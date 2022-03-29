@@ -1,3 +1,11 @@
 export { default as SideBar } from "./SideBar";
 export { default as Header } from "./Header";
-export { default as BannerSlider } from "./Home/BannerSlider";
+export { default as Loading } from "./Loading";
+export { default as Modal } from "./Modal";
+export { default as SquareButton } from "./SquareButton";
+export { default as BannerSlider } from "./HomeComponents/BannerSlider";
+export { default as TopSearch } from "./HomeComponents/TopSearch";
+export { default as AlbumSlider } from "./HomeComponents/AlbumSlider";
+export { default as SelectConfig } from "./ExploredComponents/SelectConfig";
+export { default as InfoDetail } from "./DetailComponent/InfoDetail";
+export { default as DetailSlider } from "./DetailComponent/DetailSlider";

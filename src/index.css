@@ -1,6 +1,70 @@
 :root {
   --swiper-theme-color: white !important;
 }
+
+.scroll-list::-webkit-scrollbar,
+.infinite-scroll-component::-webkit-scrollbar,
+.infinite-scroll-component__outerdiv::-webkit-scrollbar,
+.scroll-list-modal::-webkit-scrollbar {
+  width: 6px !important;
+  border-radius: 4px !important;
+}
+
+.scroll-list::-webkit-scrollbar-thumb,
+.infinite-scroll-component__outerdiv::-webkit-scrollbar-thumb {
+  background-color: rgb(105, 104, 105) !important;
+}
+.infinite-scroll-component::-webkit-scrollbar-thumb {
+  background-color: rgb(105, 104, 105) !important;
+}
+
+.scroll-list-modal::-webkit-scrollbar-thumb {
+  background-color: rgb(92, 203, 247, 0.4) !important;
+}
+
+.sub-title {
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.loading {
+  background: #eee;
+  background: linear-gradient(120deg, #d6d5d5 8%, #c7c6c6 18%, #d6d5d5 23%);
+}
+
+.card-shadow {
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}
+
+.mark {
+  -webkit-mask-image: linear-gradient(
+    180deg,
+    hsla(0, 0%, 100%, 0),
+    hsla(0, 0%, 100%, 0.8) 2%,
+    #fff 25%,
+    #fff 80%,
+    hsla(0, 0%, 100%, 0.8) 98%,
+    hsla(0, 0%, 100%, 0)
+  );
+}
+
+.bg-detail {
+  background-image: -webkit-gradient(
+    linear,
+    left top,
+    left bottom,
+    color-stop(14%, rgba(12, 39, 56, 0)),
+    to(#081b27)
+  );
+  background-image: linear-gradient(180deg, rgba(12, 39, 56, 0) 14%, #081b27);
+}
+
+.lazy-load-image-background {
+  display: block !important;
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
