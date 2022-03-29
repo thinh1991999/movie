@@ -1,23 +1,36 @@
 import { Routes, Route } from "react-router-dom";
-import { Home } from "./Pages";
+import { Detail, Explored, Home, Player } from "./Pages";
 import { Header, SideBar } from "./Components";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { actions } from "./Store";
 
 function App() {
-  const { theme } = useSelector((state) => state.root);
+  const theme = useSelector((state) => state.root.theme);
+  const showNavMobile = useSelector((state) => state.root.showNavMobile);
+  const dispatch = useDispatch();
 
   return (
     <div
-      className={`min-h-screen flex justify-end  flex-auto flex-shrink-0 antialiased bg-gray-50  text-gray-800 ${theme}`}
+      className={` flex justify-end  flex-auto flex-shrink-0 antialiased bg-gray-50 text-gray-800 ${theme}`}
     >
       <SideBar />
       <Header />
-      <div className="w-[calc(100%-16rem)] pt-16 dark:bg-gray-800">
+      <div className="lg:w-5/6 w-full md:w-[calc(100%_-_100%/16)] dark:bg-gray-800">
         <Routes>
           <Route index element={<Home />}></Route>
           <Route path="/" element={<Home />}></Route>
+          <Route path="/explored" element={<Explored />}></Route>
+          <Route path="/explored/:category" element={<Explored />}></Route>
+          <Route path="/detail/:id/:category" element={<Detail />}></Route>
+          <Route path="/player/:id/:category" element={<Player />}></Route>
         </Routes>
       </div>
+      {showNavMobile && (
+        <div
+          className="fixed top-0 left-0 bottom-0 right-0 bg-black/[0.2] z-[11] "
+          onClick={() => dispatch(actions.setShowNavMobile(false))}
+        ></div>
+      )}
     </div>
   );
 }
