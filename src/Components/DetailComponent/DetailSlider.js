@@ -3,7 +3,8 @@ import { Navigation } from "swiper";
 import Card from "../Card";
 import Loading from "../Loading";
 
-function DetailSlider({ data, title, full }) {
+function DetailSlider({ data, title, full, typeNavigate }) {
+  console.log(data);
   if (!data) {
     return (
       <div className="py-10 w-full">
@@ -73,13 +74,25 @@ function DetailSlider({ data, title, full }) {
           modules={[Navigation]}
           navigation={true}
         >
-          {data.map((item, index) => {
+          {data.results?.map((item, index) => {
             return (
               <SwiperSlide key={index}>
-                <Card data={item} type={"ALBUM"} />
+                <Card data={item} type={"ALBUM"} typeNavigate={typeNavigate} />
               </SwiperSlide>
             );
           })}
+          {data.length > 0 &&
+            data?.map((item, index) => {
+              return (
+                <SwiperSlide key={index}>
+                  <Card
+                    data={item}
+                    type={"ALBUM"}
+                    typeNavigate={typeNavigate}
+                  />
+                </SwiperSlide>
+              );
+            })}
         </Swiper>
       </div>
     </div>

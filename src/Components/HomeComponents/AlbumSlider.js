@@ -2,8 +2,9 @@ import { SwiperSlide, Swiper } from "swiper/react";
 import { Navigation } from "swiper";
 import Card from "../Card";
 import Loading from "../Loading";
+import Options from "./Options";
 
-function AlbumSlider({ data, title, full }) {
+function AlbumSlider({ data, full, option }) {
   if (!data) {
     return (
       <div className="py-10 w-full">
@@ -15,10 +16,10 @@ function AlbumSlider({ data, title, full }) {
             slidesPerView={4}
             breakpoints={{
               0: {
-                slidesPerView: 2,
+                slidesPerView: 1.5,
               },
               426: {
-                slidesPerView: 3,
+                slidesPerView: 2.5,
               },
               768: {
                 slidesPerView: 3,
@@ -47,13 +48,22 @@ function AlbumSlider({ data, title, full }) {
       </div>
     );
   }
-
+  const {
+    title,
+    data: { results },
+    mode,
+    type,
+  } = data;
   return (
     <div className="py-10 w-full">
-      <h2 className="text-xl text-gray-800 dark:text-white">{title}</h2>
+      <div className="flex items-center justify-start mb-2">
+        <h2 className="text-xl text-gray-800 dark:text-white mr-4 uppercase">
+          {title}
+        </h2>
+        {option && <Options mode={mode} options={["movie", "tv"]} />}
+      </div>
       <div className="ml-[-0.5rem] mr-[-0.5rem]">
         <Swiper
-          slidesPerView={4}
           breakpoints={{
             0: {
               slidesPerView: 1.5,
@@ -74,11 +84,11 @@ function AlbumSlider({ data, title, full }) {
           modules={[Navigation]}
           navigation={true}
         >
-          {data.map((item) => {
+          {results.map((item) => {
             const { id } = item;
             return (
               <SwiperSlide key={id}>
-                <Card data={item} type={"ALBUM"} />
+                <Card data={item} type={"ALBUM"} typeNavigate={type} />
               </SwiperSlide>
             );
           })}
