@@ -1,11 +1,17 @@
 import axios from "axios";
 
-const initAxios = axios.create({
-  baseURL: "https://ga-mobile-api.loklok.tv/cms/app",
+const config = {
   headers: {
-    lang: "en",
-    versioncode: "11",
-    clienttype: "ios_jike_default",
+    "Access-Control-Allow-Origin": "*",
+    "Content-Type": "text/plain",
+  },
+};
+
+const initAxios = axios.create({
+  baseURL: "https://api.themoviedb.org/3",
+  https: config,
+  params: {
+    api_key: "0b6263c836d6c7e96ad240968f0ad8ea",
   },
 });
 

@@ -21,7 +21,7 @@ function App() {
           <Route path="/" element={<Home />}></Route>
           <Route path="/explored" element={<Explored />}></Route>
           <Route path="/explored/:category" element={<Explored />}></Route>
-          <Route path="/detail/:id/:category" element={<Detail />}></Route>
+          <Route path="/detail/:id/:type" element={<Detail />}></Route>
           <Route path="/player/:id/:category" element={<Player />}></Route>
         </Routes>
       </div>

@@ -102,7 +102,7 @@ function Header() {
           </Button>
         </button>
         <button className="ml-2">
-          <Button size={"text-2xl"} bg={true}>
+          <Button size={"text-2xl"} bg={true} header={bgHeader}>
             <AiFillSetting />
           </Button>
         </button>
