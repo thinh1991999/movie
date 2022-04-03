@@ -16,7 +16,6 @@ export const getPopular = async (type, page) => {
     });
   return {
     mode: "popular",
-    title: "POPULAR",
     data,
     type,
   };
@@ -38,7 +37,6 @@ export const getTopRated = async (type, page) => {
     });
   return {
     mode: "topRated",
-    title: "TOP RATED",
     data,
     type,
   };
@@ -60,7 +58,6 @@ export const getNowPlaying = async (type, page) => {
     });
   return {
     type: "movie",
-    title: "Now Playing Movies",
     data,
   };
 };
@@ -81,7 +78,6 @@ export const getupcoming = async (type, page) => {
     });
   return {
     type: "movie",
-    title: "Upcoming Movies",
     data,
   };
 };
@@ -102,7 +98,6 @@ export const getTvAiringToday = async (type, page) => {
     });
   return {
     type: "tv",
-    title: "TV Shows Airing Today",
     data,
   };
 };
@@ -123,7 +118,6 @@ export const getTvOnTheAir = async (type, page) => {
     });
   return {
     type: "tv",
-    title: "Currently Airing TV Shows",
     data,
   };
 };

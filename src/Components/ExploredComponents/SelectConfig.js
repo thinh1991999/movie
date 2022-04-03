@@ -8,8 +8,11 @@ function SelectConfig({ data }) {
   const dispatch = useDispatch();
   const search = useSelector((state) => state.explore.search);
   const mainRef = useRef(null);
+  const ulRef = useRef(null);
+  const liRef = useRef(null);
   const [showDrop, setShowDrop] = useState(false);
   const [currentValue, setCurrentValue] = useState("");
+  const [char, setChar] = useState("");
 
   const handleSetSearch = (id) => {
     const { type } = data;
@@ -26,7 +29,9 @@ function SelectConfig({ data }) {
     if (data) {
       const { type, options } = data;
       const index = _.findIndex(options, ["id", search[type]]);
-      setCurrentValue(options[index].name);
+      setCurrentValue(options[index]?.name);
+      const firstChar = _.trim(options[index]?.name).slice(0, 1);
+      setChar(firstChar);
     }
   }, [search, data]);
 
@@ -34,12 +39,32 @@ function SelectConfig({ data }) {
     !mainRef.current.contains(e.target) && setShowDrop(false);
   };
 
+  const keyUp = (e) => {
+    setChar(e.key);
+  };
+
   useEffect(() => {
     showDrop && window.addEventListener("click", event);
+    showDrop && window.addEventListener("keyup", keyUp);
+    // !showDrop && setChar("");
     return () => {
       window.removeEventListener("click", event);
+      window.removeEventListener("click", keyUp);
     };
   }, [showDrop]);
+
+  useEffect(() => {
+    if (ulRef.current && liRef.current && showDrop) {
+      const heightLi = liRef.current.getBoundingClientRect().height;
+      const index = data?.options?.findIndex((item) => {
+        return (
+          _.startsWith(item.name, char) ||
+          _.startsWith(item.name.toLowerCase(), char)
+        );
+      });
+      ulRef.current.scrollTop = heightLi * index;
+    }
+  }, [char, data, showDrop]);
 
   if (!data) {
     return (
@@ -62,12 +87,16 @@ function SelectConfig({ data }) {
           </div>
         </div>
         {showDrop && (
-          <ul className="max-h-[300px] pb-0 overflow-y-scroll absolute top-[100%] left-0 w-full z-30 scroll-list bg-gray-200 dark:bg-gray-600">
+          <ul
+            ref={ulRef}
+            className="max-h-[300px] pb-0 overflow-y-scroll scroll-smooth absolute top-[100%] left-0 w-full z-30 scroll-list bg-gray-200 dark:bg-gray-600"
+          >
             {options?.map((item) => {
               const { name, id } = item;
               if (!name || name.includes("?") || id === "xx") return;
               return (
                 <li
+                  ref={liRef}
                   key={id}
                   value={id}
                   className={`text-gray-800 ${

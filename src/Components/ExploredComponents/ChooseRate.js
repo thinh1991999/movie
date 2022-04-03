@@ -92,6 +92,7 @@ function ChooseRate({ title, number, begin, end, hint, twoWay }) {
             actions.setSearchExplore({
               ...search,
               [begin]: calNumber,
+              [end]: calNumber,
             })
           );
         } else {
@@ -124,18 +125,12 @@ function ChooseRate({ title, number, begin, end, hint, twoWay }) {
   }, [countHint]);
 
   useEffect(() => {
-    let resetTimeOut;
     if (reset) {
-      resetTimeOut = setTimeout(() => {
-        setLevelLeft((number / 10) * search[begin]);
-        end && setLevelRight(number * ((10 - search[end]) / 10));
-        dispatch(actions.setResetExplore(false));
-      }, 500);
+      setLevelLeft((search[begin] / number) * 10);
+      end && setLevelRight(number * ((10 - search[end]) / 10));
+      dispatch(actions.setResetExplore(false));
     }
-    return () => {
-      clearTimeout(resetTimeOut);
-    };
-  }, [search, reset]);
+  }, [reset, search]);
 
   return (
     <div className="w-[200px] mx-4">
@@ -152,7 +147,7 @@ function ChooseRate({ title, number, begin, end, hint, twoWay }) {
                     key={index}
                     className="block w-[1px] h-2 bg-gray-700 dark:bg-white  relative "
                   >
-                    <span className="absolute top-4 -translate-x-1/2">
+                    <span className="absolute top-4 text-xs -translate-x-1/2">
                       {item}
                     </span>
                   </li>

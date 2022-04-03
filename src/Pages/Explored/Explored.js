@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   SelectConfig,
   AlbumSlider,
@@ -15,27 +15,35 @@ import { actions } from "../../Store";
 import _ from "lodash";
 
 function Explored() {
-  const { category } = useParams();
+  const { genre, type } = useParams();
   const dispatch = useDispatch();
   const search = useSelector((state) => state.explore.search);
+  const language = useSelector((state) => state.root.language);
 
   const [navData, setNavData] = useState([
     {
       type: "tv",
-      name: "TV Series",
+      name: language.exploreTvTitle,
     },
     {
       type: "movie",
-      name: "movie",
+      name: language.exploreMovieTitle,
     },
   ]);
   const [dataFound, setDataFound] = useState([]);
-  const [navIndex, setNavIndex] = useState(0);
+  const getNavIndex = useMemo(() => {
+    return navData.findIndex((item) => item.type === type);
+  }, [type]);
+  const [navIndex, setNavIndex] = useState(
+    getNavIndex === -1 ? 0 : getNavIndex
+  );
+
   const [genres, setGenres] = useState(null);
   const [languages, setLanguages] = useState(null);
   const [firstLoading, setFirstLoading] = useState(true);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
+  const [mount, setMount] = useState(false);
 
   const handleSetSearch = useCallback();
 
@@ -62,12 +70,13 @@ function Explored() {
   };
 
   useEffect(async () => {
-    dispatch(
-      actions.setSearchExplore({
-        ...search,
-        with_genres: "",
-      })
-    );
+    mount &&
+      dispatch(
+        actions.setSearchExplore({
+          ...search,
+          with_genres: "",
+        })
+      );
     setGenres(null);
     await getGenres(navData[navIndex].type).then((res) => {
       setGenres({
@@ -81,6 +90,7 @@ function Explored() {
         ],
       });
     });
+    setMount(true);
   }, [navIndex]);
 
   useEffect(() => {
@@ -149,6 +159,16 @@ function Explored() {
     };
   }, [search]);
 
+  useEffect(() => {
+    if (genre) {
+      dispatch(
+        actions.setSearchExplore({
+          ...search,
+          with_genres: genre * 1,
+        })
+      );
+    }
+  }, [genre]);
   return (
     <div className="w-full h-screen overflow-x-hidden flex flex-col pt-16 dark:bg-gray-800 bg-white px-5 py-5">
       <div className="">
@@ -176,7 +196,7 @@ function Explored() {
           <SelectConfig data={genres} handleSetSearch={handleSetSearch} />
           <SelectConfig data={languages} handleSetSearch={handleSetSearch} />
           <ChooseRate
-            title={"Score"}
+            title={language.exploreScore}
             begin={"vote_average.gte"}
             end={"vote_average.lte"}
             number={10}
@@ -184,13 +204,13 @@ function Explored() {
             twoWay={true}
           />
           <ChooseRate
-            title={"minimum voted"}
+            title={language.exploreMiniVote}
             begin={"vote_count.gte"}
             number={500}
             hint={5}
           />
           <button className="mt-2" onClick={handleClearSearch}>
-            <SquareButton msg={"Reset"}></SquareButton>
+            <SquareButton msg={language.exploreResetBtn}></SquareButton>
           </button>
         </div>
       </div>

@@ -3,12 +3,15 @@ import { Navigation } from "swiper";
 import Loading from "../Loading";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { getImageUrl } from "../../Shared";
+import { useSelector } from "react-redux";
 
 function CreditsSlider({ data }) {
+  const language = useSelector((state) => state.root.language);
+
   return (
     <div className=" w-full">
       <h2 className="text-xl text-gray-800 dark:text-white capitalize">
-        characters
+        {language.detailCharacters}
       </h2>
       <div className="ml-[-0.5rem] mr-[-0.5rem]">
         <Swiper

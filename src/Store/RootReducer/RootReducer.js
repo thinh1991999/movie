@@ -1,6 +1,16 @@
-import { English } from "../../Lanuages";
+import { English, VietNam } from "../../Lanuages";
+
+const getLanguage = () => {
+  const localLanguage = localStorage.getItem("language");
+  if (localLanguage === "EN") {
+    return English;
+  } else {
+    return VietNam;
+  }
+};
+
 const initState = {
-  language: English,
+  language: getLanguage(),
   theme: localStorage.getItem("theme") || "",
   showNavMobile: false,
   bgHeader: false,

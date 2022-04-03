@@ -3,8 +3,11 @@ import { getImageUrl } from "../../Shared";
 import Loading from "../Loading";
 import { AiFillStar } from "react-icons/ai";
 import Options from "./Options";
+import { useSelector } from "react-redux";
 
-function Trending({ data, chooseTrending }) {
+function Trending({ data }) {
+  const language = useSelector((state) => state.root.language);
+
   if (!data) {
     return (
       <div className="w-1/5 md:block hidden pr-4 py-5 h-[calc(100vh_-_4rem)] fixed right-[12px] bottom-0 overflow-y-hidden hover:overflow-y-scroll  scroll-list">
@@ -29,8 +32,8 @@ function Trending({ data, chooseTrending }) {
   return (
     <div className="w-1/5  flex-col md:flex hidden py-5 pt-16 fixed right-[12px] top-0 bottom-0">
       <div className="flex items-center mb-5 justify-between">
-        <h2 className="font-normal text-gray-800 dark:text-white text-2xl  ">
-          Trending
+        <h2 className="font-normal capitalize text-gray-800 dark:text-white text-2xl  ">
+          {language.homeTrending}
         </h2>
         <Options mode={"trending"} options={["today", "week"]} />
       </div>
@@ -39,7 +42,6 @@ function Trending({ data, chooseTrending }) {
           {results.map((item, index) => {
             const { id, title, backdrop_path, name, vote_average, popularity } =
               item;
-
             return (
               <a
                 className="flex group mb-2 hover:opacity-50 cursor-pointer transition-all duration-300 ease-linear"

@@ -9,6 +9,8 @@ import { actions } from "../../Store";
 import DetailModal from "./DetailModal";
 
 function InfoDetail({ data, type }) {
+  const language = useSelector((state) => state.root.language);
+
   const [showDetailModal, setShowDetailModal] = useState(false);
 
   const {
@@ -28,8 +30,6 @@ function InfoDetail({ data, type }) {
   } = data;
 
   const countStar = score / 2;
-
-  const handleShowTrailer = () => {};
 
   return (
     <div className=" text-white text-sm flex justify-center flex-col items-center pb-10 md:block md:pb-0">
@@ -84,7 +84,7 @@ function InfoDetail({ data, type }) {
         {genres.map((item) => {
           const { name, id } = item;
           return (
-            <Link to={`/explored/${id}`} key={id} className="mr-2">
+            <Link to={`/explored/${id}/${type}`} key={id} className="mr-2">
               <SquareButton msg={name} bd={false} detail={true} />
             </Link>
           );
@@ -92,46 +92,51 @@ function InfoDetail({ data, type }) {
       </div>
       <div className="mt-5">
         <Link to={`/`} className="inline-block">
-          <SquareButton msg={"watch"} bg={"bg-red-700/[0.8]"} bd={true} />
+          <SquareButton
+            msg={language.detailWatch}
+            bg={"bg-red-700/[0.8]"}
+            bd={true}
+          />
         </Link>
-        <a
-          href="#trailer"
-          className="inline-block ml-4"
-          onClick={handleShowTrailer}
-        >
-          <SquareButton msg={"trailer"} bg={"bg-blue-700/[0.8]"} bd={true} />
+        <a href="#trailer" className="inline-block ml-4">
+          <SquareButton
+            msg={language.detailTrailer}
+            bg={"bg-blue-700/[0.8]"}
+            bd={true}
+          />
         </a>
       </div>
       <div className="mt-2 text-base text-center px-5 md:px-0 md:text-left capitalize">
         {nations.length > 0 && (
           <p className="">
-            <span className="text-sm">nation</span>:{" "}
+            <span className="text-sm">{language.detailNation}</span>:{" "}
             {nations.map((item, index) => {
-              const { iso_3166_1, name } = item;
-              return <span key={index}>{name}</span>;
+              return <span key={index}>{item.name}</span>;
             })}
           </p>
         )}
 
         {episodeCount && (
           <p>
-            <span className="text-sm">episodes:</span> {episodeCount}{" "}
-            <span>eps</span>
+            <span className="text-sm">{language.detailEpisodes}:</span>{" "}
+            {episodeCount} <span>{language.detailEps}</span>
           </p>
         )}
         {seriesNo && (
           <p>
-            <span className="text-sm">seasons:</span> {seriesNo}
+            <span className="text-sm">{language.detailSeasons}:</span>{" "}
+            {seriesNo}
           </p>
         )}
         {runtime && (
           <p>
-            <span className="text-sm">duration:</span> {getTimeMovie(runtime)}
+            <span className="text-sm">{language.detailDuration}:</span>{" "}
+            {getTimeMovie(runtime)}
           </p>
         )}
 
         <p className="">
-          <span className="text-sm">overview:</span>{" "}
+          <span className="text-sm">{language.detailOverview}:</span>{" "}
           {overview.length > 150 ? (
             <span className="">
               {`${overview.substring(0, 150)}...`}{" "}
@@ -139,7 +144,7 @@ function InfoDetail({ data, type }) {
                 className="uppercase font-bold hover:text-blue-600 transition-all duration-300 ease-linear"
                 onClick={() => setShowDetailModal(true)}
               >
-                read More
+                {language.detailReadMore}
               </button>
             </span>
           ) : (

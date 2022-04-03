@@ -26,6 +26,7 @@ function Home() {
   const trending = useSelector((state) => state.home.trending);
   const popular = useSelector((state) => state.home.popular);
   const topRated = useSelector((state) => state.home.topRated);
+  const language = useSelector((state) => state.root.language);
 
   const [trendingData, setTrendingData] = useState(null);
   const [popularData, setPopularData] = useState(null);
@@ -57,40 +58,53 @@ function Home() {
     }
   }, [trending]);
 
-  // useEffect(() => {
-  //   dispatch(actions.setBgHeader(true));
-  //   Promise.all([
-  //     getPopular(popular, 1),
-  //     getTopRated(topRated, 1),
-  //     getNowPlaying("", 1),
-  //     getupcoming("", 1),
-  //     getTvAiringToday("", 1),
-  //     getTvOnTheAir("", 1),
-  //   ]).then((res) => setHomeData(res));
-  // }, [popular, topRated]);
-
   useEffect(() => {
-    console.log("abc");
     setPopularData(null);
     getPopular(popular, 1).then((res) => {
-      setPopularData(res);
+      setPopularData({
+        ...res,
+        title: language.homePopular,
+      });
     });
   }, [popular]);
 
   useEffect(() => {
     setTopRatedData(null);
     getTopRated(topRated, 1).then((res) => {
-      setTopRatedData(res);
+      setTopRatedData({
+        ...res,
+        title: language.homeTopRated,
+      });
     });
   }, [topRated]);
 
-  useEffect(() => {
-    Promise.all([
-      getNowPlaying("", 1),
-      getupcoming("", 1),
-      getTvAiringToday("", 1),
-      getTvOnTheAir("", 1),
-    ]).then((res) => setHomeData(res));
+  useEffect(async () => {
+    const arrData = [];
+    await getNowPlaying("", 1).then((res) => {
+      arrData.push({
+        ...res,
+        title: language.homeNowPlaying,
+      });
+    });
+    await getupcoming("", 1).then((res) => {
+      arrData.push({
+        ...res,
+        title: language.homeUpComing,
+      });
+    });
+    await getTvAiringToday("", 1).then((res) => {
+      arrData.push({
+        ...res,
+        title: language.homeTvShows,
+      });
+    });
+    await getTvOnTheAir("", 1).then((res) => {
+      arrData.push({
+        ...res,
+        title: language.homeCurrentlyTv,
+      });
+    });
+    setHomeData(arrData);
     dispatch(actions.setBgHeader(true));
   }, []);
 
