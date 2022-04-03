@@ -4,7 +4,6 @@ import Card from "../Card";
 import Loading from "../Loading";
 
 function DetailSlider({ data, title, full, typeNavigate }) {
-  console.log(data);
   if (!data) {
     return (
       <div className="py-10 w-full">
@@ -50,7 +49,9 @@ function DetailSlider({ data, title, full, typeNavigate }) {
   }
   return (
     <div className=" w-full">
-      <h2 className="text-xl text-gray-800 dark:text-white">{title}</h2>
+      <h2 className="text-xl text-gray-800 dark:text-white capitalize">
+        {title}
+      </h2>
       <div className="ml-[-0.5rem] mr-[-0.5rem]">
         <Swiper
           slidesPerView={4}

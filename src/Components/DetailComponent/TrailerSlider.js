@@ -1,11 +1,13 @@
 import { SwiperSlide, Swiper } from "swiper/react";
 import { Navigation } from "swiper";
 import { BsPlayCircle } from "react-icons/bs";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { actions } from "../../Store";
+import { LazyLoadImage } from "react-lazy-load-image-component";
 
 function TrailerSlider({ data }) {
   const dispatch = useDispatch();
+  const language = useSelector((state) => state.root.language);
 
   const handleShowTrailerModal = (key) => {
     dispatch(
@@ -19,7 +21,7 @@ function TrailerSlider({ data }) {
   return (
     <div className=" w-full" id="trailer">
       <h2 className="text-xl text-gray-800 dark:text-white capitalize">
-        trailer
+        {language.detailTrailer}
       </h2>
       <div className="ml-[-0.5rem] mr-[-0.5rem]">
         <Swiper
@@ -45,13 +47,16 @@ function TrailerSlider({ data }) {
             const { id, key } = item;
             return (
               <SwiperSlide key={id}>
-                <div className="p-2">
-                  <div className="relative group overflow-hidden">
-                    <img
-                      src={`https://i.ytimg.com/vi/${key}/hqdefault.jpg`}
-                      alt=""
-                      className="group-hover:scale-125 transition-all duration-300 ease-linear"
-                    />
+                <div className="p-2 h-full">
+                  <div className="relative h-full group overflow-hidden">
+                    <div className=" h-full">
+                      <img
+                        src={`https://i.ytimg.com/vi/${key}/hqdefault.jpg`}
+                        alt=""
+                        className="group-hover:scale-125 h-full transition-all duration-300 ease-linear"
+                        effect="opacity"
+                      />
+                    </div>
                     <div className="absolute  top-0 left-0 right-0 bottom-0 bg-black opacity-0 group-hover:opacity-20 transition-all duration-300 ease-linear"></div>
                     <div
                       onClick={() => handleShowTrailerModal(key)}

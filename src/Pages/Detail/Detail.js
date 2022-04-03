@@ -18,6 +18,7 @@ function Detail() {
   const showTrailerModal = useSelector(
     (state) => state.detail.showTrailerModal
   );
+  const language = useSelector((state) => state.root.language);
 
   const dispatch = useDispatch();
   const { id, type } = useParams();
@@ -72,7 +73,6 @@ function Detail() {
   }
 
   const { backdrop_path: bgImg, poster_path: showImg, seasons } = detailData;
-  console.log(similarData);
   return (
     <div
       className="h-screen pb-10 overflow-y-scroll scroll-list scroll-smooth"
@@ -100,7 +100,7 @@ function Detail() {
       </div>
 
       <div className="px-5">
-        {creditsData && (
+        {creditsData?.length > 0 && (
           <div className="mt-10">
             <CreditsSlider data={creditsData?.cast} />
           </div>
@@ -115,7 +115,7 @@ function Detail() {
           <div className="mt-10">
             <DetailSlider
               data={seasons}
-              title={"In the series"}
+              title={language.detailSeris}
               typeNavigate={type}
             />
           </div>
@@ -125,7 +125,7 @@ function Detail() {
           <div className="mt-10">
             <DetailSlider
               data={similarData}
-              title={"Similar to this"}
+              title={language.detailSimilar}
               typeNavigate={type}
             />
           </div>

@@ -15,6 +15,7 @@ function Header() {
   const theme = useSelector((state) => state.root.theme);
   const showNavMobile = useSelector((state) => state.root.showNavMobile);
   const bgHeader = useSelector((state) => state.root.bgHeader);
+  const language = useSelector((state) => state.root.language);
 
   const handleChangeTheme = () => {
     if (theme === "") {
@@ -77,12 +78,12 @@ function Header() {
           </button>
           <input
             type="text"
-            className={`px-2 flex-1  outline-none  ${
+            className={`px-2 flex-1  outline-none capitalize  ${
               !bgHeader
                 ? `bg-transparent dark:bg-transparent text-white dark:text-white`
                 : `bg-gray-200 dark:bg-gray-600 dark:text-gray-200`
             }`}
-            placeholder="Search"
+            placeholder={language.headerSearch}
           />
         </div>
       </div>
