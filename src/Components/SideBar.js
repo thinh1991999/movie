@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { FaHome } from "react-icons/fa";
 import {
   MdVideoCameraBack,
@@ -11,12 +11,14 @@ import { BsMoonStarsFill } from "react-icons/bs";
 import Popper from "./Popper";
 import ArrowPopper from "./ArrowPopper";
 import { showPopper } from "../Shared";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 
 function SideBar() {
   const navigate = useNavigate();
 
-  const { language, theme, showNavMobile } = useSelector((state) => state.root);
+  const language = useSelector((state) => state.root.language);
+  const theme = useSelector((state) => state.root.theme);
+  const showNavMobile = useSelector((state) => state.root.showNavMobile);
 
   const [sideBarInfo, setSiBarInfo] = useState([
     {
@@ -41,8 +43,30 @@ function SideBar() {
     },
   ]);
 
-  const buttonRef = useRef(null);
-  const popperRef = useRef(null);
+  useEffect(() => {
+    setSiBarInfo([
+      {
+        icon: <FaHome />,
+        title: language.sideBar1,
+        link: "/",
+      },
+      {
+        icon: <MdVideoCameraBack />,
+        title: language.sideBar2,
+        link: "/",
+      },
+      {
+        icon: <MdTravelExplore />,
+        title: language.sideBar3,
+        link: "/explored",
+      },
+      {
+        icon: <MdOutlineHistory />,
+        title: language.sideBar4,
+        link: "/",
+      },
+    ]);
+  }, [language]);
 
   return (
     <div
@@ -79,9 +103,15 @@ function SideBar() {
             const { icon, title, link } = item;
             return (
               <li key={index}>
-                <Link
+                <NavLink
                   to={link}
-                  className="relative flex lg:justify-start md:justify-center flex-row items-center h-11 focus:outline-none transition-all capitalize duration-500 ease-linear font-medium hover:bg-gray-200 hover:dark:bg-gray-300/[0.3] text-gray-600 dark:text-gray-400 hover:text-gray-900 hover:dark:text-white border-l-4 border-transparent hover:border-indigo-500 border-indigo-500 md:pr-0 pr-6"
+                  className={({ isActive }) => {
+                    return `relative flex lg:justify-start md:justify-center flex-row items-center h-11 focus:outline-none transition-all capitalize duration-500 ease-linear font-medium hover:bg-gray-200 hover:dark:bg-gray-300/[0.3]  hover:text-gray-900 hover:dark:text-white border-l-4 border-transparent hover:border-indigo-500  md:pr-0 pr-6 ${
+                      isActive
+                        ? `border-indigo-500 bg-gray-300 dark:bg-gray-300/[0.3] text-gray-900 dark:text-white`
+                        : `text-gray-600 dark:text-gray-400`
+                    }`;
+                  }}
                 >
                   <span className="inline-flex text-2xl justify-center items-center lg:ml-4 md:ml-0 ml-4">
                     {icon}
@@ -89,7 +119,7 @@ function SideBar() {
                   <span className="ml-2 lg:block md:hidden text-base tracking-wide truncate">
                     {title}
                   </span>
-                </Link>
+                </NavLink>
               </li>
             );
           })}

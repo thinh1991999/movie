@@ -1,8 +1,9 @@
 import { English, VietNam } from "../../Lanuages";
 
 const getLanguage = () => {
+  console.log("language");
   const localLanguage = localStorage.getItem("language");
-  if (localLanguage === "EN") {
+  if (localLanguage === "US") {
     return English;
   } else {
     return VietNam;
@@ -25,6 +26,20 @@ export const RootReducer = (state = initState, { type, payload }) => {
         ...state,
         theme: payload,
       };
+    }
+    case "SET_LANGUAGE": {
+      localStorage.setItem("language", payload);
+      if (payload === "US") {
+        return {
+          ...state,
+          language: Object.assign({}, English),
+        };
+      } else {
+        return {
+          ...state,
+          language: Object.assign({}, VietNam),
+        };
+      }
     }
     case "SET_SHOW_NAV_MOBILE": {
       return {

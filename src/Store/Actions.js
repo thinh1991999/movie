@@ -7,6 +7,13 @@ export const setTheme = (payload) => {
   };
 };
 
+export const setLanguage = (payload) => {
+  return {
+    type: "SET_LANGUAGE",
+    payload,
+  };
+};
+
 export const setShowNavMobile = (payload) => {
   return {
     type: "SET_SHOW_NAV_MOBILE",

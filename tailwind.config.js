@@ -17,7 +17,8 @@ module.exports = {
         // => @media (min-width: 1280px) { ... }
       },
     },
+    namedGroups: ["foo", "bar"],
   },
-  plugins: [],
+  plugins: [require("tailwindcss-named-groups")],
   variants: {},
 };

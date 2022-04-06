@@ -9,6 +9,7 @@ import {
 import { BsFillMoonStarsFill, BsSunFill } from "react-icons/bs";
 import { useDispatch, useSelector } from "react-redux";
 import { actions } from "../Store";
+import Setting from "./Setting";
 
 function Header() {
   const dispatch = useDispatch();
@@ -102,10 +103,13 @@ function Header() {
             {theme === "" ? <BsFillMoonStarsFill /> : <BsSunFill />}
           </Button>
         </button>
-        <button className="ml-2">
+        <button className="ml-2 relative group before:absolute  before:block before:contents[*] before:w-[100%] before:h-[10px] before:top-full">
           <Button size={"text-2xl"} bg={true} header={bgHeader}>
             <AiFillSetting />
           </Button>
+          <div className="absolute group-hover:block hidden min-w-[200px] top-[calc(100%_+_10px)] right-[50%]">
+            <Setting />
+          </div>
         </button>
         <button
           className="ml-2 md:hidden"
