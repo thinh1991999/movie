@@ -10,3 +10,4 @@ export {
   getLanguages,
 } from "./explore";
 export { getDetail, getSmilar, getVideos, getCredits } from "./detail";
+export { getTvSession } from "./player";

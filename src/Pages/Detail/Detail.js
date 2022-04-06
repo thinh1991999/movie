@@ -100,7 +100,7 @@ function Detail() {
       </div>
 
       <div className="px-5">
-        {creditsData?.length > 0 && (
+        {creditsData?.cast.length && (
           <div className="mt-10">
             <CreditsSlider data={creditsData?.cast} />
           </div>

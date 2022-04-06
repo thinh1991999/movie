@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { AiFillStar, AiFillTags } from "react-icons/ai";
 import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { SquareButton, Modal } from "..";
 import { getTimeMovie } from "../../Shared";
 import { IoEyeSharp } from "react-icons/io5";
@@ -9,6 +9,7 @@ import { actions } from "../../Store";
 import DetailModal from "./DetailModal";
 
 function InfoDetail({ data, type }) {
+  const navigate = useNavigate();
   const language = useSelector((state) => state.root.language);
 
   const [showDetailModal, setShowDetailModal] = useState(false);
@@ -30,6 +31,23 @@ function InfoDetail({ data, type }) {
   } = data;
 
   const countStar = score / 2;
+
+  const handleToPlayer = () => {
+    switch (type) {
+      case "movie":
+        {
+          navigate(`/player/${id}/${type}`);
+        }
+        break;
+      case "tv":
+        {
+          navigate(`/player/${id}/${type}/1/1`);
+        }
+        break;
+      default:
+        navigate("/");
+    }
+  };
 
   return (
     <div className=" text-white text-sm flex justify-center flex-col items-center pb-10 md:block md:pb-0">
@@ -91,13 +109,13 @@ function InfoDetail({ data, type }) {
         })}
       </div>
       <div className="mt-5">
-        <Link to={`/`} className="inline-block">
+        <button onClick={handleToPlayer} className="inline-block">
           <SquareButton
             msg={language.detailWatch}
             bg={"bg-red-700/[0.8]"}
             bd={true}
           />
-        </Link>
+        </button>
         <a href="#trailer" className="inline-block ml-4">
           <SquareButton
             msg={language.detailTrailer}

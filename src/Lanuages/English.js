@@ -1,4 +1,6 @@
 export const English = {
+  hint: "US",
+  headerLanguage: "Language",
   homeTitle: "Menu",
   homeTrending: "Trending",
   homeTopRated: "top rated",

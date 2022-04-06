@@ -1,4 +1,6 @@
 export const VietNam = {
+  hint: "VN",
+  headerLanguage: "Ngôn ngữ",
   homeTitle: "Menu",
   homeTrending: "xu hướng",
   homeTopRated: "top bình chọn",

@@ -111,6 +111,19 @@ function Explored() {
   }, [page]);
 
   useEffect(() => {
+    setNavData([
+      {
+        type: "tv",
+        name: language.exploreTvTitle,
+      },
+      {
+        type: "movie",
+        name: language.exploreMovieTitle,
+      },
+    ]);
+  }, [language]);
+
+  useEffect(() => {
     dispatch(actions.setBgHeader(true));
     getLanguages().then((res) => {
       const newArr = res.map((item) => {

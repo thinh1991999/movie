@@ -31,11 +31,13 @@ function Trending({ data }) {
 
   return (
     <div className="w-1/5  flex-col md:flex hidden py-5 pt-16 fixed right-[12px] top-0 bottom-0">
-      <div className="flex items-center mb-5 justify-between">
+      <div className="flex items-center mb-5 lg:justify-between flex-wrap">
         <h2 className="font-normal capitalize text-gray-800 dark:text-white text-2xl  ">
           {language.homeTrending}
         </h2>
-        <Options mode={"trending"} options={["today", "week"]} />
+        <div className="mt-4 xl:mt-0 ">
+          <Options mode={"trending"} options={["today", "week"]} />
+        </div>
       </div>
       <div className="flex-1 overflow-hidden hover:overflow-y-auto scroll-list">
         <div className="flex flex-col ">

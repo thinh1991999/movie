@@ -22,7 +22,11 @@ function App() {
           <Route path="/explored" element={<Explored />}></Route>
           <Route path="/explored/:genre/:type" element={<Explored />}></Route>
           <Route path="/detail/:id/:type" element={<Detail />}></Route>
-          <Route path="/player/:id/:category" element={<Player />}></Route>
+          <Route path="/player/:id/:type" element={<Player />}></Route>
+          <Route
+            path="/player/:id/:type/:session/:episode"
+            element={<Player />}
+          ></Route>
         </Routes>
       </div>
       {showNavMobile && (
