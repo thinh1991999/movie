@@ -11,3 +11,4 @@ export {
 } from "./explore";
 export { getDetail, getSmilar, getVideos, getCredits } from "./detail";
 export { getTvSession } from "./player";
+export { getMutilSearch } from "./global";

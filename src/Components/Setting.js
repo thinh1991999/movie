@@ -27,9 +27,9 @@ function Setting() {
   };
 
   return (
-    <div className="w-full rounded-md  text-gray-800 dark:text-white bg-slate-400 py-2  cursor-default">
+    <div className="w-full rounded-md  text-gray-800 dark:text-white from-violet-400 to-fuchsia-400 bg-gradient-to-r dark:from-violet-800 dark:to-fuchsia-800 py-2  cursor-default">
       <ul>
-        <li className="group-bar flex items-center relative capitalize justify-between cursor-pointer px-5 py-2 hover:bg-slate-500 transition-all duration-300 ease-linear">
+        <li className="group-bar flex items-center relative capitalize justify-between cursor-pointer px-5 py-2 dark:hover:bg-slate-400/[0.4] hover:bg-slate-400/[0.5] transition-all duration-300 ease-linear">
           {language.headerLanguage}:
           <img
             src={flag.filter((item) => item.type === language.hint)[0].imgUrl}
@@ -37,13 +37,13 @@ function Setting() {
             className="w-[30px] object-contain"
           />
           <AiOutlineRight />
-          <div className="absolute group-bar-hover:block setting-shadow hidden w-[150px] right-[100%] rounded-md translate-y-1/2 bottom-0 py-2 bg-slate-400">
+          <div className="absolute group-bar-hover:block setting-shadow hidden w-[150px] right-[100%] rounded-md translate-y-1/2 bottom-0 py-2 from-violet-400 to-fuchsia-400 bg-gradient-to-r dark:from-violet-800 dark:to-fuchsia-800">
             <ul>
               {flag.map((item, index) => {
                 return (
                   <li
                     onClick={() => handleChangeLanguage(item.type)}
-                    className="flex justify-between py-2 px-4 hover:bg-slate-500 transition-all duration-300 ease-linear"
+                    className="flex items-center justify-between py-2 px-4 dark:hover:bg-slate-400/[0.4] hover:bg-slate-400/[0.5] transition-all duration-300 ease-linear"
                     key={index}
                   >
                     <span>{item.name}</span>

@@ -1,6 +1,8 @@
 export const VietNam = {
   hint: "VN",
   headerLanguage: "Ngôn ngữ",
+  headerLoading: "Đang tìm kiếm",
+  headerNoResult: "Không tìm thấy kết quả",
   homeTitle: "Menu",
   homeTrending: "xu hướng",
   homeTopRated: "top bình chọn",
@@ -31,4 +33,11 @@ export const VietNam = {
   sideBar3: "khám phá",
   sideBar4: "lịch sử",
   headerSearch: "tìm kiếm",
+  playerCurrentSession: "Phần phim đang phát",
+  playerBudget: "Chi phí sản xuất",
+  playerComments: "bình luận",
+  playerCommentsLeft: "Bạn cần",
+  playerCommentsRight: "để bình luận",
+  login: "đăng nhập",
+  logout: "đăng ký",
 };

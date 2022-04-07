@@ -34,6 +34,7 @@ function Home() {
   const [homeData, setHomeData] = useState([]);
   const [page, setPage] = useState(0);
   const [hasMore, setHasMore] = useState(true);
+  const [mounted, setMounted] = useState(false);
 
   const chooseTrending = (type) => {};
 
@@ -84,29 +85,50 @@ function Home() {
       arrData.push({
         ...res,
         title: language.homeNowPlaying,
+        hint: "homeNowPlaying",
       });
     });
     await getupcoming("", 1).then((res) => {
       arrData.push({
         ...res,
         title: language.homeUpComing,
+        hint: "homeUpComing",
       });
     });
     await getTvAiringToday("", 1).then((res) => {
       arrData.push({
         ...res,
         title: language.homeTvShows,
+        hint: "homeTvShows",
       });
     });
     await getTvOnTheAir("", 1).then((res) => {
       arrData.push({
         ...res,
         title: language.homeCurrentlyTv,
+        hint: "homeCurrentlyTv",
       });
     });
     setHomeData(arrData);
     dispatch(actions.setBgHeader(true));
+    setMounted(true);
   }, []);
+
+  useEffect(() => {
+    if (mounted) {
+      setPopularData({
+        ...popularData,
+        title: language.homePopular,
+      });
+      setTopRatedData({
+        ...topRatedData,
+        title: language.homeTopRated,
+      });
+      homeData.forEach((item) => {
+        item.title = language[item.hint];
+      });
+    }
+  }, [language]);
 
   return (
     <div className="h-screen w-full pt-16 overflow-auto scroll-list">

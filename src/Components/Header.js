@@ -10,6 +10,8 @@ import { BsFillMoonStarsFill, BsSunFill } from "react-icons/bs";
 import { useDispatch, useSelector } from "react-redux";
 import { actions } from "../Store";
 import Setting from "./Setting";
+import { useEffect, useRef, useState } from "react";
+import Search from "./Search";
 
 function Header() {
   const dispatch = useDispatch();
@@ -17,6 +19,9 @@ function Header() {
   const showNavMobile = useSelector((state) => state.root.showNavMobile);
   const bgHeader = useSelector((state) => state.root.bgHeader);
   const language = useSelector((state) => state.root.language);
+  const [showSetting, setShowSetting] = useState(false);
+
+  const settingWrapRef = useRef(null);
 
   const handleChangeTheme = () => {
     if (theme === "") {
@@ -25,6 +30,19 @@ function Header() {
       dispatch(actions.setTheme(""));
     }
   };
+
+  const event = (e) => {
+    if (!settingWrapRef.current.contains(e.target)) {
+      setShowSetting(false);
+    }
+  };
+
+  useEffect(() => {
+    window.addEventListener("click", event);
+    return () => {
+      window.removeEventListener("click", event);
+    };
+  }, []);
 
   return (
     <div
@@ -67,25 +85,8 @@ function Header() {
             </Button>
           </button>
         </div>
-        <div
-          className={`bg-gray-200 dark:bg-gray-600 ${
-            !bgHeader && `bg-gray-200/[0.3] dark:bg-gray-200/[0.3]`
-          } px-2 ml-4 rounded-3xl hidden md:flex w-1/2  items-center`}
-        >
-          <button className={`${!bgHeader && `text-white`}`}>
-            <Button size={"text-2xl"}>
-              <AiOutlineSearch />
-            </Button>
-          </button>
-          <input
-            type="text"
-            className={`px-2 flex-1  outline-none capitalize  ${
-              !bgHeader
-                ? `bg-transparent dark:bg-transparent text-white dark:text-white`
-                : `bg-gray-200 dark:bg-gray-600 dark:text-gray-200`
-            }`}
-            placeholder={language.headerSearch}
-          />
+        <div className={"hidden md:block w-1/2"}>
+          <Search />
         </div>
       </div>
       <div
@@ -103,14 +104,22 @@ function Header() {
             {theme === "" ? <BsFillMoonStarsFill /> : <BsSunFill />}
           </Button>
         </button>
-        <button className="ml-2 relative group before:absolute  before:block before:contents[*] before:w-[100%] before:h-[10px] before:top-full">
-          <Button size={"text-2xl"} bg={true} header={bgHeader}>
-            <AiFillSetting />
-          </Button>
-          <div className="absolute group-hover:block hidden min-w-[200px] top-[calc(100%_+_10px)] right-[50%]">
-            <Setting />
-          </div>
-        </button>
+        <div
+          ref={settingWrapRef}
+          className="ml-2 relative before:absolute  before:block before:contents[*] before:w-[100%] before:h-[10px] before:top-full"
+        >
+          <button onClick={() => setShowSetting(!showSetting)}>
+            <Button size={"text-2xl"} bg={true} header={bgHeader}>
+              <AiFillSetting />
+            </Button>
+          </button>
+          {showSetting && (
+            <div className="absolute min-w-[200px] top-[calc(100%_+_2px)] right-[50%]">
+              <Setting />
+            </div>
+          )}
+        </div>
+
         <button
           className="ml-2 md:hidden"
           onClick={() => dispatch(actions.setShowNavMobile(!showNavMobile))}

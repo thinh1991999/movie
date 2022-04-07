@@ -1,4 +1,5 @@
 import { createPopper } from "@popperjs/core";
+import { English, VietNam } from "../Lanuages";
 
 export const showPopper = (reference, popper) => {
   createPopper(reference, popper, {
@@ -36,3 +37,16 @@ export const getTimeMovie = (duration) => {
   }
   return `${hour}h ${minute}m`;
 };
+
+export const getLanguage = (type) => {
+  if (type === "US") {
+    return English;
+  } else {
+    return VietNam;
+  }
+};
+
+export const formatter = new Intl.NumberFormat("en-US", {
+  style: "currency",
+  currency: "USD",
+});
