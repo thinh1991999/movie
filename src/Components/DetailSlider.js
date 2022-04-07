@@ -1,7 +1,7 @@
 import { SwiperSlide, Swiper } from "swiper/react";
 import { Navigation } from "swiper";
-import Card from "../Card";
-import Loading from "../Loading";
+import Card from "./Card";
+import Loading from "./Loading";
 
 function DetailSlider({ data, title, full, typeNavigate }) {
   if (!data) {

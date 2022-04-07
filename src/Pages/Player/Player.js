@@ -1,49 +1,58 @@
 import { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { actions } from "../../Store";
-import { axios, getImageUrl } from "../../Shared";
-import { getDetail, getTvSession } from "../../Services";
+import { axios, formatter, getImageUrl, getTimeMovie } from "../../Shared";
+import { getDetail, getSmilar, getTvSession } from "../../Services";
 import { AiFillStar, AiFillTags } from "react-icons/ai";
 import { Link, useNavigate } from "react-router-dom";
-import { Loading, SquareButton } from "../../Components";
+import {
+  Comments,
+  DetailSlider,
+  Loading,
+  SquareButton,
+} from "../../Components";
 
 function Player() {
   const navigate = useNavigate();
+  const language = useSelector((state) => state.root.language);
+  const dispatch = useDispatch();
 
   const { id, type, session, episode } = useParams();
 
   const [mount, setMount] = useState(false);
   const [detailData, setDetailData] = useState(null);
   const [sessionsData, setSessionsData] = useState([]);
+  const [similarData, setSimilarData] = useState(null);
   const [episodeCurrent, setEpisodeCurrent] = useState(null);
   const [mediaUrl, setMediaUrl] = useState(null);
   const [episodeData, setEpisodeData] = useState([]);
-  const dispatch = useDispatch();
-  console.log(mediaUrl);
+
   const handleChangeEpisode = (episode_number) => {
     navigate(`/player/${id}/${type}/${session}/${episode_number}`);
   };
 
   useEffect(() => {
     setDetailData(null);
-    // setMediaUrl(null);
     getDetail(id, type).then((res) => {
       setDetailData(res);
       setSessionsData(res?.seasons);
+    });
+    getSmilar(id, type, 1).then((res) => {
+      setSimilarData(res);
     });
     if (type === "movie") {
       setMediaUrl(`https://www.2embed.ru/embed/tmdb/movie?id=${id}`);
     }
   }, [id, type]);
-  console.log(type);
+
   useEffect(() => {
     if (session && episode)
       getTvSession(id, session).then((res) => {
-        setEpisodeData(res?.episodes);
+        setEpisodeData(res);
       });
   }, [session, id]);
-
+  console.log(episodeData);
   useEffect(() => {
     let timeOutSetMedia;
     if (type === "tv") {
@@ -71,20 +80,28 @@ function Player() {
       </div>
     );
   }
-  console.log(mediaUrl);
   const {
     name,
     title,
     vote_average: score,
     first_air_date: time,
+    release_date,
     genres,
     overview,
     backdrop_path: bgShow,
+    runtime,
+    budget,
   } = detailData;
-  console.log(mediaUrl);
+  const {
+    season_number,
+    overview: sessionOverview,
+    name: sessionName,
+    air_date,
+  } = episodeData;
+
   return (
     <div className="h-screen pt-16 pb-20 px-5 w-full overflow-y-scroll scroll-list">
-      <div className="flex  ">
+      <div className="">
         <div className="w-full ">
           <div className="mb-5 h-[500px] bg-gray-400/[0.2] dark:bg-gray-900">
             {mediaUrl ? (
@@ -102,11 +119,11 @@ function Player() {
               <Loading />
             )}
           </div>
-          {episodeData.length > 0 && (
+          {episodeData?.episodes?.length > 0 && (
             <div className="mb-4">
               <h4 className="text-gray-800 dark:text-white mb-2">Episodes</h4>
               <div className="">
-                {episodeData.map((item, index) => {
+                {episodeData?.episodes.map((item, index) => {
                   const { episode_number } = item;
                   return (
                     <button
@@ -127,12 +144,15 @@ function Player() {
           )}
           <h3 className="text-3xl text-gray-800 dark:text-white">
             {name || title}
+            {sessionName && <span className="ml-2">{`(${sessionName})`}</span>}
           </h3>
           <div className="flex text-xl items-center mt-2 text-gray-800 dark:text-white">
             <AiFillStar className="text-yellow-300" />
             <span className="ml-1 text-base">{score}</span>
             <img src="/calendar.png" alt="" className="lg:h-5 ml-4" />
-            <span className="ml-1 text-base">{time}</span>
+            <span className="ml-1 text-base">
+              {air_date || time || release_date}
+            </span>
           </div>
           <div className="mt-5 flex items-center">
             <AiFillTags className="mr-2 text-xl text-yellow-400" />
@@ -145,9 +165,50 @@ function Player() {
               );
             })}
           </div>
+          {runtime && (
+            <p className="mt-2 text-gray-800 dark:text-white text-base">
+              <span className="capitalize font-semibold">
+                {language.detailDuration}:
+              </span>{" "}
+              {getTimeMovie(runtime)}
+            </p>
+          )}
+          {budget > 0 ? (
+            <p className="mt-2 text-gray-800 dark:text-white text-base">
+              <span className="capitalize font-semibold">
+                {language.playerBudget}:
+              </span>{" "}
+              {formatter.format(budget)}
+            </p>
+          ) : (
+            ""
+          )}
+          {season_number && (
+            <p className="mt-2 text-gray-800 dark:text-white text-base">
+              <span className="capitalize font-semibold">
+                {language.playerCurrentSession}:
+              </span>{" "}
+              {season_number}
+            </p>
+          )}
           <p className="mt-2 text-gray-800 dark:text-white text-base">
-            {overview}
+            <span className="capitalize font-semibold">
+              {language.detailOverview}:
+            </span>{" "}
+            {sessionOverview || overview}
           </p>
+        </div>
+        <Comments />
+        <div className="">
+          {similarData && similarData?.results.length > 0 && (
+            <div className="mt-10">
+              <DetailSlider
+                data={similarData}
+                title={language.detailSimilar}
+                typeNavigate={type}
+              />
+            </div>
+          )}
         </div>
       </div>
     </div>

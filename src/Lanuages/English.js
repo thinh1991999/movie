@@ -1,6 +1,8 @@
 export const English = {
   hint: "US",
   headerLanguage: "Language",
+  headerLoading: "Loading",
+  headerNoResult: "No results were found",
   homeTitle: "Menu",
   homeTrending: "Trending",
   homeTopRated: "top rated",
@@ -31,4 +33,11 @@ export const English = {
   sideBar3: "explore",
   sideBar4: "history",
   headerSearch: "search",
+  playerCurrentSession: "Current session",
+  playerBudget: "budget",
+  playerComments: "comments",
+  playerCommentsLeft: "You need",
+  playerCommentsRight: "to comment",
+  login: "login",
+  logout: "logout",
 };
