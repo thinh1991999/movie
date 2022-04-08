@@ -25,7 +25,13 @@ function Search() {
   const closeBtnRef = useRef(null);
 
   const handleForwardLink = (id, type) => {
-    navigate(`detail/${id}/${type}`);
+    if (type === "person") {
+      navigate(`people/${id}`);
+    } else if (type === "tv" || type === "movie") {
+      navigate(`detail/${id}/${type}`);
+    } else {
+      navigate(`/`);
+    }
   };
 
   const handleClear = () => {

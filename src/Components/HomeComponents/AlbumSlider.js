@@ -84,7 +84,7 @@ function AlbumSlider({ data, full, option }) {
           modules={[Navigation]}
           navigation={true}
         >
-          {results.map((item) => {
+          {results?.map((item) => {
             const { id } = item;
             return (
               <SwiperSlide key={id}>
