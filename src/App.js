@@ -1,5 +1,5 @@
 import { Routes, Route } from "react-router-dom";
-import { Detail, Explored, Home, Player } from "./Pages";
+import { Detail, Explored, Home, People, Player } from "./Pages";
 import { Header, SideBar } from "./Components";
 import { useSelector, useDispatch } from "react-redux";
 import { actions } from "./Store";
@@ -27,6 +27,7 @@ function App() {
             path="/player/:id/:type/:session/:episode"
             element={<Player />}
           ></Route>
+          <Route path="/people/:id" element={<People />}></Route>
         </Routes>
       </div>
       {showNavMobile && (

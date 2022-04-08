@@ -4,9 +4,15 @@ import Loading from "../Loading";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { getImageUrl } from "../../Shared";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 function CreditsSlider({ data }) {
   const language = useSelector((state) => state.root.language);
+  const navigate = useNavigate();
+
+  const handleToPeoplePage = (id) => {
+    navigate(`/people/${id}`);
+  };
 
   return (
     <div className=" w-full">
@@ -36,12 +42,15 @@ function CreditsSlider({ data }) {
           modules={[Navigation]}
           navigation={true}
         >
-          {data.map((item, index) => {
+          {data.map((item) => {
             const { id, profile_path, name, character } = item;
             return (
               <SwiperSlide key={id}>
                 <div className="p-2">
-                  <div className="w-full bg-gray-200/[0.8] dark:bg-gray-900/[0.3] rounded-xl">
+                  <div
+                    onClick={() => handleToPeoplePage(id)}
+                    className="w-full group cursor-pointer bg-gray-200/[0.8] dark:bg-gray-900/[0.3] rounded-xl"
+                  >
                     <div className="relative inline-block w-full">
                       <div className="mt-[100%]"></div>
                       <div className="absolute top-0 left-0 right-0 bottom-0 flex items-center justify-center rounded-full overflow-hidden">
@@ -55,7 +64,7 @@ function CreditsSlider({ data }) {
                       </div>
                     </div>
                     <div className="w-full text-center flex flex-col items-center">
-                      <span className="text-gray-800 text-xl font-bold dark:text-white sub-title">
+                      <span className="text-gray-800 text-xl font-bold dark:text-white sub-title group-hover:text-blue-600 transition-all duration-300 ease-linear">
                         {name}
                       </span>
                       <span className="text-gray-800 text-sm dark:text-white sub-title">
