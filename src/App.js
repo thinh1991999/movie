@@ -3,6 +3,8 @@ import { Detail, Explored, Home, People, Player } from "./Pages";
 import { Header, SideBar } from "./Components";
 import { useSelector, useDispatch } from "react-redux";
 import { actions } from "./Store";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function App() {
   const theme = useSelector((state) => state.root.theme);
@@ -11,11 +13,11 @@ function App() {
 
   return (
     <div
-      className={` flex justify-end  flex-auto flex-shrink-0 antialiased bg-gray-50 text-gray-800 ${theme}`}
+      className={` flex justify-end  flex-auto flex-shrink-0 antialiased bg-gray-50 dark:bg-gray-800 text-gray-800 ${theme}`}
     >
       <SideBar />
       <Header />
-      <div className="lg:w-5/6 w-full md:w-[calc(100%_-_100%/16)] dark:bg-gray-800">
+      <div className="lg:w-5/6 w-full md:w-[calc(100%_-_100%/16)] bg-gray-50 dark:bg-gray-800">
         <Routes>
           <Route index element={<Home />}></Route>
           <Route path="/" element={<Home />}></Route>
@@ -36,6 +38,7 @@ function App() {
           onClick={() => dispatch(actions.setShowNavMobile(false))}
         ></div>
       )}
+      <ToastContainer />
     </div>
   );
 }

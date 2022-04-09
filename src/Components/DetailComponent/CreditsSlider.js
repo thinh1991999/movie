@@ -42,10 +42,10 @@ function CreditsSlider({ data }) {
           modules={[Navigation]}
           navigation={true}
         >
-          {data.map((item) => {
+          {data.map((item, index) => {
             const { id, profile_path, name, character } = item;
             return (
-              <SwiperSlide key={id}>
+              <SwiperSlide key={`${id}${index}`}>
                 <div className="p-2">
                   <div
                     onClick={() => handleToPeoplePage(id)}
