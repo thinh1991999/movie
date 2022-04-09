@@ -1,7 +1,11 @@
 import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 
 function ActingAndProduction({ data }) {
   const { cast, crew } = data;
+  const language = useSelector((state) => state.root.language);
+
   const [castData, setCastData] = useState([]);
   const [crewData, setCrewData] = useState([]);
 
@@ -39,11 +43,14 @@ function ActingAndProduction({ data }) {
     setCastData(getNewArr(cast));
     setCrewData(getNewArr(crew));
   }, []);
+  console.log(castData);
 
   return (
     <div className="w-full mt-20 text-gray-800 dark:text-white">
       <div className="">
-        <h5 className="capitalize font-semibold text-xl mb-2">Acting</h5>
+        <h5 className="capitalize font-semibold text-xl mb-2">
+          {language.peopleActing}
+        </h5>
         <div className="border-l-[1px] border-r-[1px] border-t-[1px]">
           {castData.map((item, index) => {
             const { year, items } = item;
@@ -54,16 +61,19 @@ function ActingAndProduction({ data }) {
                 className="px-4 py-5 bg-slate-100 card-shadow dark:bg-slate-900  border-b-[1px]"
               >
                 {items.map((castItem, index) => {
-                  const { title, character, name, id } = castItem;
+                  const { title, character, name, id, media_type } = castItem;
                   return (
                     <li className="flex mb-3" key={`${id}${index}`}>
                       <span className="block w-[50px] text-center">
                         {year || "—"}
                       </span>
                       <p className="ml-5 flex-1 ">
-                        <span className="text-md font-semibold cursor-pointer hover:text-blue-600 transition-all duration-300 ease-linear">
+                        <Link
+                          to={`/detail/${id}/${media_type}`}
+                          className="text-md font-semibold cursor-pointer hover:text-blue-600 transition-all duration-300 ease-linear"
+                        >
                           {title || name}{" "}
-                        </span>
+                        </Link>
                         {character && (
                           <span className="text-sm text-gray-400">
                             as {character}
@@ -80,7 +90,9 @@ function ActingAndProduction({ data }) {
       </div>
       {crewData.length > 0 && (
         <div className="mt-10">
-          <h5 className="capitalize font-semibold text-xl mb-2">Production</h5>
+          <h5 className="capitalize font-semibold text-xl mb-2">
+            {language.peopleProduction}
+          </h5>
           <div className="border-l-[1px] border-r-[1px] border-t-[1px]">
             {crewData.map((item, index) => {
               const { year, items } = item;

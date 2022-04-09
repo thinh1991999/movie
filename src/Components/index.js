@@ -21,5 +21,6 @@ export { default as TrailerModal } from "./DetailComponent/TrailerModal";
 export { default as Comments } from "./PlayerComponent/Comments";
 
 export { default as ActingAndProduction } from "./PeopleComponents/ActingAndProduction";
+export { default as PeopleSocial } from "./PeopleComponents/PeopleSocial";
 
 export { default as CircleLoading } from "./CircleLoading/CircleLoading";

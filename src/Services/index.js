@@ -12,4 +12,4 @@ export {
 export { getDetail, getSmilar, getVideos, getCredits } from "./detail";
 export { getTvSession } from "./player";
 export { getMutilSearch } from "./global";
-export { getPeopleDetail, getPeopleCredits } from "./people";
+export { getPeopleDetail, getPeopleCredits, getPeopleExternal } from "./people";

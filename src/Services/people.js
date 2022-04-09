@@ -23,3 +23,15 @@ export const getPeopleCredits = async (id) => {
     });
   return data;
 };
+
+export const getPeopleExternal = async (id) => {
+  const data = await axios
+    .get(`/person/${id}/external_ids`)
+    .then((res) => {
+      return res.data;
+    })
+    .catch(() => {
+      return null;
+    });
+  return data;
+};
