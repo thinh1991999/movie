@@ -54,4 +54,8 @@ export const English = {
   peopleAsKnown: "Also Known As",
   peopleReadMore: "Read More",
   peopleReadLess: "Read Less",
+  searchResults: "Search Results",
+  searchKeyWord: "Key Word",
+  person: "person",
+  nothingToSee: "Nothing to see",
 };

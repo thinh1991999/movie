@@ -4,6 +4,7 @@ import Loading from "../Loading";
 import { AiFillStar } from "react-icons/ai";
 import Options from "./Options";
 import { useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 
 function Trending({ data }) {
   const language = useSelector((state) => state.root.language);
@@ -41,11 +42,19 @@ function Trending({ data }) {
       </div>
       <div className="flex-1 overflow-hidden hover:overflow-y-auto scroll-list">
         <div className="flex flex-col ">
-          {results.map((item, index) => {
-            const { id, title, backdrop_path, name, vote_average, popularity } =
-              item;
+          {results.map((item) => {
+            const {
+              id,
+              title,
+              backdrop_path,
+              name,
+              vote_average,
+              popularity,
+              media_type,
+            } = item;
             return (
-              <a
+              <Link
+                to={`/detail/${id}/${media_type}`}
                 className="flex group mb-2 hover:opacity-50 cursor-pointer transition-all duration-300 ease-linear"
                 key={id}
               >
@@ -72,7 +81,7 @@ function Trending({ data }) {
                     <span>{popularity}</span>
                   </div>
                 </div>
-              </a>
+              </Link>
             );
           })}
         </div>
