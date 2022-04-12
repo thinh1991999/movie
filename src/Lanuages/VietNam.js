@@ -54,4 +54,8 @@ export const VietNam = {
   peopleAsKnown: "Còn được biết là",
   peopleReadMore: "Đọc thêm",
   peopleReadLess: "đọc ít hơn",
+  searchResults: "kết quả tìm kiếm",
+  searchKeyWord: "từ khóa",
+  person: "nhân vật",
+  nothingToSee: "không có gì để xem",
 };

@@ -264,7 +264,7 @@ function Explored() {
             </div>
             {!hasMore && dataFound.length === 0 ? (
               <h2 className="text-gray-800 dark:text-white text-center pt-5 text-2xl w-full block">
-                Nothing to see
+                {language.nothingToSee}
               </h2>
             ) : (
               ""

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { actions } from "../../Store";
@@ -20,16 +20,21 @@ function Player() {
 
   const { id, type, session, episode } = useParams();
 
-  const [mount, setMount] = useState(false);
+  const iframeRef = useRef(null);
   const [detailData, setDetailData] = useState(null);
   const [sessionsData, setSessionsData] = useState([]);
   const [similarData, setSimilarData] = useState(null);
   const [episodeCurrent, setEpisodeCurrent] = useState(null);
   const [mediaUrl, setMediaUrl] = useState(null);
   const [episodeData, setEpisodeData] = useState([]);
+  const [playing, setPlaying] = useState(false);
 
   const handleChangeEpisode = (episode_number) => {
     navigate(`/player/${id}/${type}/${session}/${episode_number}`);
+  };
+
+  const handleLoad = () => {
+    console.log("123");
   };
 
   useEffect(() => {
@@ -52,7 +57,7 @@ function Player() {
         setEpisodeData(res);
       });
   }, [session, id]);
-  console.log(episodeData);
+
   useEffect(() => {
     let timeOutSetMedia;
     if (type === "tv") {
@@ -72,6 +77,13 @@ function Player() {
   useEffect(() => {
     dispatch(actions.setBgHeader(true));
   }, []);
+
+  useEffect(() => {
+    // if (playing) {
+    //   console.log(iframeRef.current?.getCurrentTime());
+    // }
+    console.log(iframeRef.current);
+  }, [playing]);
 
   if (!detailData) {
     return (
@@ -104,8 +116,9 @@ function Player() {
       <div className="">
         <div className="w-full ">
           <div className="mb-5 h-[500px] bg-gray-400/[0.2] dark:bg-gray-900">
-            {mediaUrl ? (
+            {/* {mediaUrl ? (
               <iframe
+                ref={iframeRef}
                 width="100%"
                 height="100%"
                 src={mediaUrl}
@@ -117,7 +130,18 @@ function Player() {
               ></iframe>
             ) : (
               <Loading />
-            )}
+            )} */}
+            <iframe
+              ref={iframeRef}
+              onProgress={() => console.log("123")}
+              width="560"
+              height="315"
+              src="https://www.youtube.com/embed/m7MyIy0MxWA"
+              title="YouTube video player"
+              frameborder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowfullscreen
+            ></iframe>
           </div>
           {episodeData?.episodes?.length > 0 && (
             <div className="mb-4">
@@ -129,7 +153,7 @@ function Player() {
                     <button
                       className={`${
                         episodeCurrent * 1 === episode_number
-                          ? "bg-blue-600"
+                          ? "bg-gradient-to-r from-cyan-400 to-blue-400 dark:from-cyan-700 dark:to-blue-700"
                           : `dark:bg-gray-100/[0.2] bg-gray-500/[0.3]`
                       }  mr-5 rounded-md mt-2 w-12 h-10 text-gray-800 dark:text-white `}
                       onClick={() => handleChangeEpisode(episode_number)}

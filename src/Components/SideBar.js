@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { FaHome } from "react-icons/fa";
+import { FaHome, FaSignInAlt } from "react-icons/fa";
 import {
   MdVideoCameraBack,
   MdTravelExplore,
@@ -123,6 +123,28 @@ function SideBar() {
               </li>
             );
           })}
+        </ul>
+        <ul className="flex flex-col py-4 space-y-1">
+          <li className="px-5 pb-5 lg:block md:hidden">
+            <div className="flex flex-row items-center h-8">
+              <div className="capitalize text-xl font-light tracking-wide text-gray-800 dark:text-white font-bold">
+                personal
+              </div>
+            </div>
+          </li>
+          <li>
+            <Link
+              to={`/login`}
+              className="cursor-pointer text-gray-600 dark:text-gray-400 relative flex lg:justify-start md:justify-center flex-row items-center h-11 focus:outline-none transition-all capitalize duration-500 ease-linear font-medium hover:bg-gray-200 hover:dark:bg-gray-300/[0.3]  hover:text-gray-900 hover:dark:text-white border-l-4 border-transparent hover:border-indigo-500  md:pr-0 pr-6"
+            >
+              <span className="inline-flex text-2xl justify-center items-center lg:ml-4 md:ml-0 ml-4">
+                <FaSignInAlt />
+              </span>
+              <span className="ml-2 lg:block md:hidden text-base tracking-wide truncate">
+                Sign in
+              </span>
+            </Link>
+          </li>
         </ul>
       </div>
       {/* <Manager>

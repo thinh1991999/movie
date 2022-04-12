@@ -23,4 +23,7 @@ export { default as Comments } from "./PlayerComponent/Comments";
 export { default as ActingAndProduction } from "./PeopleComponents/ActingAndProduction";
 export { default as PeopleSocial } from "./PeopleComponents/PeopleSocial";
 
+export { default as SignIn } from "./LoginComponent/SignIn";
+export { default as SignUp } from "./LoginComponent/SignUp";
+
 export { default as CircleLoading } from "./CircleLoading/CircleLoading";

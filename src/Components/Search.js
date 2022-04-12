@@ -42,6 +42,13 @@ function Search() {
     }, 110);
   };
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    navigate(`/search/${searchValue}`);
+    // setSearchFocus(false);
+    inputRef.current.blur();
+  };
+
   useEffect(() => {
     setLoading(true);
     const getSearchData = setTimeout(() => {
@@ -78,43 +85,48 @@ function Search() {
         searchFocus
           ? " from-violet-400 to-fuchsia-400 bg-gradient-to-r dark:from-violet-800 dark:to-fuchsia-800"
           : ""
-      }  flex items-center relative ${
+      }  relative  ${
         searchFocus && searchValue ? `rounded-t-3xl` : `rounded-3xl`
       }`}
     >
-      <button className={`${!bgHeader && `text-white`}`}>
-        <Button size={"text-2xl"}>
-          <AiOutlineSearch />
-        </Button>
-      </button>
-      <input
-        onFocus={() => setSearchFocus(true)}
-        ref={inputRef}
-        type="text"
-        className={`px-2 flex-1  outline-none capitalize  ${
-          !bgHeader
-            ? `bg-transparent dark:bg-transparent text-white dark:text-white`
-            : `bg-gray-200 dark:bg-gray-600 dark:text-gray-200`
-        }
+      <form onSubmit={handleSubmit} className="w-full flex items-center ">
+        <button type="submit" className={`${!bgHeader && `text-white`}`}>
+          <Button size={"text-2xl"}>
+            <AiOutlineSearch />
+          </Button>
+        </button>
+        <input
+          onFocus={() => setSearchFocus(true)}
+          ref={inputRef}
+          type="text"
+          name="value"
+          autoComplete="off"
+          className={`px-2 flex-1  outline-none placeholder:capitalize  ${
+            !bgHeader
+              ? `bg-transparent dark:bg-transparent text-white dark:text-white`
+              : `bg-gray-200 dark:bg-gray-600 dark:text-gray-200`
+          }
+          
         ${
           searchFocus
             ? "from-violet-400 placeholder:text-gray-800 dark:placeholder:text-gray-300 to-fuchsia-400 bg-gradient-to-r dark:from-violet-800 dark:to-fuchsia-800"
             : ""
         }
         `}
-        placeholder={language.headerSearch}
-        value={searchValue}
-        onChange={(e) => setSearchValue(e.target.value)}
-      />
-      {searchValue.length > 0 ? (
-        <button onClick={handleClear} ref={closeBtnRef}>
-          <Button size={"text-md"}>
-            <AiOutlineClose />
-          </Button>
-        </button>
-      ) : (
-        ""
-      )}
+          placeholder={language.headerSearch}
+          value={searchValue}
+          onChange={(e) => setSearchValue(e.target.value)}
+        />
+        {searchValue.length > 0 ? (
+          <button type="button" onClick={handleClear} ref={closeBtnRef}>
+            <Button size={"text-md"}>
+              <AiOutlineClose />
+            </Button>
+          </button>
+        ) : (
+          ""
+        )}
+      </form>
       {searchFocus && searchValue && (
         <div className="absolute w-full rounded-b-[20px] max-h-[300px] overflow-y-auto scroll-list from-violet-400 to-fuchsia-400 bg-gradient-to-r dark:from-violet-800 dark:to-fuchsia-800 top-full left-0">
           <div className="max-h-[300px] overflow-y-auto scroll-list">
