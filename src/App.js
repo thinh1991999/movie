@@ -5,11 +5,25 @@ import { useSelector, useDispatch } from "react-redux";
 import { actions } from "./Store";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { onAuthStateChanged } from "firebase/auth";
+import { useEffect } from "react";
+import { auth } from "./Shared";
 
 function App() {
   const theme = useSelector((state) => state.root.theme);
   const showNavMobile = useSelector((state) => state.root.showNavMobile);
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        const uid = user.uid;
+        console.log(true);
+      } else {
+        console.log(false);
+      }
+    });
+  }, []);
 
   return (
     <div className="w-full">

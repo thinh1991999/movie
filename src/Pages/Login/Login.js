@@ -1,8 +1,17 @@
 import { SignIn, SignUp, SquareButton } from "../../Components";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 function Login() {
+  const navigate = useNavigate();
+  const user = useSelector((state) => state.user.user);
+
   const [state, setState] = useState("SIGNIN");
+
+  useEffect(() => {
+    user && navigate("/");
+  }, []);
 
   return (
     <div className="h-screen w-full relative z-50">
