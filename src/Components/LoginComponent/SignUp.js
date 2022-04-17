@@ -1,5 +1,7 @@
 import { useState } from "react";
 import Validator from "../../Shared/validator";
+import { auth } from "../../Shared";
+import { createUserWithEmailAndPassword, signOut } from "firebase/auth";
 
 function SignUp() {
   const [signUpValue, setSignUpValue] = useState({
@@ -7,7 +9,7 @@ function SignUp() {
     password: "",
     cfPassWord: "",
   });
-  const rules = [
+  const [rules, setRules] = useState([
     {
       field: "email",
       method: "isEmpty",
@@ -21,19 +23,14 @@ function SignUp() {
       message: "This field is email.",
     },
     {
-      field: "email",
-      method: "isMobilePhone",
-      validWhen: true,
-      message: "This field is email or phone.",
-    },
-    {
       field: "password",
       method: "isEmpty",
       validWhen: false,
       message: "The password field is required.",
     },
-  ];
+  ]);
   const [errors, setErrors] = useState({});
+  const [messSuccess, setMessSuccess] = useState("");
   const [validator, setValidator] = useState(new Validator(rules));
 
   const requiredWith = (value, field, state) =>
@@ -42,15 +39,61 @@ function SignUp() {
   const handleSubmit = (e) => {
     e.preventDefault();
     setErrors(validator.validate(signUpValue));
+    if (validator.isValid && handleBlurCfPassword()) {
+      createUserWithEmailAndPassword(
+        auth,
+        signUpValue.email,
+        signUpValue.password
+      )
+        .then(() => {
+          setMessSuccess("Sign Up success!");
+          setSignUpValue({
+            email: "",
+            password: "",
+            cfPassWord: "",
+          });
+          signOut(auth)
+            .then(() => {
+              // Sign-out successful.
+            })
+            .catch((error) => {});
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          if (errorCode === "auth/email-already-in-use") {
+            setErrors({
+              ...errors,
+              email: "This email has been used!",
+            });
+          } else if (errorCode === "auth/weak-password") {
+            setErrors({
+              ...errors,
+              password: "This password is weak!",
+            });
+          }
+        });
+    }
   };
 
-  const checkEmpty = () => {};
+  const handleBlurCfPassword = () => {
+    if (signUpValue.cfPassWord !== signUpValue.password) {
+      setErrors({
+        ...errors,
+        cfPassWord: "Comfirm password isn't corrected!",
+      });
+      return false;
+    } else {
+      return true;
+    }
+  };
 
   const handleFocus = (e) => {
     setErrors({
       ...errors,
       [e.target.name]: "",
     });
+    setMessSuccess("");
   };
 
   const handleChange = (e) => {
@@ -107,15 +150,20 @@ function SignUp() {
         <input
           type="password"
           placeholder="Comfirm Password"
-          name="cfPassword"
+          name="cfPassWord"
           onFocus={handleFocus}
           autoComplete={`off`}
           onChange={handleChange}
           value={signUpValue.cfPassWord}
+          onBlur={handleBlurCfPassword}
           className={`my-2 bg-gray-700 px-3 py-2 border-2  outline-none rounded-md ${
-            errors.password ? `border-red-600` : `border-gray-400`
+            errors.cfPassWord ? `border-red-600` : `border-gray-400`
           }`}
         />
+        {errors.cfPassWord && (
+          <p className="text-red-600">{errors.cfPassWord}</p>
+        )}
+        {messSuccess && <p className="text-blue-600">{messSuccess}</p>}
         <button className="capitalize mt-5 hover:opacity-70 transition-all duration-300 ease-linear bg-red-600 py-2 rounded-md">
           sign up
         </button>

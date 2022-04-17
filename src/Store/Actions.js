@@ -89,3 +89,18 @@ export const setResetExplore = (payload) => {
     payload,
   };
 };
+
+// User reducer
+export const setUser = (payload) => {
+  return {
+    type: "SET_USER",
+    payload,
+  };
+};
+
+export const setPathNameLogin = (payload) => {
+  return {
+    type: "SET_PATH_NAME_LOGIN",
+    payload,
+  };
+};

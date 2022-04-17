@@ -1,8 +1,8 @@
-import { getLanguage } from "../../Shared";
+import { getLanguage, localStorageServ } from "../../Shared";
 
 const initState = {
-  language: getLanguage(localStorage.getItem("language")),
-  theme: localStorage.getItem("theme") || "",
+  language: getLanguage(localStorageServ.languageTheme.get()),
+  theme: localStorageServ.modeTheme.get(),
   showNavMobile: false,
   bgHeader: false,
   showModal: false,
@@ -11,14 +11,14 @@ const initState = {
 export const RootReducer = (state = initState, { type, payload }) => {
   switch (type) {
     case "SET_THEME": {
-      localStorage.setItem("theme", payload);
+      localStorageServ.modeTheme.set(payload);
       return {
         ...state,
         theme: payload,
       };
     }
     case "SET_LANGUAGE": {
-      localStorage.setItem("language", payload);
+      localStorageServ.languageTheme.set(payload);
       return {
         ...state,
         language: getLanguage(payload),

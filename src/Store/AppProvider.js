@@ -4,6 +4,7 @@ import { RootReducer } from "./RootReducer/RootReducer";
 import { HomeReducer } from "./HomeReducer/HomeReducer";
 import { DetailReducer } from "./DetailReducer/DetailReducer";
 import { ExploreReducer } from "./ExploreReducer/ExploreReducer";
+import { UserReducer } from "./UserReducer/UserReducer";
 
 function AppProvider({ children }) {
   const store = createStore(
@@ -12,6 +13,7 @@ function AppProvider({ children }) {
       home: HomeReducer,
       detail: DetailReducer,
       explore: ExploreReducer,
+      user: UserReducer,
     }),
     window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
   );

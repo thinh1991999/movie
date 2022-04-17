@@ -131,7 +131,7 @@ function Player() {
             ) : (
               <Loading />
             )} */}
-            <iframe
+            {/* <iframe
               ref={iframeRef}
               onProgress={() => console.log("123")}
               width="560"
@@ -141,7 +141,7 @@ function Player() {
               frameborder="0"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowfullscreen
-            ></iframe>
+            ></iframe> */}
           </div>
           {episodeData?.episodes?.length > 0 && (
             <div className="mb-4">
@@ -222,7 +222,7 @@ function Player() {
             {sessionOverview || overview}
           </p>
         </div>
-        <Comments />
+        <Comments id={id} />
         <div className="">
           {similarData && similarData?.results.length > 0 && (
             <div className="mt-10">
