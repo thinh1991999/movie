@@ -1,7 +1,8 @@
 import { useState } from "react";
 import Validator from "../../Shared/validator";
-import { auth } from "../../Shared";
+import { auth, db } from "../../Shared";
 import { createUserWithEmailAndPassword, signOut } from "firebase/auth";
+import { ref, update } from "firebase/database";
 
 function SignUp() {
   const [signUpValue, setSignUpValue] = useState({
@@ -45,7 +46,15 @@ function SignUp() {
         signUpValue.email,
         signUpValue.password
       )
-        .then(() => {
+        .then((user) => {
+          const updates = {};
+          const { displayName, email, photoURL } = user.user;
+          updates["/users/" + user.user.uid] = {
+            displayName,
+            email,
+            photoURL,
+          };
+          update(ref(db), updates);
           setMessSuccess("Sign Up success!");
           setSignUpValue({
             email: "",
@@ -53,9 +62,7 @@ function SignUp() {
             cfPassWord: "",
           });
           signOut(auth)
-            .then(() => {
-              // Sign-out successful.
-            })
+            .then(() => {})
             .catch((error) => {});
         })
         .catch((error) => {

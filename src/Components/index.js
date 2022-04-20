@@ -19,6 +19,7 @@ export { default as TrailerSlider } from "./DetailComponent/TrailerSlider";
 export { default as TrailerModal } from "./DetailComponent/TrailerModal";
 
 export { default as Comments } from "./PlayerComponent/Comments";
+export { default as InforPlayer } from "./PlayerComponent/InforPlayer";
 
 export { default as ActingAndProduction } from "./PeopleComponents/ActingAndProduction";
 export { default as PeopleSocial } from "./PeopleComponents/PeopleSocial";

@@ -15,7 +15,6 @@ function Card({ data, type, typeNavigate }) {
     profile_path,
     vote_average: score,
   } = data;
-  console.log(typeNavigate);
   const handleToDetail = () => {
     if (typeNavigate === "person") {
       navigate(`/people/${id}`);
