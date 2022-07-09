@@ -25,7 +25,7 @@ function Comments({ id }) {
 
   const handleFowardToLogin = () => {
     dispatch(actions.setPathNameLogin(location.pathname));
-    navigate("/login");
+    navigate("/authen/signIn");
   };
 
   const handleSubmit = (e) => {

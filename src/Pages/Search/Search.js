@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { getDataSearch } from "../../Services";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { CircleLoading, Loading } from "../../Components";
 import Card from "../../Components/Card";
 import { useDispatch, useSelector } from "react-redux";
 import { actions } from "../../Store";
+import httpService from "../../Services/http.service";
 
 function Search() {
   const { value } = useParams();
@@ -55,17 +55,17 @@ function Search() {
       setAllData([]);
       setLoading(true);
       setPage(1);
-      getDataSearch(value, 1, navData[currentNav]?.type)
-        .then((res) => res.data)
+      httpService
+        .getDataSearch(value, 1, navData[currentNav]?.type)
+        .then((res) => {
+          return res.data;
+        })
         .then((res) => {
           res?.total_pages === 1 || res?.results.length === 0
             ? setHasMore(false)
             : setHasMore(true);
           setAllData(res?.results);
           setLoading(false);
-        })
-        .catch(() => {
-          setLoading(true);
         });
     } else {
       setHasMore(false);
@@ -76,16 +76,14 @@ function Search() {
 
   useEffect(() => {
     if (page > 1) {
-      getDataSearch(value, page, navData[currentNav]?.type)
+      httpService
+        .getDataSearch(value, page, navData[currentNav]?.type)
         .then((res) => res.data)
         .then((res) => {
           res.total_pages === 1 || res.results.length === 0
             ? setHasMore(false)
             : setHasMore(true);
           setAllData([...allData, ...res?.results]);
-        })
-        .catch(() => {
-          setHasMore(false);
         });
     }
   }, [page]);

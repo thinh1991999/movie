@@ -2,9 +2,9 @@ import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { actions } from "../../Store";
-import { getDetail, getSmilar, getTvSession } from "../../Services";
-import { Link, useNavigate } from "react-router-dom";
 import { Comments, DetailSlider, InforPlayer, Loading } from "../../Components";
+import httpService from "../../Services/http.service";
+import { getMovieUrl, getTvUrl } from "../../Shared";
 
 function Player() {
   const language = useSelector((state) => state.root.language);
@@ -21,6 +21,7 @@ function Player() {
   const [mediaUrl, setMediaUrl] = useState(null);
   const [episodeData, setEpisodeData] = useState([]);
   const [playing, setPlaying] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   const handleLoad = () => {
     console.log("123");
@@ -28,35 +29,38 @@ function Player() {
 
   useEffect(() => {
     setDetailData(null);
-    getDetail(id, type).then((res) => {
-      setDetailData(res);
-      setSessionsData(res?.seasons);
+    const call1 = httpService.getDetail(id, type).then((res) => {
+      return res.data;
     });
-    getSmilar(id, type, 1).then((res) => {
-      setSimilarData(res);
+    const call2 = httpService.getSmilar(id, type, 1).then((res) => {
+      return res.data;
+    });
+
+    Promise.all([call1, call2]).then((res) => {
+      setDetailData(res[0]);
+      // setSessionsData(res[0]?.seasons);
+      setSimilarData(res[1]);
     });
     if (type === "movie") {
-      setMediaUrl(`https://www.2embed.ru/embed/tmdb/movie?id=${id}`);
+      setMediaUrl(getMovieUrl(id));
     }
   }, [id, type]);
 
   useEffect(() => {
     if (session && episode) {
-      getTvSession(id, session).then((res) => {
-        setEpisodeData(res);
+      httpService.getTvSession(id, session).then((res) => {
+        setEpisodeData(res.data);
       });
     }
   }, [session, id]);
   useEffect(() => {
     let timeOutSetMedia;
     if (type === "tv") {
-      setMediaUrl("");
+      setMediaUrl(null);
       setEpisodeCurrent(episode);
       setSessionCurrent(session);
       timeOutSetMedia = setTimeout(() => {
-        setMediaUrl(
-          `https://www.2embed.ru/embed/tmdb/tv?id=${id}&s=${session}&e=${episode}`
-        );
+        setMediaUrl(getTvUrl(id, session, episode));
       }, 50);
     }
     return () => {

@@ -18,7 +18,6 @@ function Header() {
   const theme = useSelector((state) => state.root.theme);
   const showNavMobile = useSelector((state) => state.root.showNavMobile);
   const bgHeader = useSelector((state) => state.root.bgHeader);
-  const language = useSelector((state) => state.root.language);
   const [showSetting, setShowSetting] = useState(false);
 
   const settingWrapRef = useRef(null);

@@ -1,4 +1,3 @@
-export { default as axios } from "./axios";
 export {
   showPopper,
   resizeImage,
@@ -6,6 +5,8 @@ export {
   getTimeMovie,
   getLanguage,
   formatter,
+  getMovieUrl,
+  getTvUrl,
 } from "./ultils";
 export { IMAGE_CARD_SIZE, unKnowUserUrl } from "./Constant";
 export { app, auth, db, storage, provider } from "./firebase";

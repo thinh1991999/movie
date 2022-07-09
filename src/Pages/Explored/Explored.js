@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
+import _ from "lodash";
 import {
   SelectConfig,
   AlbumSlider,
@@ -9,10 +10,9 @@ import {
 import InfiniteScroll from "react-infinite-scroll-component";
 import Card from "../../Components/Card";
 import { useParams } from "react-router-dom";
-import { getDiscover, getGenres, getLanguages } from "../../Services";
 import { useDispatch, useSelector } from "react-redux";
 import { actions } from "../../Store";
-import _ from "lodash";
+import httpService from "../../Services/http.service";
 
 function Explored() {
   const { genre, type } = useParams();
@@ -69,7 +69,7 @@ function Explored() {
     dispatch(actions.setResetExplore(true));
   };
 
-  useEffect(async () => {
+  useEffect(() => {
     mount &&
       dispatch(
         actions.setSearchExplore({
@@ -78,7 +78,7 @@ function Explored() {
         })
       );
     setGenres(null);
-    await getGenres(navData[navIndex].type).then((res) => {
+    httpService.getGenres(navData[navIndex].type).then((res) => {
       setGenres({
         type: "with_genres",
         options: [
@@ -86,7 +86,7 @@ function Explored() {
             id: "",
             name: "all genres",
           },
-          ...res.genres,
+          ...res.data.genres,
         ],
       });
     });
@@ -97,11 +97,11 @@ function Explored() {
     const getData = setTimeout(() => {
       if (page > 1) {
         const type = navData[navIndex].type;
-        getDiscover(type, search, page).then((res) => {
-          res.total_pages === 1 || res.results.length === 0
+        httpService.getDiscover(type, search, page).then((res) => {
+          res.data.total_pages === 1 || res.data.results.length === 0
             ? setHasMore(false)
             : setHasMore(true);
-          setDataFound([...dataFound, ...res.results]);
+          setDataFound([...dataFound, ...res.data.results]);
         });
       }
     }, 500);
@@ -125,8 +125,9 @@ function Explored() {
 
   useEffect(() => {
     dispatch(actions.setBgHeader(true));
-    getLanguages().then((res) => {
-      const newArr = res.map((item) => {
+    httpService.getLanguages().then((res) => {
+      const dataRes = res.data;
+      const newArr = dataRes.map((item) => {
         const { iso_639_1, english_name } = item;
         return {
           id: iso_639_1,
@@ -159,11 +160,11 @@ function Explored() {
     setPage(1);
     const getData = setTimeout(() => {
       const type = navData[navIndex].type;
-      getDiscover(type, search, 1).then((res) => {
-        res.total_pages === 1 || res.results.length === 0
+      httpService.getDiscover(type, search, 1).then((res) => {
+        res?.data.total_pages === 1 || res?.data.results.length === 0
           ? setHasMore(false)
           : setHasMore(true);
-        setDataFound(res.results);
+        setDataFound(res?.data.results);
         setFirstLoading(false);
       });
     }, 500);

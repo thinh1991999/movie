@@ -7,10 +7,10 @@ import {
   AiOutlineTags,
   AiOutlineClose,
 } from "react-icons/ai";
-import { getMutilSearch } from "../Services";
 import { getImageUrl } from "../Shared";
 import { BsFillPlayFill } from "react-icons/bs";
 import { useNavigate } from "react-router-dom";
+import httpService from "../Services/http.service";
 
 function Search() {
   const navigate = useNavigate();
@@ -50,18 +50,21 @@ function Search() {
   };
 
   useEffect(() => {
-    setLoading(true);
-    const getSearchData = setTimeout(() => {
-      getMutilSearch(searchValue, 1).then((res) => {
-        setDataSearch(res);
-        setLoading(false);
-      });
-    }, 200);
+    let getSearchData;
+    if (searchFocus) {
+      setLoading(true);
+      getSearchData = setTimeout(() => {
+        httpService.getMutilSearch(searchValue, 1).then((res) => {
+          setDataSearch(res.data);
+          setLoading(false);
+        });
+      }, 200);
+    }
     return () => {
       clearTimeout(getSearchData);
       setLoading(true);
     };
-  }, [searchValue]);
+  }, [searchValue, searchFocus]);
 
   useEffect(() => {
     let timeout;

@@ -2,11 +2,7 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { ActingAndProduction, Loading, PeopleSocial } from "../../Components";
-import {
-  getPeopleCredits,
-  getPeopleDetail,
-  getPeopleExternal,
-} from "../../Services";
+import httpService from "../../Services/http.service";
 import { getImageUrl } from "../../Shared";
 import { actions } from "../../Store";
 
@@ -23,15 +19,20 @@ function People() {
 
   useEffect(() => {
     setLoading(true);
-    getPeopleDetail(id).then((res) => {
-      setPeopleDetail(res);
+    const call1 = httpService.getPeopleDetail(id).then((res) => {
+      return res.data;
+    });
+    const call2 = httpService.getPeopleExternal(id).then((res) => {
+      return res.data;
+    });
+    const call3 = httpService.getPeopleCredits(id).then((res) => {
+      return res.data;
+    });
+    Promise.all([call1, call2, call3]).then((res) => {
+      setPeopleDetail(res[0]);
+      setPeopleExternal(res[1]);
+      setPeopleCredits(res[2]);
       setLoading(false);
-    });
-    getPeopleExternal(id).then((res) => {
-      setPeopleExternal(res);
-    });
-    getPeopleCredits(id).then((res) => {
-      setPeopleCredits(res);
     });
   }, [id]);
 

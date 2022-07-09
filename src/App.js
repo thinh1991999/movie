@@ -1,12 +1,20 @@
+import { useEffect } from "react";
 import { Routes, Route } from "react-router-dom";
-import { Detail, Explored, Home, Login, People, Player, Search } from "./Pages";
-import { Header, SideBar } from "./Components";
-import { useSelector, useDispatch } from "react-redux";
-import { actions } from "./Store";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { onAuthStateChanged } from "firebase/auth";
-import { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import {
+  Detail,
+  Explored,
+  Home,
+  Authen,
+  People,
+  Player,
+  Search,
+} from "./Pages";
+import { Header, SideBar } from "./Components";
+import { actions } from "./Store";
 import { auth } from "./Shared";
 
 function App() {
@@ -26,9 +34,9 @@ function App() {
   }, []);
 
   return (
-    <div className="w-full">
+    <div className={`w-full ${theme}`}>
       <div
-        className={` flex justify-end  flex-auto flex-shrink-0 antialiased bg-gray-50 dark:bg-gray-800 text-gray-800 ${theme}`}
+        className={` flex justify-end  flex-auto flex-shrink-0 antialiased bg-gray-50 dark:bg-gray-800 text-gray-800 `}
       >
         <SideBar />
         <Header />
@@ -59,7 +67,8 @@ function App() {
         <ToastContainer />
       </div>
       <Routes>
-        <Route path="/login" element={<Login />}></Route>
+        <Route path="/authen" element={<Authen />}></Route>
+        <Route path="/authen/:status" element={<Authen />}></Route>
       </Routes>
     </div>
   );
