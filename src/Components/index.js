@@ -1,4 +1,5 @@
 export { default as SideBar } from "./SideBar";
+export { default as Logo } from "./Logo";
 export { default as Header } from "./Header";
 export { default as Search } from "./Search";
 export { default as Loading } from "./Loading";
@@ -24,7 +25,7 @@ export { default as InforPlayer } from "./PlayerComponent/InforPlayer";
 export { default as ActingAndProduction } from "./PeopleComponents/ActingAndProduction";
 export { default as PeopleSocial } from "./PeopleComponents/PeopleSocial";
 
-export { default as SignIn } from "./LoginComponent/SignIn";
-export { default as SignUp } from "./LoginComponent/SignUp";
+export { default as SignIn } from "./AuthenComponent/SignIn";
+export { default as SignUp } from "./AuthenComponent/SignUp";
 
 export { default as CircleLoading } from "./CircleLoading/CircleLoading";

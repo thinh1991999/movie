@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { LazyLoadImage } from "react-lazy-load-image-component";
+import { useDispatch, useSelector } from "react-redux";
 import {
   CreditsSlider,
   DetailSlider,
@@ -8,11 +10,9 @@ import {
   TrailerModal,
   TrailerSlider,
 } from "../../Components";
-import { axios, getImageUrl, resizeImage } from "../../Shared";
-import { LazyLoadImage } from "react-lazy-load-image-component";
-import { useDispatch, useSelector } from "react-redux";
+import { getImageUrl } from "../../Shared";
 import { actions } from "../../Store";
-import { getCredits, getDetail, getSmilar, getVideos } from "../../Services";
+import httpService from "../../Services/http.service";
 
 function Detail() {
   const showTrailerModal = useSelector(
@@ -26,6 +26,7 @@ function Detail() {
   const [similarData, setSimilarData] = useState(null);
   const [creditsData, setCreditsData] = useState(null);
   const [trailerData, setTrailerData] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   const handleScroll = (e) => {
     if (e.target.scrollTop > 0) {
@@ -35,22 +36,30 @@ function Detail() {
     }
   };
 
-  useEffect(async () => {
+  useEffect(() => {
+    setLoading(true);
     setDetailData(null);
     setSimilarData(null);
     setCreditsData(null);
     setTrailerData(null);
-    await getDetail(id, type).then((res) => {
-      setDetailData(res);
+    const call1 = httpService.getDetail(id, type).then((res) => {
+      return res.data;
     });
-    await getCredits(id, type).then((res) => {
-      setCreditsData(res);
+    const call2 = httpService.getCredits(id, type).then((res) => {
+      return res.data;
     });
-    await getVideos(id, type).then((res) => {
-      setTrailerData(res.results);
+    const call3 = httpService.getVideos(id, type).then((res) => {
+      return res.data;
     });
-    await getSmilar(id, type, 1).then((res) => {
-      setSimilarData(res);
+    const call4 = httpService.getSmilar(id, type, 1).then((res) => {
+      return res.data;
+    });
+    Promise.all([call1, call2, call3, call4]).then((res) => {
+      setDetailData(res[0]);
+      setCreditsData(res[1]);
+      setTrailerData(res[2].results);
+      setSimilarData(res[3]);
+      setLoading(false);
     });
   }, [id, type]);
 
@@ -58,7 +67,7 @@ function Detail() {
     dispatch(actions.setBgHeader(false));
   }, []);
 
-  if (!detailData && !similarData) {
+  if (loading) {
     return (
       <div className=" w-full h-screen pt-16 overflow-y-scroll scroll-list">
         <div className="lg:h-[500px] md:h-[450px] w-full">

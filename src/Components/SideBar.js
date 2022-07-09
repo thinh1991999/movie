@@ -5,15 +5,12 @@ import {
   MdTravelExplore,
   MdOutlineHistory,
 } from "react-icons/md";
-import { useSelector, useDispatch } from "react-redux";
-import { BsMoonStarsFill } from "react-icons/bs";
-
-import Popper from "./Popper";
-import ArrowPopper from "./ArrowPopper";
-import { auth, showPopper } from "../Shared";
-import { Link, NavLink, useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { signOut } from "firebase/auth";
+import { useSelector, useDispatch } from "react-redux";
+import { auth } from "../Shared";
 import { actions } from "../Store";
+import Logo from "./Logo";
 
 function SideBar() {
   const navigate = useNavigate();
@@ -59,7 +56,7 @@ function SideBar() {
 
   const handleLogIn = () => {
     dispatch(actions.setPathNameLogin(""));
-    navigate("/login");
+    navigate("/authen");
   };
 
   useEffect(() => {
@@ -72,7 +69,7 @@ function SideBar() {
       {
         icon: <MdVideoCameraBack />,
         title: language.sideBar2,
-        link: "/",
+        link: "/a",
       },
       {
         icon: <MdTravelExplore />,
@@ -82,7 +79,7 @@ function SideBar() {
       {
         icon: <MdOutlineHistory />,
         title: language.sideBar4,
-        link: "/",
+        link: "/c",
       },
     ]);
   }, [language]);
@@ -94,20 +91,7 @@ function SideBar() {
       } transition-all duration-300 ease-linear z-20 overflow-hidden  lg:w-1/6 md:w-[calc(100%/16)] flex flex-col top-0 left-0 bg-gray-100 dark:bg-gray-900 h-full border-r dark:border-gray-800`}
     >
       <div className="flex items-center lg:justify-start lg:pl-4 h-14 md:pl-0 md:justify-center justify-start pl-4">
-        <div className="flex items-center cursor-pointer ">
-          {theme === "dark" ? (
-            <img
-              src="/iconWhite.png"
-              alt=""
-              className="w-10 h-10 object-cover"
-            />
-          ) : (
-            <img src="/icon.png" alt="" className="w-10 h-10 object-cover" />
-          )}
-          <span className="text-gray-800 text-xl font-bold font-sans dark:text-white lg:block md:hidden">
-            ChillTime
-          </span>
-        </div>
+        <Logo />
       </div>
       <div className="overflow-y-auto overflow-x-hidden flex-grow">
         <ul className="flex flex-col py-4 space-y-1">

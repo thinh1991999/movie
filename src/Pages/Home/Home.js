@@ -1,28 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { axios } from "../../Shared";
-import {
-  AlbumSlider,
-  BannerSlider,
-  TopSearch,
-  Trending,
-} from "../../Components";
-import InfiniteScroll from "react-infinite-scroll-component";
-import {
-  getNowPlaying,
-  getPopular,
-  getTodayTrending,
-  getTopRated,
-  getWeekTrending,
-  getTvAiringToday,
-  getTvOnTheAir,
-} from "../../Services";
+import { AlbumSlider, BannerSlider, Trending } from "../../Components";
 import { useDispatch, useSelector } from "react-redux";
 import { actions } from "../../Store";
-import { getupcoming } from "../../Services/explore";
+import httpService from "../../Services/http.service";
 
 function Home() {
   const dispatch = useDispatch();
-
   const trending = useSelector((state) => state.home.trending);
   const popular = useSelector((state) => state.home.popular);
   const topRated = useSelector((state) => state.home.topRated);
@@ -32,84 +15,82 @@ function Home() {
   const [popularData, setPopularData] = useState(null);
   const [topRatedData, setTopRatedData] = useState(null);
   const [homeData, setHomeData] = useState([]);
-  const [page, setPage] = useState(0);
-  const [hasMore, setHasMore] = useState(true);
   const [mounted, setMounted] = useState(false);
-
-  const chooseTrending = (type) => {};
 
   useEffect(() => {
     setTrendingData(null);
     if (trending === "week") {
-      getWeekTrending()
-        .then((res) => {
-          setTrendingData(res);
-        })
-        .catch(() => {
-          setTrendingData(null);
-        });
+      httpService.getWeekTrending().then((res) => {
+        setTrendingData(res.data);
+      });
     } else {
-      getTodayTrending()
-        .then((res) => {
-          setTrendingData(res);
-        })
-        .catch(() => {
-          setTrendingData(null);
-        });
+      httpService.getTodayTrending().then((res) => {
+        setTrendingData(res.data);
+      });
     }
   }, [trending]);
 
   useEffect(() => {
     setPopularData(null);
-    getPopular(popular, 1).then((res) => {
+    httpService.getPopular(popular, 1).then((res) => {
       setPopularData({
-        ...res,
+        data: res?.data,
         title: language.homePopular,
+        mode: "popular",
+        type: popular,
       });
     });
   }, [popular]);
 
   useEffect(() => {
     setTopRatedData(null);
-    getTopRated(topRated, 1).then((res) => {
+    httpService.getTopRated(topRated, 1).then((res) => {
       setTopRatedData({
-        ...res,
+        data: res?.data,
         title: language.homeTopRated,
+        mode: "topRated",
+        type: topRated,
       });
     });
   }, [topRated]);
 
-  useEffect(async () => {
-    const arrData = [];
-    await getNowPlaying("", 1).then((res) => {
-      arrData.push({
+  useEffect(() => {
+    const call1 = httpService.getMovieNowPlaying(1).then((res) => {
+      return {
         ...res,
+        type: "movie",
         title: language.homeNowPlaying,
         hint: "homeNowPlaying",
-      });
+      };
     });
-    await getupcoming("", 1).then((res) => {
-      arrData.push({
+    const call2 = httpService.getMovieUpComing(1).then((res) => {
+      return {
         ...res,
+        type: "movie",
         title: language.homeUpComing,
         hint: "homeUpComing",
-      });
+      };
     });
-    await getTvAiringToday("", 1).then((res) => {
-      arrData.push({
+    const call3 = httpService.getTvAiringToday(1).then((res) => {
+      return {
         ...res,
+        type: "tv",
         title: language.homeTvShows,
         hint: "homeTvShows",
-      });
+      };
     });
-    await getTvOnTheAir("", 1).then((res) => {
-      arrData.push({
+    const call4 = httpService.getTvOnTheAir(1).then((res) => {
+      return {
         ...res,
+        type: "tv",
         title: language.homeCurrentlyTv,
         hint: "homeCurrentlyTv",
-      });
+      };
     });
-    setHomeData(arrData);
+
+    Promise.all([call1, call2, call3, call4]).then((res) => {
+      setHomeData(res);
+    });
     dispatch(actions.setBgHeader(true));
     setMounted(true);
   }, []);

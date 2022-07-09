@@ -50,3 +50,11 @@ export const formatter = new Intl.NumberFormat("en-US", {
   style: "currency",
   currency: "USD",
 });
+
+export const getMovieUrl = (id) => {
+  return "https://2embed.org//embed/movie?tmdb=" + id;
+};
+
+export const getTvUrl = (id, session, episode) => {
+  return `https://2embed.org//embed/series?tmdb=${id}&sea=${session}&epi=${episode}`;
+};
