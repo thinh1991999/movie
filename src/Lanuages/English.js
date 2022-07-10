@@ -30,7 +30,7 @@ export const English = {
   detailSimilar: "Similar to this",
   detailCharacters: "characters",
   sideBar1: "home",
-  sideBar2: "short video",
+  sideBar2: "Actor",
   sideBar3: "explore",
   sideBar4: "history",
   headerSearch: "search",

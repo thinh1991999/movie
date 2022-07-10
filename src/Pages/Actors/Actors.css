@@ -1,0 +1,22 @@
+#actors ul {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px 0;
+}
+
+#actors ul li {
+  padding: 0 10px;
+}
+
+#actors ul li.previous.disabled a,
+#actors ul li.next.disabled a {
+  opacity: 0.5;
+  cursor: not-allowed !important;
+}
+
+#actors ul li.active {
+  border: 1px solid gray;
+  border-radius: 4px;
+  font-weight: 600;
+}

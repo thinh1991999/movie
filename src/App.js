@@ -12,6 +12,7 @@ import {
   People,
   Player,
   Search,
+  Actors,
 } from "./Pages";
 import { Header, SideBar } from "./Components";
 import { actions } from "./Store";
@@ -55,6 +56,7 @@ function App() {
             <Route path="/people/:id" element={<People />}></Route>
             <Route path="/search/" element={<Search />}></Route>
             <Route path="/search/:value" element={<Search />}></Route>
+            <Route path="/actors" element={<Actors />}></Route>
           </Routes>
         </div>
 
