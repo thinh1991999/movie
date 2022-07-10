@@ -69,7 +69,7 @@ function SideBar() {
       {
         icon: <MdVideoCameraBack />,
         title: language.sideBar2,
-        link: "/a",
+        link: "/actors",
       },
       {
         icon: <MdTravelExplore />,

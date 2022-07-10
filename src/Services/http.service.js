@@ -99,6 +99,15 @@ class HttpService {
     });
     return axiosService.getMethod(`/search/${type}`, true);
   }
+  // Actor page
+  getActor(page) {
+    axiosService.addOption({
+      params: {
+        page,
+      },
+    });
+    return axiosService.getMethod(`/person/popular`, true);
+  }
   // Explore page
   getGenres(type) {
     return axiosService.getMethod(`/genre/${type}/list`, true);

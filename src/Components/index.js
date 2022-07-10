@@ -28,4 +28,6 @@ export { default as PeopleSocial } from "./PeopleComponents/PeopleSocial";
 export { default as SignIn } from "./AuthenComponent/SignIn";
 export { default as SignUp } from "./AuthenComponent/SignUp";
 
+export { default as Items } from "./ActorsComponent/Items";
+
 export { default as CircleLoading } from "./CircleLoading/CircleLoading";

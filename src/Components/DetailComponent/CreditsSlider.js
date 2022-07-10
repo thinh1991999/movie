@@ -1,6 +1,5 @@
 import { SwiperSlide, Swiper } from "swiper/react";
 import { Navigation } from "swiper";
-import Loading from "../Loading";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { getImageUrl } from "../../Shared";
 import { useSelector } from "react-redux";
