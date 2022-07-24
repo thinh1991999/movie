@@ -13,10 +13,12 @@ import {
   Player,
   Search,
   Actors,
+  History,
 } from "./Pages";
 import { Header, SideBar } from "./Components";
 import { actions } from "./Store";
 import { auth } from "./Shared";
+import User from "./Pages/User/User";
 
 function App() {
   const theme = useSelector((state) => state.root.theme);
@@ -26,8 +28,7 @@ function App() {
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
       if (user) {
-        const uid = user.uid;
-        console.log(true);
+        console.log(user);
       } else {
         console.log(false);
       }
@@ -57,6 +58,8 @@ function App() {
             <Route path="/search/" element={<Search />}></Route>
             <Route path="/search/:value" element={<Search />}></Route>
             <Route path="/actors" element={<Actors />}></Route>
+            <Route path="/history" element={<History />}></Route>
+            <Route path="/user" element={<User />}></Route>
           </Routes>
         </div>
 

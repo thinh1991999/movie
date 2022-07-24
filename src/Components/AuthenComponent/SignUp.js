@@ -1,37 +1,41 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import Validator from "../../Shared/validator";
 import { auth, db } from "../../Shared";
 import { createUserWithEmailAndPassword, signOut } from "firebase/auth";
 import { ref, update } from "firebase/database";
+import SubmitButton from "../SubmitButton";
 
 function SignUp() {
+  const rules = useMemo(() => {
+    return [
+      {
+        field: "email",
+        method: "isEmpty",
+        validWhen: false,
+        message: "The email field is required.",
+      },
+      {
+        field: "email",
+        method: "isEmail",
+        validWhen: true,
+        message: "This field is email.",
+      },
+      {
+        field: "password",
+        method: "isEmpty",
+        validWhen: false,
+        message: "The password field is required.",
+      },
+    ];
+  }, []);
   const [signUpValue, setSignUpValue] = useState({
     email: "",
     password: "",
     cfPassWord: "",
   });
-  const [rules, setRules] = useState([
-    {
-      field: "email",
-      method: "isEmpty",
-      validWhen: false,
-      message: "The email field is required.",
-    },
-    {
-      field: "email",
-      method: "isEmail",
-      validWhen: true,
-      message: "This field is email.",
-    },
-    {
-      field: "password",
-      method: "isEmpty",
-      validWhen: false,
-      message: "The password field is required.",
-    },
-  ]);
   const [errors, setErrors] = useState({});
   const [messSuccess, setMessSuccess] = useState("");
+  const [loading, setLoading] = useState(false);
   const [validator, setValidator] = useState(new Validator(rules));
 
   const requiredWith = (value, field, state) =>
@@ -41,6 +45,7 @@ function SignUp() {
     e.preventDefault();
     setErrors(validator.validate(signUpValue));
     if (validator.isValid && handleBlurCfPassword()) {
+      setLoading(true);
       createUserWithEmailAndPassword(
         auth,
         signUpValue.email,
@@ -61,13 +66,10 @@ function SignUp() {
             password: "",
             cfPassWord: "",
           });
-          signOut(auth)
-            .then(() => {})
-            .catch((error) => {});
+          signOut(auth);
         })
         .catch((error) => {
           const errorCode = error.code;
-          const errorMessage = error.message;
           if (errorCode === "auth/email-already-in-use") {
             setErrors({
               ...errors,
@@ -79,6 +81,7 @@ function SignUp() {
               password: "This password is weak!",
             });
           }
+          setLoading(false);
         });
     }
   };
@@ -171,9 +174,7 @@ function SignUp() {
           <p className="text-red-600">{errors.cfPassWord}</p>
         )}
         {messSuccess && <p className="text-blue-600">{messSuccess}</p>}
-        <button className="capitalize mt-5 hover:opacity-70 transition-all duration-300 ease-linear bg-red-600 py-2 rounded-md">
-          sign up
-        </button>
+        <SubmitButton title="sign up" loading={loading} />
       </form>
     </div>
   );

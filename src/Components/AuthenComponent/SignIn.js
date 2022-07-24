@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useMemo, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   signInWithEmailAndPassword,
   signInWithPopup,
@@ -6,11 +7,11 @@ import {
 } from "firebase/auth";
 import { BsFacebook } from "react-icons/bs";
 import { FcGoogle } from "react-icons/fc";
-import { auth, localStorageServ, provider } from "../../Shared";
+import { auth, provider } from "../../Shared";
 import Validator from "../../Shared/validator";
 import { useDispatch, useSelector } from "react-redux";
 import { actions } from "../../Store";
-import { useNavigate } from "react-router-dom";
+import SubmitButton from "../SubmitButton";
 
 function SignIn() {
   const dispatch = useDispatch();
@@ -18,37 +19,42 @@ function SignIn() {
 
   const pathNameLogin = useSelector((state) => state.user.pathNameLogin);
 
+  const rules = useMemo(
+    () => [
+      {
+        field: "email",
+        method: "isEmpty",
+        validWhen: false,
+        message: "The email field is required.",
+      },
+      {
+        field: "email",
+        method: "isEmail",
+        validWhen: true,
+        message: "This field is email.",
+      },
+      {
+        field: "password",
+        method: "isEmpty",
+        validWhen: false,
+        message: "The password field is required.",
+      },
+    ],
+    []
+  );
   const [signInValue, setSignInValue] = useState({
     email: "",
     password: "",
   });
-  const [rules, setRules] = useState([
-    {
-      field: "email",
-      method: "isEmpty",
-      validWhen: false,
-      message: "The email field is required.",
-    },
-    {
-      field: "email",
-      method: "isEmail",
-      validWhen: true,
-      message: "This field is email.",
-    },
-    {
-      field: "password",
-      method: "isEmpty",
-      validWhen: false,
-      message: "The password field is required.",
-    },
-  ]);
+  const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
-  const [validator, setValidator] = useState(new Validator(rules));
+  const validator = useRef(new Validator(rules)).current;
 
   const handleSubmit = (e) => {
     e.preventDefault();
     setErrors(validator.validate(signInValue));
     if (validator.isValid) {
+      setLoading(true);
       signInWithEmailAndPassword(auth, signInValue.email, signInValue.password)
         .then((userCredential) => {
           const user = userCredential.user;
@@ -61,7 +67,6 @@ function SignIn() {
         })
         .catch((error) => {
           const errorCode = error.code;
-          const errorMessage = error.message;
           if (errorCode === "auth/user-not-found") {
             setErrors({
               ...errors,
@@ -78,6 +83,7 @@ function SignIn() {
               password: errorCode,
             });
           }
+          setLoading(false);
         });
     }
   };
@@ -146,13 +152,7 @@ function SignIn() {
           }`}
         />
         {errors.password && <p className="text-red-600">{errors.password}</p>}
-        <button
-          type="submit"
-          onSubmit={handleSubmit}
-          className="capitalize mt-5 hover:opacity-70 transition-all duration-300 ease-linear bg-red-600 py-2 rounded-md"
-        >
-          sign in
-        </button>
+        <SubmitButton title="sign in" loading={loading} />
       </form>
       <div className="flex justify-between items-center mt-5">
         <div className="h-[1px]  bg-gray-500 flex-1"></div>

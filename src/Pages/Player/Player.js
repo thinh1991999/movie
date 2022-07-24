@@ -35,11 +35,12 @@ function Player() {
     const call2 = httpService.getSmilar(id, type, 1).then((res) => {
       return res.data;
     });
-
+    setLoading(true);
     Promise.all([call1, call2]).then((res) => {
       setDetailData(res[0]);
       // setSessionsData(res[0]?.seasons);
       setSimilarData(res[1]);
+      setLoading(false);
     });
     if (type === "movie") {
       setMediaUrl(getMovieUrl(id));
@@ -53,6 +54,7 @@ function Player() {
       });
     }
   }, [session, id]);
+
   useEffect(() => {
     let timeOutSetMedia;
     if (type === "tv") {
@@ -72,17 +74,15 @@ function Player() {
     dispatch(actions.setBgHeader(true));
   }, []);
 
-  useEffect(() => {
-    // if (playing) {
-    //   console.log(iframeRef.current?.getCurrentTime());
-    // }
-    console.log(iframeRef.current);
-  }, [playing]);
-
-  if (!detailData) {
+  if (loading) {
     return (
-      <div className="">
-        <h2>Loading</h2>
+      <div className="h-screen pt-16 pb-20 px-5 w-full overflow-y-scroll scroll-list">
+        <div className="h-[500px]">
+          <Loading />
+        </div>
+        <div className="">
+          <DetailSlider />
+        </div>
       </div>
     );
   }
