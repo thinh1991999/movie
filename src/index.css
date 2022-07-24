@@ -38,7 +38,7 @@
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
 }
 
-.setting-shadow{
+.setting-shadow {
   box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
 }
 
@@ -63,6 +63,13 @@
     to(#081b27)
   );
   background-image: linear-gradient(180deg, rgba(12, 39, 56, 0) 14%, #081b27);
+}
+
+.one-line {
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .lazy-load-image-background {

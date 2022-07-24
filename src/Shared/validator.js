@@ -20,7 +20,6 @@ class Validator {
         const args = rule.args || [];
         const validationMethod =
           typeof rule.method === "string" ? methods[rule.method] : rule.method;
-
         if (validationMethod(fieldValue, ...args, state) !== rule.validWhen) {
           this.errors[rule.field] = rule.message;
           this.isValid = false;

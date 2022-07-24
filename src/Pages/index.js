@@ -6,3 +6,4 @@ export { default as People } from "./People/People";
 export { default as Search } from "./Search/Search";
 export { default as Authen } from "./Authen/Authen";
 export { default as Actors } from "./Actors/Actors";
+export { default as History } from "./History/History";

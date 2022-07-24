@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { FaHome, FaSignInAlt, FaSignOutAlt } from "react-icons/fa";
+import { FaHome, FaSignInAlt, FaSignOutAlt, FaUserPlus } from "react-icons/fa";
 import {
   MdVideoCameraBack,
   MdTravelExplore,
@@ -8,16 +8,32 @@ import {
 import { NavLink, useNavigate } from "react-router-dom";
 import { signOut } from "firebase/auth";
 import { useSelector, useDispatch } from "react-redux";
-import { auth } from "../Shared";
+import { auth, unKnowUserUrl } from "../Shared";
 import { actions } from "../Store";
 import Logo from "./Logo";
+
+function LinkItem({ link, children }) {
+  return (
+    <NavLink
+      to={link}
+      className={({ isActive }) => {
+        return `relative flex lg:justify-start md:justify-center flex-row items-center h-11 focus:outline-none transition-all capitalize duration-500 ease-linear font-medium hover:bg-gray-200 hover:dark:bg-gray-300/[0.3]  hover:text-gray-900 hover:dark:text-white border-l-4 border-transparent hover:border-indigo-500  md:pr-0 pr-6 ${
+          isActive
+            ? `border-indigo-500 bg-gray-300 dark:bg-gray-300/[0.3] text-gray-900 dark:text-white`
+            : `text-gray-600 dark:text-gray-400`
+        }`;
+      }}
+    >
+      {children}
+    </NavLink>
+  );
+}
 
 function SideBar() {
   const navigate = useNavigate();
 
   const dispatch = useDispatch();
   const language = useSelector((state) => state.root.language);
-  const theme = useSelector((state) => state.root.theme);
   const showNavMobile = useSelector((state) => state.root.showNavMobile);
   const user = useSelector((state) => state.user.user);
 
@@ -56,7 +72,12 @@ function SideBar() {
 
   const handleLogIn = () => {
     dispatch(actions.setPathNameLogin(""));
-    navigate("/authen");
+    navigate("/authen/signIn");
+  };
+
+  const handleSignUp = () => {
+    dispatch(actions.setPathNameLogin(""));
+    navigate("/authen/signUp");
   };
 
   useEffect(() => {
@@ -79,7 +100,7 @@ function SideBar() {
       {
         icon: <MdOutlineHistory />,
         title: language.sideBar4,
-        link: "/c",
+        link: "/history",
       },
     ]);
   }, [language]);
@@ -106,23 +127,14 @@ function SideBar() {
             const { icon, title, link } = item;
             return (
               <li key={index}>
-                <NavLink
-                  to={link}
-                  className={({ isActive }) => {
-                    return `relative flex lg:justify-start md:justify-center flex-row items-center h-11 focus:outline-none transition-all capitalize duration-500 ease-linear font-medium hover:bg-gray-200 hover:dark:bg-gray-300/[0.3]  hover:text-gray-900 hover:dark:text-white border-l-4 border-transparent hover:border-indigo-500  md:pr-0 pr-6 ${
-                      isActive
-                        ? `border-indigo-500 bg-gray-300 dark:bg-gray-300/[0.3] text-gray-900 dark:text-white`
-                        : `text-gray-600 dark:text-gray-400`
-                    }`;
-                  }}
-                >
+                <LinkItem link={link}>
                   <span className="inline-flex text-2xl justify-center items-center lg:ml-4 md:ml-0 ml-4">
                     {icon}
                   </span>
                   <span className="ml-2 lg:block md:hidden text-base tracking-wide truncate">
                     {title}
                   </span>
-                </NavLink>
+                </LinkItem>
               </li>
             );
           })}
@@ -136,12 +148,19 @@ function SideBar() {
             </div>
           </li>
           {user ? (
-            <li className="px-5 lg:block md:hidden">
-              <div className="flex flex-row items-center h-8">
-                <div className="capitalize tracking-wide text-gray-800 dark:text-white font-bold">
-                  {user?.email}
+            <li>
+              <LinkItem link={"/user"}>
+                <div className="flex flex-row items-center ">
+                  <img
+                    src={unKnowUserUrl}
+                    alt=""
+                    className="w-[40px] h-[40px] rounded-full mr-2 lg:ml-4 md:ml-0 ml-4"
+                  />
+                  <div className="capitalize tracking-wide text-gray-800 dark:text-white font-bold one-line">
+                    {user?.email}
+                  </div>
                 </div>
-              </div>
+              </LinkItem>
             </li>
           ) : (
             ""
@@ -161,19 +180,34 @@ function SideBar() {
               </button>
             </li>
           ) : (
-            <li>
-              <button
-                onClick={handleLogIn}
-                className="w-full cursor-pointer text-gray-600 dark:text-gray-400 relative flex lg:justify-start md:justify-center flex-row items-center h-11 focus:outline-none transition-all capitalize duration-500 ease-linear font-medium hover:bg-gray-200 hover:dark:bg-gray-300/[0.3]  hover:text-gray-900 hover:dark:text-white border-l-4 border-transparent hover:border-indigo-500  md:pr-0 pr-6"
-              >
-                <span className="inline-flex text-2xl justify-center items-center lg:ml-4 md:ml-0 ml-4">
-                  <FaSignInAlt />
-                </span>
-                <span className="ml-2 lg:block md:hidden text-base tracking-wide truncate">
-                  Sign in
-                </span>
-              </button>
-            </li>
+            <>
+              <li>
+                <button
+                  onClick={handleLogIn}
+                  className="w-full cursor-pointer text-gray-600 dark:text-gray-400 relative flex lg:justify-start md:justify-center flex-row items-center h-11 focus:outline-none transition-all capitalize duration-500 ease-linear font-medium hover:bg-gray-200 hover:dark:bg-gray-300/[0.3]  hover:text-gray-900 hover:dark:text-white border-l-4 border-transparent hover:border-indigo-500  md:pr-0 pr-6"
+                >
+                  <span className="inline-flex text-2xl justify-center items-center lg:ml-4 md:ml-0 ml-4">
+                    <FaSignInAlt />
+                  </span>
+                  <span className="ml-2 lg:block md:hidden text-base tracking-wide truncate">
+                    Sign in
+                  </span>
+                </button>
+              </li>
+              <li>
+                <button
+                  onClick={handleSignUp}
+                  className="w-full cursor-pointer text-gray-600 dark:text-gray-400 relative flex lg:justify-start md:justify-center flex-row items-center h-11 focus:outline-none transition-all capitalize duration-500 ease-linear font-medium hover:bg-gray-200 hover:dark:bg-gray-300/[0.3]  hover:text-gray-900 hover:dark:text-white border-l-4 border-transparent hover:border-indigo-500  md:pr-0 pr-6"
+                >
+                  <span className="inline-flex text-2xl justify-center items-center lg:ml-4 md:ml-0 ml-4">
+                    <FaUserPlus />
+                  </span>
+                  <span className="ml-2 lg:block md:hidden text-base tracking-wide truncate">
+                    Sign up
+                  </span>
+                </button>
+              </li>
+            </>
           )}
         </ul>
       </div>

@@ -30,4 +30,7 @@ export { default as SignUp } from "./AuthenComponent/SignUp";
 
 export { default as Items } from "./ActorsComponent/Items";
 
+export { default as Info } from "./UserComponent/Info";
+export { default as Password } from "./UserComponent/Password";
+
 export { default as CircleLoading } from "./CircleLoading/CircleLoading";

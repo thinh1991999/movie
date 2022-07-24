@@ -58,3 +58,18 @@ export const getMovieUrl = (id) => {
 export const getTvUrl = (id, session, episode) => {
   return `https://2embed.org//embed/series?tmdb=${id}&sea=${session}&epi=${episode}`;
 };
+
+export const getErrorMessFirebase = (code) => {
+  let mess = "Có lỗi xảy ra,vui lòng thử lại";
+  switch (code) {
+    case "auth/wrong-password":
+      mess = "Mật khẩu không chính xác";
+      break;
+    case "auth/too-many-requests":
+      mess = "Quá nhiều request,vui lòng thử lại sau";
+      break;
+    default:
+      break;
+  }
+  return mess;
+};
