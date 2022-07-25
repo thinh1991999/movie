@@ -1,11 +1,14 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Validator from "../../Shared/validator";
 import { auth, db } from "../../Shared";
 import { createUserWithEmailAndPassword, signOut } from "firebase/auth";
 import { ref, update } from "firebase/database";
 import SubmitButton from "../SubmitButton";
+import { useSelector } from "react-redux";
 
 function SignUp() {
+  const language = useSelector((state) => state.root.language);
+
   const rules = useMemo(() => {
     return [
       {
@@ -122,6 +125,10 @@ function SignUp() {
       ...validator.validate(newObject, false, e.target.name),
     });
   };
+
+  useEffect(() => {
+    document.title = language.logout;
+  }, [language]);
 
   return (
     <div className="">

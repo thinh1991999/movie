@@ -109,6 +109,7 @@ function Home() {
         item.title = language[item.hint];
       });
     }
+    document.title = language.home;
   }, [language]);
 
   return (

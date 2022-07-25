@@ -1,17 +1,15 @@
 import { useState } from "react";
 import { AiFillStar, AiFillTags } from "react-icons/ai";
-import { useDispatch, useSelector } from "react-redux";
-import { Link, useNavigate, useLocation } from "react-router-dom";
-import { SquareButton, Modal } from "..";
-import { getTimeMovie } from "../../Shared";
-import { IoEyeSharp } from "react-icons/io5";
-import { actions } from "../../Store";
-import DetailModal from "./DetailModal";
+import { useSelector } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { IoEyeSharp } from "react-icons/io5";
+import { SquareButton } from "..";
+import { getTimeMovie } from "../../Shared";
+import DetailModal from "./DetailModal";
 
 function InfoDetail({ data, type, trailerLength }) {
   const navigate = useNavigate();
-  const location = useLocation();
   const language = useSelector((state) => state.root.language);
 
   const [showDetailModal, setShowDetailModal] = useState(false);

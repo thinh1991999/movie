@@ -92,7 +92,6 @@ function Explored() {
     });
     setMount(true);
   }, [navIndex]);
-
   useEffect(() => {
     const getData = setTimeout(() => {
       if (page > 1) {
@@ -121,6 +120,7 @@ function Explored() {
         name: language.exploreMovieTitle,
       },
     ]);
+    document.title = language.search;
   }, [language]);
 
   useEffect(() => {
@@ -152,6 +152,7 @@ function Explored() {
     });
     return () => {
       dispatch(actions.setResetExplore(true));
+      dispatch(actions.resetExplore());
     };
   }, []);
 
@@ -183,6 +184,7 @@ function Explored() {
       );
     }
   }, [genre]);
+
   return (
     <div className="w-full h-screen overflow-x-hidden flex flex-col pt-16 dark:bg-gray-800 bg-white px-5 py-5">
       <div className="">

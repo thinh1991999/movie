@@ -64,6 +64,10 @@ function Detail() {
   }, [id, type]);
 
   useEffect(() => {
+    document.title = detailData?.name || detailData?.title || language.detail;
+  }, [detailData, language]);
+
+  useEffect(() => {
     dispatch(actions.setBgHeader(false));
   }, []);
 

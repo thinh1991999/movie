@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from "react";
 import ReactPaginate from "react-paginate";
+import { useSelector } from "react-redux";
 import { CircleLoading, Items } from "../../Components";
 import httpService from "../../Services/http.service";
 import "./Actors.css";
 
 export default function Actors() {
+  const language = useSelector((state) => state.root.language);
+
   const [actorsData, setActorsData] = useState(null);
   const [offset, setOffset] = useState(1);
   const [pageCount, setPageCount] = useState(50);
@@ -25,6 +28,10 @@ export default function Actors() {
         setLoading(false);
       });
   }, [offset]);
+
+  useEffect(() => {
+    document.title = language.popularPeople;
+  }, [language]);
 
   return (
     <div

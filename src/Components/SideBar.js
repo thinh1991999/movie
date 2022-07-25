@@ -61,13 +61,7 @@ function SideBar() {
   ]);
 
   const handleLogOut = () => {
-    signOut(auth)
-      .then(() => {
-        dispatch(actions.setUser(null));
-      })
-      .catch((error) => {
-        // An error happened.
-      });
+    signOut(auth);
   };
 
   const handleLogIn = () => {

@@ -23,6 +23,18 @@ export const ExploreReducer = (state = initState, { type, payload }) => {
         reset: payload,
       };
     }
+    case "RESET_EXPLORE": {
+      return {
+        ...state,
+        search: {
+          with_genres: "",
+          with_original_language: "",
+          "vote_average.gte": 0,
+          "vote_average.lte": 10,
+          "vote_count.gte": 0,
+        },
+      };
+    }
     default:
       return {
         ...state,

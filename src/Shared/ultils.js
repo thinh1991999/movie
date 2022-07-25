@@ -73,3 +73,11 @@ export const getErrorMessFirebase = (code) => {
   }
   return mess;
 };
+
+export const checkImage = (path) => {
+  if (path.match(/.(jpg|jpeg|png|gif)$/i)) {
+    return true;
+  } else {
+    return false;
+  }
+};

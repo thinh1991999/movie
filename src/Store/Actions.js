@@ -90,6 +90,13 @@ export const setResetExplore = (payload) => {
   };
 };
 
+export const resetExplore = (payload) => {
+  return {
+    type: "RESET_EXPLORE",
+    payload,
+  };
+};
+
 // User reducer
 export const setUser = (payload) => {
   return {
