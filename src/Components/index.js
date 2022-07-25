@@ -6,6 +6,7 @@ export { default as Loading } from "./Loading";
 export { default as Modal } from "./Modal";
 export { default as SquareButton } from "./SquareButton";
 export { default as DetailSlider } from "./DetailSlider";
+export { default as MessNoti } from "./MessNoti";
 
 export { default as BannerSlider } from "./HomeComponents/BannerSlider";
 export { default as Trending } from "./HomeComponents/Trending";

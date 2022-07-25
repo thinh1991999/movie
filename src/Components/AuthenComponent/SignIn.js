@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   signInWithEmailAndPassword,
@@ -17,6 +17,7 @@ function SignIn() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  const language = useSelector((state) => state.root.language);
   const pathNameLogin = useSelector((state) => state.user.pathNameLogin);
 
   const rules = useMemo(
@@ -58,7 +59,7 @@ function SignIn() {
       signInWithEmailAndPassword(auth, signInValue.email, signInValue.password)
         .then((userCredential) => {
           const user = userCredential.user;
-          dispatch(actions.setUser(user));
+
           if (pathNameLogin) {
             navigate(pathNameLogin);
           } else {
@@ -123,6 +124,10 @@ function SignIn() {
       [e.target.name]: e.target.value,
     });
   };
+
+  useEffect(() => {
+    document.title = language.login;
+  }, [language]);
 
   return (
     <div className="">

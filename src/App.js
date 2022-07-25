@@ -4,6 +4,7 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { onAuthStateChanged } from "firebase/auth";
 import { useSelector, useDispatch } from "react-redux";
+
 import {
   Detail,
   Explored,
@@ -28,9 +29,9 @@ function App() {
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
       if (user) {
-        console.log(user);
+        dispatch(actions.setUser(user));
       } else {
-        console.log(false);
+        dispatch(actions.setUser(null));
       }
     });
   }, []);

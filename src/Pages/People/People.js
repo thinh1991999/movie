@@ -37,6 +37,10 @@ function People() {
   }, [id]);
 
   useEffect(() => {
+    document.title = peopleDetail?.name || language.actor;
+  }, [peopleDetail, language]);
+
+  useEffect(() => {
     dispatch(actions.setBgHeader(true));
   }, []);
 
