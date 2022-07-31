@@ -4,28 +4,24 @@ import { useParams } from "react-router-dom";
 import { actions } from "../../Store";
 import { Comments, DetailSlider, InforPlayer, Loading } from "../../Components";
 import httpService from "../../Services/http.service";
-import { getMovieUrl, getTvUrl } from "../../Shared";
+import { getMovieUrl, getTvUrl, localStorageServ } from "../../Shared";
 
 function Player() {
   const language = useSelector((state) => state.root.language);
+  const user = useSelector((state) => state.user.user);
+
   const dispatch = useDispatch();
 
   const { id, type, session, episode } = useParams();
 
   const iframeRef = useRef(null);
   const [detailData, setDetailData] = useState(null);
-  const [sessionsData, setSessionsData] = useState([]);
   const [similarData, setSimilarData] = useState(null);
   const [episodeCurrent, setEpisodeCurrent] = useState(null);
   const [sessionCurrent, setSessionCurrent] = useState(null);
   const [mediaUrl, setMediaUrl] = useState(null);
   const [episodeData, setEpisodeData] = useState([]);
-  const [playing, setPlaying] = useState(false);
   const [loading, setLoading] = useState(true);
-
-  const handleLoad = () => {
-    console.log("123");
-  };
 
   useEffect(() => {
     setDetailData(null);
@@ -37,8 +33,7 @@ function Player() {
     });
     setLoading(true);
     Promise.all([call1, call2]).then((res) => {
-      setDetailData(res[0]);
-      // setSessionsData(res[0]?.seasons);
+      setDetailData({ ...res[0], typePlayer: type });
       setSimilarData(res[1]);
       setLoading(false);
     });
@@ -71,6 +66,28 @@ function Player() {
   }, [episode, session, type]);
 
   useEffect(() => {
+    let setHistory;
+    if (detailData) {
+      setHistory = setTimeout(() => {
+        const key = user?.email || "unknowUser";
+        const historyArr = localStorageServ.historyWatch.get()?.[key] || [];
+        const checkExisted = historyArr.findIndex((item) => {
+          return item.id === detailData.id;
+        });
+        if (checkExisted === -1) {
+          localStorageServ.historyWatch.set({
+            ...historyArr,
+            [key]: [...historyArr, detailData],
+          });
+        }
+      }, 500);
+    }
+    return () => {
+      clearTimeout(setHistory);
+    };
+  }, [detailData, user]);
+
+  useEffect(() => {
     dispatch(actions.setBgHeader(true));
   }, []);
 
@@ -94,6 +111,8 @@ function Player() {
           <div className="mb-5 h-[500px] bg-gray-400/[0.2] dark:bg-gray-900">
             {mediaUrl ? (
               <iframe
+                id="iframe-player"
+                title="movie"
                 ref={iframeRef}
                 width="100%"
                 height="100%"

@@ -75,6 +75,16 @@ export default function Info({ infoValues, setInfoValues, handleUpdateInfo }) {
             handleFocus={handleFocus}
           />
         </div>
+        <div className="w-1/2 flex flex-col p-2">
+          <InputInfo
+            title={"Name"}
+            placeholder={"Your name"}
+            infoValues={infoValues}
+            handleChangeInput={handleChangeInput}
+            hint="name"
+            handleFocus={handleFocus}
+          />
+        </div>
       </div>
       <div className="flex">
         <div className="w-1/2 flex flex-col p-2">

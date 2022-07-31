@@ -54,7 +54,6 @@ function AlbumSlider({ data, full, option }) {
     mode,
     type,
   } = data;
-  console.log(mode);
   return (
     <div className="py-10 w-full">
       <div className="flex items-center justify-start mb-2">

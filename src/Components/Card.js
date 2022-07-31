@@ -5,7 +5,7 @@ import Button from "./Button";
 import { BsPlayCircle } from "react-icons/bs";
 import { useNavigate } from "react-router-dom";
 
-function Card({ data, type, typeNavigate }) {
+function Card({ data, type, typeNavigate = null }) {
   const navigate = useNavigate();
   const {
     name,
@@ -14,8 +14,14 @@ function Card({ data, type, typeNavigate }) {
     poster_path,
     profile_path,
     vote_average: score,
+    typePlayer,
   } = data;
+
   const handleToDetail = () => {
+    if (!typeNavigate) {
+      navigate(`/detail/${id}/${typePlayer}`);
+      return;
+    }
     if (typeNavigate === "person") {
       navigate(`/people/${id}`);
     } else {
@@ -66,7 +72,7 @@ function Card({ data, type, typeNavigate }) {
         {typeof score === "number" && (
           <div className="absolute top-2 left-2">
             <div className="relative w-9 h-9 flex items-center justify-center rounded-full bg-black">
-              <span className="text-white absolute z-20 w-full h-full block flex justify-center items-center">
+              <span className="text-white absolute z-20 w-full h-full  flex justify-center items-center">
                 {score?.toFixed(1)}
               </span>
               <div className="slice absolute w-full h-full ">
@@ -87,7 +93,6 @@ function Card({ data, type, typeNavigate }) {
                     }}
                   ></div>
                 )}
-
                 {score !== 0 && (
                   <div
                     className={`absolute w-full h-full border-2 ${color} rounded-full`}
