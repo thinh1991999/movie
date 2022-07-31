@@ -121,6 +121,7 @@ function Home() {
           <AlbumSlider data={topRatedData} option={true} />
           {homeData.map((item, index) => {
             const { mode } = item;
+            console.log(item);
             if (mode) {
               return <AlbumSlider data={item} key={index} option={true} />;
             } else {

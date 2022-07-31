@@ -226,7 +226,10 @@ function Explored() {
             hint={5}
           />
           <button className="mt-2" onClick={handleClearSearch}>
-            <SquareButton msg={language.exploreResetBtn}></SquareButton>
+            <SquareButton
+              msg={language.exploreResetBtn}
+              bg="bg-red-600"
+            ></SquareButton>
           </button>
         </div>
       </div>

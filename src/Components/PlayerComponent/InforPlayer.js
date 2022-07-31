@@ -55,7 +55,6 @@ function InforPlayer({
           <div className="">
             {seasons.map((item) => {
               const { id, season_number } = item;
-              console.log(season_number);
               return (
                 <button
                   className={`${

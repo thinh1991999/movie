@@ -35,7 +35,7 @@ export default function User() {
       setLoadingBtnImg(true);
       const nameFile = user.uid + ".png";
       const storageRef = refStorage(storage, nameFile);
-      await uploadBytes(storageRef, file).then((snapshot) => {});
+      await uploadBytes(storageRef, file).then(() => {});
       await getDownloadURL(storageRef, nameFile)
         .then((url) => {
           const xhr = new XMLHttpRequest();
@@ -45,10 +45,13 @@ export default function User() {
           xhr.send();
           infoValues.avatar = url;
           handleUpdateInfo();
-          toast.error("upload thành công");
+          toast.success("Upload thành công");
           setLoadingBtnImg(false);
         })
-        .catch((error) => {});
+        .catch(() => {
+          toast.error("Có lỗi xảy ra");
+          setLoadingBtnImg(false);
+        });
     } else {
       toast.error("File được chọn phải là ảnh");
     }

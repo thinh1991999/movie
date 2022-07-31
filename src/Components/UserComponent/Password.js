@@ -22,7 +22,9 @@ const InputPassword = function ({
 }) {
   return (
     <>
-      <label htmlFor={title}>{title}</label>
+      <label className="my-1" htmlFor={title}>
+        {title}
+      </label>
       <input
         type={type}
         id={title}

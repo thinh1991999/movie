@@ -1,6 +1,8 @@
 import Button from "./Button";
 import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
+import { BsFillPlayFill } from "react-icons/bs";
+import { useNavigate } from "react-router-dom";
 import {
   AiOutlineSearch,
   AiFillStar,
@@ -8,8 +10,6 @@ import {
   AiOutlineClose,
 } from "react-icons/ai";
 import { getImageUrl } from "../Shared";
-import { BsFillPlayFill } from "react-icons/bs";
-import { useNavigate } from "react-router-dom";
 import httpService from "../Services/http.service";
 
 function Search() {
@@ -21,6 +21,8 @@ function Search() {
   const [searchFocus, setSearchFocus] = useState(false);
   const [dataSearch, setDataSearch] = useState(null);
   const [loading, setLoading] = useState(true);
+
+  const wrapRef = useRef(null);
   const inputRef = useRef(null);
   const closeBtnRef = useRef(null);
 
@@ -32,6 +34,7 @@ function Search() {
     } else {
       navigate(`/`);
     }
+    setSearchFocus(false);
   };
 
   const handleClear = () => {
@@ -39,14 +42,18 @@ function Search() {
       setSearchValue("");
       setSearchFocus(true);
       inputRef.current.focus();
-    }, 110);
+    }, 10);
   };
-
   const handleSubmit = (e) => {
     e.preventDefault();
     navigate(`/search/${searchValue}`);
-    // setSearchFocus(false);
     inputRef.current.blur();
+  };
+
+  const eventClick = (e) => {
+    if (!wrapRef.current.contains(e.target)) {
+      setSearchFocus(false);
+    }
   };
 
   useEffect(() => {
@@ -67,26 +74,20 @@ function Search() {
   }, [searchValue, searchFocus]);
 
   useEffect(() => {
-    let timeout;
-    const eventBlur = (e) => {
-      timeout = setTimeout(() => {
-        setSearchFocus(false);
-      }, 100);
-    };
-    inputRef.current.addEventListener("blur", eventBlur);
+    window.addEventListener("click", eventClick);
     return () => {
-      inputRef.current.removeEventListener("blur", eventBlur);
-      clearTimeout(timeout);
+      window.removeEventListener("click", eventClick);
     };
   }, [searchFocus]);
 
   return (
     <div
+      ref={wrapRef}
       className={`bg-gray-200 dark:bg-gray-600 ${
         !bgHeader && `bg-gray-200/[0.3] dark:bg-gray-200/[0.3]`
       } px-2 ml-4   ${
         searchFocus
-          ? " from-violet-400 to-fuchsia-400 bg-gradient-to-r dark:from-violet-800 dark:to-fuchsia-800"
+          ? " from-violet-200 to-fuchsia-300 bg-gradient-to-r dark:from-violet-800 dark:to-fuchsia-800"
           : ""
       }  relative  ${
         searchFocus && searchValue ? `rounded-t-3xl` : `rounded-3xl`
@@ -112,7 +113,7 @@ function Search() {
           
         ${
           searchFocus
-            ? "from-violet-400 placeholder:text-gray-800 dark:placeholder:text-gray-300 to-fuchsia-400 bg-gradient-to-r dark:from-violet-800 dark:to-fuchsia-800"
+            ? " placeholder:text-gray-800 dark:placeholder:text-gray-300 from-violet-200 to-fuchsia-300 bg-gradient-to-r dark:from-violet-800 dark:to-fuchsia-800"
             : ""
         }
         `}
@@ -131,7 +132,7 @@ function Search() {
         )}
       </form>
       {searchFocus && searchValue && (
-        <div className="absolute w-full rounded-b-[20px] max-h-[300px] overflow-y-auto scroll-list from-violet-400 to-fuchsia-400 bg-gradient-to-r dark:from-violet-800 dark:to-fuchsia-800 top-full left-0">
+        <div className="absolute w-full rounded-b-[20px] max-h-[300px] overflow-y-auto scroll-list from-violet-200 to-fuchsia-300 bg-gradient-to-r dark:from-violet-800 dark:to-fuchsia-800 top-full left-0">
           <div className="max-h-[300px] overflow-y-auto scroll-list">
             {loading && searchValue ? (
               <h2 className="dark:text-white text-gray-800 text-center capitalize">
@@ -154,7 +155,7 @@ function Search() {
                     return (
                       <li
                         key={id || index}
-                        className="px-4 py-2 cursor-pointer group hover:bg-slate-300/[0.5] dark:hover:bg-slate-300/[0.2] flex transition-all duration-300 ease-linear"
+                        className="px-4 py-2 cursor-pointer group hover:bg-gray-600/[0.3] dark:hover:bg-slate-300/[0.2] flex transition-all duration-300 ease-linear"
                         onClick={() => handleForwardLink(id, media_type)}
                       >
                         <div className="relative w-[75px] h-[50px] overflow-hidden rounded-md">
@@ -163,7 +164,7 @@ function Search() {
                               backdrop_path || poster_path || profile_path,
                               "w300"
                             )}
-                            alt=""
+                            alt={name || title}
                             className="w-full h-full object-cover "
                           />
                           <div className="absolute group-hover:opacity-30 bg-black transition-all duration-300 ease-linear opacity-0 top-0 left-0 right-0 bottom-0 flex items-center justify-center">

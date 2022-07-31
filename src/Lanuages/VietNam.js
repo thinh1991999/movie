@@ -30,7 +30,7 @@ export const VietNam = {
   detailSimilar: "Phim tương tự",
   detailCharacters: "diễn viên",
   sideBar1: "Trang chủ",
-  sideBar2: "Diễn viên",
+  sideBar2: "Nghệ sĩ",
   sideBar3: "khám phá",
   sideBar4: "lịch sử",
   headerSearch: "Tìm kiếm",
