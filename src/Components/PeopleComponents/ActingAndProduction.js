@@ -43,7 +43,6 @@ function ActingAndProduction({ data }) {
     setCastData(getNewArr(cast));
     setCrewData(getNewArr(crew));
   }, []);
-  console.log(castData);
 
   return (
     <div className="w-full mt-20 text-gray-800 dark:text-white">

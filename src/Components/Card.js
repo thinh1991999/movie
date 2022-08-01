@@ -4,6 +4,7 @@ import "react-lazy-load-image-component/src/effects/opacity.css";
 import Button from "./Button";
 import { BsPlayCircle } from "react-icons/bs";
 import { useNavigate } from "react-router-dom";
+import ScoreCard from "./ScoreCard";
 
 function Card({ data, type, typeNavigate = null }) {
   const navigate = useNavigate();
@@ -16,7 +17,6 @@ function Card({ data, type, typeNavigate = null }) {
     vote_average: score,
     typePlayer,
   } = data;
-
   const handleToDetail = () => {
     if (!typeNavigate) {
       navigate(`/detail/${id}/${typePlayer}`);
@@ -29,14 +29,6 @@ function Card({ data, type, typeNavigate = null }) {
     }
   };
 
-  let color = "border-red-500";
-  if (score >= 0 && score < 5) {
-    color = "border-red-500";
-  } else if (score >= 5 && score < 7.5) {
-    color = "border-yellow-500";
-  } else {
-    color = "border-green-500";
-  }
   return (
     <div className="w-full p-2 ">
       <div
@@ -64,52 +56,12 @@ function Card({ data, type, typeNavigate = null }) {
             </div>
           )}
         </div>
-        <div className="py-2 px-2 bg-gray-700  ">
-          <p className="sub-title text-white group-hover:text-blue-600 transition-all duration-300 ease-linear">
+        <div className="py-2 px-2 dark:bg-gray-900 bg-white">
+          <p className="sub-title dark:text-white text-gray-800 group-hover:text-blue-600 transition-all duration-300 ease-linear">
             {title || name}
           </p>
         </div>
-        {typeof score === "number" && (
-          <div className="absolute top-2 left-2">
-            <div className="relative w-9 h-9 flex items-center justify-center rounded-full bg-black">
-              <span className="text-white absolute z-20 w-full h-full  flex justify-center items-center">
-                {score?.toFixed(1)}
-              </span>
-              <div className="slice absolute w-full h-full ">
-                {score > 5 ? (
-                  <div
-                    className={`absolute w-full h-full border-2 ${color} rounded-full`}
-                    style={{
-                      clip: `rect(0,20px,40px,0)`,
-                      transform: `rotate(${180 + (180 / 5) * (score - 5)}deg)`,
-                    }}
-                  ></div>
-                ) : (
-                  <div
-                    className={`absolute w-full h-full bg-black rounded-full z-10`}
-                    style={{
-                      clip: `rect(0,20px,40px,0)`,
-                      transform: `rotate(${0}deg)`,
-                    }}
-                  ></div>
-                )}
-                {score !== 0 && (
-                  <div
-                    className={`absolute w-full h-full border-2 ${color} rounded-full`}
-                    style={{
-                      clip: `rect(0,20px,40px,0)`,
-                      transform: `${
-                        score > 5
-                          ? `rotate(180deg)`
-                          : `rotate(${(180 / 5) * score}deg)`
-                      }`,
-                    }}
-                  ></div>
-                )}
-              </div>
-            </div>
-          </div>
-        )}
+        {typeof score === "number" && <ScoreCard score={score} />}
       </div>
     </div>
   );

@@ -3,16 +3,17 @@ import { FaRegUserCircle } from "react-icons/fa";
 import { AiOutlineSend, AiFillLike, AiFillDislike } from "react-icons/ai";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
-import { db, unKnowUserUrl } from "../../Shared";
-import { actions } from "../../Store";
 import { onValue, ref, push, child, update } from "firebase/database";
 import { Timestamp } from "firebase/firestore";
 import moment from "moment";
 import _ from "lodash";
+import { db, unKnowUserUrl } from "../../Shared";
+import { actions } from "../../Store";
 
 function Comments({ id }) {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user.user);
+  const userInfo = useSelector((state) => state.user.userInfo);
   const language = useSelector((state) => state.root.language);
   const location = useLocation();
   const navigate = useNavigate();
@@ -110,11 +111,11 @@ function Comments({ id }) {
         {language.playerComments}: {comments.length}
       </h5>
       <div className=" py-2 px-4 border-2 border-gray-600 dark:border-gray-200 rounded-full mt-5">
-        {user && (
+        {user && userInfo && (
           <form action="" onSubmit={handleSubmit}>
             <div className="flex items-center">
               <img
-                src={user?.photoUrl || unKnowUserUrl}
+                src={userInfo?.avatar || unKnowUserUrl}
                 alt=""
                 className="h-[30px] w-[30px] bg-white rounded-full mr-2"
               />
@@ -174,7 +175,10 @@ function Comments({ id }) {
             return (
               <li key={id} className="flex items-center mt-5">
                 <div className="h-[50px] mr-2 w-[50px] rounded-full overflow-hidden">
-                  <img src={item[sentBy]?.photoUrl || unKnowUserUrl} alt="" />
+                  <img
+                    src={infoUsers[sentBy]?.avatar || unKnowUserUrl}
+                    alt=""
+                  />
                 </div>
                 <div className="">
                   <h3>

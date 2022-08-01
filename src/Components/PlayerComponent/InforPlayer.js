@@ -26,17 +26,14 @@ function InforPlayer({
     genres,
     seasons,
     overview,
-    backdrop_path: bgShow,
     runtime,
     budget,
   } = data;
   const {
-    season_number,
     overview: sessionOverview,
     name: sessionName,
     air_date,
   } = episodeData;
-
   const handleChangeEpisode = (episode_number) => {
     navigate(`/player/${id}/${type}/${session}/${episode_number}`);
   };

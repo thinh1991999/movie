@@ -26,6 +26,10 @@ export const getImageUrl = (url = "", width = "") => {
   return `https://image.tmdb.org/t/p/${width}${url}`;
 };
 
+export const getImageUrlOriginal = (url = "") => {
+  return `https://image.tmdb.org/t/p/original/${url}`;
+};
+
 export const getTimeMovie = (duration) => {
   let hour = Math.floor(duration / 60);
   let minute = duration - hour * 60;
@@ -80,4 +84,16 @@ export const checkImage = (path) => {
   } else {
     return false;
   }
+};
+
+export const getColorCard = (score) => {
+  let color = "border-red-500";
+  if (score >= 0 && score < 5) {
+    color = "border-red-500";
+  } else if (score >= 5 && score < 7.5) {
+    color = "border-yellow-500";
+  } else {
+    color = "border-green-500";
+  }
+  return color;
 };

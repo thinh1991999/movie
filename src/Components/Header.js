@@ -10,23 +10,44 @@ import { BsFillMoonStarsFill, BsSunFill } from "react-icons/bs";
 import { useDispatch, useSelector } from "react-redux";
 import { actions } from "../Store";
 import Setting from "./Setting";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Search from "./Search";
+import { useNavigate } from "react-router-dom";
 
 function Header() {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const theme = useSelector((state) => state.root.theme);
+  const routerHistory = useSelector((state) => state.root.routerHistory);
+  const currentRouter = useSelector((state) => state.root.currentRouter);
+
   const showNavMobile = useSelector((state) => state.root.showNavMobile);
   const bgHeader = useSelector((state) => state.root.bgHeader);
   const [showSetting, setShowSetting] = useState(false);
 
   const settingWrapRef = useRef(null);
 
+  const checkIdxRouter = useMemo(() => {
+    return routerHistory.findIndex((item) => {
+      return item.key === currentRouter;
+    });
+  }, [routerHistory, currentRouter]);
+
   const handleChangeTheme = () => {
     if (theme === "") {
       dispatch(actions.setTheme("dark"));
     } else {
       dispatch(actions.setTheme(""));
+    }
+  };
+  const handleBack = () => {
+    if (checkIdxRouter > 0) {
+      navigate(-1);
+    }
+  };
+  const handleNext = () => {
+    if (checkIdxRouter < routerHistory.length - 1) {
+      navigate(+1);
     }
   };
 
@@ -73,13 +94,27 @@ function Header() {
           </span>
         </div>
         <div className={`hidden md:block ${!bgHeader && `text-white`}`}>
-          <button>
-            <Button size={"text-2xl"}>
+          <button
+            onClick={handleBack}
+            className={`${
+              checkIdxRouter === 0 && "opacity-50 cursor-not-allowed"
+            }`}
+          >
+            <Button size={"text-2xl"} hover={checkIdxRouter !== 0}>
               <AiOutlineArrowLeft />
             </Button>
           </button>
-          <button>
-            <Button size={"text-2xl"}>
+          <button
+            onClick={handleNext}
+            className={`${
+              checkIdxRouter === routerHistory.length - 1 &&
+              "opacity-50 cursor-not-allowed"
+            }`}
+          >
+            <Button
+              size={"text-2xl"}
+              hover={checkIdxRouter !== routerHistory.length - 1}
+            >
               <AiOutlineArrowRight />
             </Button>
           </button>
@@ -103,11 +138,11 @@ function Header() {
             {theme === "" ? <BsFillMoonStarsFill /> : <BsSunFill />}
           </Button>
         </button>
-        <div
-          ref={settingWrapRef}
-          className="ml-2 relative before:absolute  before:block before:contents[*] before:w-[100%] before:h-[10px] before:top-full"
-        >
-          <button onClick={() => setShowSetting(!showSetting)}>
+        <div ref={settingWrapRef} className="ml-2 relative ">
+          <button
+            className="block"
+            onClick={() => setShowSetting(!showSetting)}
+          >
             <Button size={"text-2xl"} bg={true} header={bgHeader}>
               <AiFillSetting />
             </Button>
@@ -118,7 +153,6 @@ function Header() {
             </div>
           )}
         </div>
-
         <button
           className="ml-2 md:hidden"
           onClick={() => dispatch(actions.setShowNavMobile(!showNavMobile))}

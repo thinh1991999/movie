@@ -1,10 +1,9 @@
 import { useEffect } from "react";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useLocation } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { onAuthStateChanged } from "firebase/auth";
 import { useSelector, useDispatch } from "react-redux";
-
 import {
   Detail,
   Explored,
@@ -18,10 +17,12 @@ import {
 } from "./Pages";
 import { Header, SideBar } from "./Components";
 import { actions } from "./Store";
-import { auth } from "./Shared";
+import { auth, db } from "./Shared";
 import User from "./Pages/User/User";
+import { onValue, ref } from "firebase/database";
 
 function App() {
+  const location = useLocation();
   const theme = useSelector((state) => state.root.theme);
   const showNavMobile = useSelector((state) => state.root.showNavMobile);
   const dispatch = useDispatch();
@@ -30,11 +31,21 @@ function App() {
     onAuthStateChanged(auth, (user) => {
       if (user) {
         dispatch(actions.setUser(user));
+        onValue(ref(db, "/users/" + user.uid), (snapshot) => {
+          const data = snapshot.val();
+          dispatch(actions.setUserInfo(data));
+        });
       } else {
         dispatch(actions.setUser(null));
+        dispatch(actions.setUserInfo(null));
       }
     });
   }, []);
+
+  useEffect(() => {
+    dispatch(actions.setRouterHistory(location));
+    dispatch(actions.setCurrentRouter(location.key));
+  }, [location]);
 
   return (
     <div className={`w-full ${theme}`}>
