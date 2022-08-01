@@ -1,17 +1,21 @@
-import { localStorageServ } from "../../Shared";
-
 const initState = {
-  user: localStorageServ.userInfo.get(),
+  user: null,
+  userInfo: null,
   pathNameLogin: "",
 };
 
 export const UserReducer = (state = initState, { type, payload }) => {
   switch (type) {
     case "SET_USER": {
-      localStorageServ.userInfo.set(payload);
       return {
         ...state,
         user: payload,
+      };
+    }
+    case "SET_USER_INFO": {
+      return {
+        ...state,
+        userInfo: payload,
       };
     }
     case "SET_PATH_NAME_LOGIN": {

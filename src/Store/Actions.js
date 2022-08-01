@@ -35,6 +35,20 @@ export const setBgHeader = (payload) => {
   };
 };
 
+export const setRouterHistory = (payload) => {
+  return {
+    type: "SET_ROUTER_HISTORY",
+    payload,
+  };
+};
+
+export const setCurrentRouter = (payload) => {
+  return {
+    type: "SET_CURRENT_ROUTER",
+    payload,
+  };
+};
+
 // HOME REDUCER
 
 export const setTrending = (payload) => {
@@ -101,6 +115,13 @@ export const resetExplore = (payload) => {
 export const setUser = (payload) => {
   return {
     type: "SET_USER",
+    payload,
+  };
+};
+
+export const setUserInfo = (payload) => {
+  return {
+    type: "SET_USER_INFO",
     payload,
   };
 };

@@ -6,6 +6,8 @@ const initState = {
   showNavMobile: false,
   bgHeader: false,
   showModal: false,
+  routerHistory: [],
+  currentRouter: null,
 };
 
 export const RootReducer = (state = initState, { type, payload }) => {
@@ -40,6 +42,28 @@ export const RootReducer = (state = initState, { type, payload }) => {
       return {
         ...state,
         bgHeader: payload,
+      };
+    }
+    case "SET_ROUTER_HISTORY": {
+      const filterIdx = state.routerHistory.findIndex((item) => {
+        return item.key === payload.key;
+      });
+      if (filterIdx !== -1) {
+        return {
+          ...state,
+        };
+      }
+      const newRouterHistory = [...state.routerHistory, payload];
+      return {
+        ...state,
+        routerHistory: newRouterHistory,
+        currentRouter: payload.key,
+      };
+    }
+    case "SET_CURRENT_ROUTER": {
+      return {
+        ...state,
+        currentRouter: payload,
       };
     }
     default:

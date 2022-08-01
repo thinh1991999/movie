@@ -1,8 +1,6 @@
-import axios from "axios";
 import axiosService from "./axios.service";
 
 class HttpService {
-  constructor() {}
   getWeekTrending() {
     return axiosService.getMethod("trending/all/week", true);
   }
@@ -84,6 +82,9 @@ class HttpService {
   }
   getPeopleExternal(id) {
     return axiosService.getMethod(`/person/${id}/external_ids`, true);
+  }
+  getPeopleImages(id) {
+    return axiosService.getMethod(`/person/${id}/images`, true);
   }
   // Player page
   getTvSession(id, seasonNb) {

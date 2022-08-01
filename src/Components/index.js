@@ -27,6 +27,8 @@ export { default as InforPlayer } from "./PlayerComponent/InforPlayer";
 
 export { default as ActingAndProduction } from "./PeopleComponents/ActingAndProduction";
 export { default as PeopleSocial } from "./PeopleComponents/PeopleSocial";
+export { default as Overview } from "./PeopleComponents/Overview";
+export { default as Media } from "./PeopleComponents/Media";
 
 export { default as SignIn } from "./AuthenComponent/SignIn";
 export { default as SignUp } from "./AuthenComponent/SignUp";

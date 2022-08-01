@@ -36,7 +36,7 @@ function SideBar() {
   const language = useSelector((state) => state.root.language);
   const showNavMobile = useSelector((state) => state.root.showNavMobile);
   const user = useSelector((state) => state.user.user);
-
+  const userInfo = useSelector((state) => state.user.userInfo);
   const [sideBarInfo, setSiBarInfo] = useState([
     {
       icon: <FaHome />,
@@ -73,7 +73,6 @@ function SideBar() {
     dispatch(actions.setPathNameLogin(""));
     navigate("/authen/signUp");
   };
-
   useEffect(() => {
     setSiBarInfo([
       {
@@ -112,7 +111,7 @@ function SideBar() {
         <ul className="flex flex-col py-4 space-y-1">
           <li className="px-5 pb-5 lg:block md:hidden">
             <div className="flex flex-row items-center h-8">
-              <div className="text-xl font-light tracking-wide text-gray-800 dark:text-white font-bold">
+              <div className="text-xl  tracking-wide text-gray-800 dark:text-white font-bold">
                 {language.homeTitle}
               </div>
             </div>
@@ -136,7 +135,7 @@ function SideBar() {
         <ul className="flex flex-col py-4 space-y-1">
           <li className="px-5 pb-5 lg:block md:hidden">
             <div className="flex flex-row items-center h-8">
-              <div className="capitalize text-xl font-light tracking-wide text-gray-800 dark:text-white font-bold">
+              <div className="capitalize text-xl  tracking-wide text-gray-800 dark:text-white font-bold">
                 personal
               </div>
             </div>
@@ -146,11 +145,15 @@ function SideBar() {
               <LinkItem link={"/user"}>
                 <div className="flex flex-row items-center ">
                   <img
-                    src={unKnowUserUrl}
+                    src={userInfo?.avatar || unKnowUserUrl}
                     alt=""
                     className="w-[40px] h-[40px] rounded-full mr-2 lg:ml-4 md:ml-0 ml-4"
                   />
-                  <div className="capitalize tracking-wide text-gray-800 dark:text-white font-bold one-line">
+                  <div
+                    className={`${
+                      !showNavMobile && "hidden lg:block"
+                    } capitalize tracking-wide  text-gray-800 dark:text-white font-bold one-line`}
+                  >
                     {user?.email}
                   </div>
                 </div>
