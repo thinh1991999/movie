@@ -80,7 +80,7 @@ function Player() {
             [key]: [...historyArr, detailData],
           });
         }
-      }, 500);
+      }, 2000);
     }
     return () => {
       clearTimeout(setHistory);
@@ -93,7 +93,7 @@ function Player() {
 
   if (loading) {
     return (
-      <div className="h-screen pt-16 pb-20 px-5 w-full overflow-y-scroll scroll-list">
+      <div className="pb-20 px-5 w-full ">
         <div className="h-[500px]">
           <Loading />
         </div>
@@ -105,7 +105,7 @@ function Player() {
   }
 
   return (
-    <div className="h-screen pt-16 pb-20 px-5 w-full overflow-y-scroll scroll-list">
+    <div className="pb-20 px-5 w-full ">
       <div className="">
         <div className="w-full ">
           <div className="mb-5 h-[500px] bg-gray-400/[0.2] dark:bg-gray-900">
@@ -116,7 +116,7 @@ function Player() {
                 ref={iframeRef}
                 width="100%"
                 height="100%"
-                // src={mediaUrl}
+                src={mediaUrl}
                 frameBorder="0"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 allowFullScreen

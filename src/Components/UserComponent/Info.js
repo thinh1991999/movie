@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import SubmitButton from "../SubmitButton";
 import MessNoti from "../MessNoti";
+import { useSelector } from "react-redux";
 
 function InputInfo({
   title,
@@ -20,8 +21,8 @@ function InputInfo({
         id={title}
         placeholder={placeholder}
         className={`${
-          disable && `cursor-not-allowed`
-        } px-3 py-2 rounded-sm outline-none text-black border-[1px] border-gray-400 `}
+          disable && `cursor-not-allowed opacity-50`
+        } px-3 py-2 rounded-sm outline-none bg-gray-100 dark:bg-gray-700 text-black  dark:text-white border-[2px] border-gray-400 `}
         value={infoValues[hint] || ""}
         disabled={disable}
         onChange={(e) => {
@@ -34,6 +35,8 @@ function InputInfo({
 }
 
 export default function Info({ infoValues, setInfoValues, handleUpdateInfo }) {
+  const language = useSelector((state) => state.root.language);
+
   const [loadingBtn, setLoadingBtn] = useState(false);
   const [mess, setMess] = useState({
     type: true,
@@ -52,7 +55,7 @@ export default function Info({ infoValues, setInfoValues, handleUpdateInfo }) {
     await handleUpdateInfo();
     setMess({
       type: true,
-      value: "Cap nhat thanh cong",
+      value: language.successUpdate,
     });
     setLoadingBtn(false);
   };
@@ -62,10 +65,24 @@ export default function Info({ infoValues, setInfoValues, handleUpdateInfo }) {
       value: null,
     });
   };
+
+  useEffect(() => {
+    const handleClick = () => {
+      if (mess.value) {
+        setMess({
+          value: null,
+        });
+      }
+    };
+    window.addEventListener("click", handleClick);
+    return () => {
+      window.removeEventListener("click", handleClick);
+    };
+  }, [mess]);
   return (
     <form onSubmit={handleSubmit}>
-      <div className="flex">
-        <div className="w-1/2 flex flex-col p-2">
+      <div className="flex flex-wrap">
+        <div className="w-full smm:w-1/2 flex flex-col p-2">
           <InputInfo
             title={"Email"}
             disable={true}
@@ -75,10 +92,10 @@ export default function Info({ infoValues, setInfoValues, handleUpdateInfo }) {
             handleFocus={handleFocus}
           />
         </div>
-        <div className="w-1/2 flex flex-col p-2">
+        <div className="w-full smm:w-1/2 flex flex-col p-2">
           <InputInfo
-            title={"Name"}
-            placeholder={"Your name"}
+            title={language.name}
+            placeholder={language.yourName}
             infoValues={infoValues}
             handleChangeInput={handleChangeInput}
             hint="name"
@@ -86,21 +103,21 @@ export default function Info({ infoValues, setInfoValues, handleUpdateInfo }) {
           />
         </div>
       </div>
-      <div className="flex">
-        <div className="w-1/2 flex flex-col p-2">
+      <div className="flex flex-wrap">
+        <div className="w-full smm:w-1/2 flex flex-col p-2">
           <InputInfo
-            title={"Phone number"}
-            placeholder={"Your phone"}
+            title={language.phoneNumber}
+            placeholder={language.urPhoneNumber}
             infoValues={infoValues}
             handleChangeInput={handleChangeInput}
             hint="phone"
             handleFocus={handleFocus}
           />
         </div>
-        <div className="w-1/2 flex flex-col p-2">
+        <div className="w-full smm:w-1/2 flex flex-col p-2">
           <InputInfo
-            title={"Address"}
-            placeholder={"Your address"}
+            title={language.address}
+            placeholder={language.urAddress}
             infoValues={infoValues}
             handleChangeInput={handleChangeInput}
             hint="address"
@@ -108,10 +125,10 @@ export default function Info({ infoValues, setInfoValues, handleUpdateInfo }) {
           />
         </div>
       </div>
-      <div className="flex">
-        <div className="w-1/2 flex flex-col p-2">
+      <div className="flex flex-wrap">
+        <div className="w-full smm:w-1/2 flex flex-col p-2">
           <InputInfo
-            title={"Ngày sinh"}
+            title={language.birth}
             type="date"
             infoValues={infoValues}
             handleChangeInput={handleChangeInput}
@@ -119,8 +136,8 @@ export default function Info({ infoValues, setInfoValues, handleUpdateInfo }) {
             handleFocus={handleFocus}
           />
         </div>
-        <div className="w-1/2 flex flex-col p-2">
-          <label htmlFor="">Giới tính</label>
+        <div className="w-full smm:w-1/2 flex flex-col p-2">
+          <label htmlFor="">{language.gender}</label>
           <div className="flex flex-1">
             <div className="flex items-center mx-2 ">
               <input
@@ -136,7 +153,7 @@ export default function Info({ infoValues, setInfoValues, handleUpdateInfo }) {
                 onFocus={() => handleFocus()}
               />
               <label className="ml-2 cursor-pointer" htmlFor="male">
-                Nam
+                {language.male}
               </label>
             </div>
             <div className="flex items-center mx-2 cursor-pointer">
@@ -153,7 +170,7 @@ export default function Info({ infoValues, setInfoValues, handleUpdateInfo }) {
                 onFocus={() => handleFocus()}
               />
               <label className="ml-2 cursor-pointer" htmlFor="female">
-                Nữ
+                {language.female}
               </label>
             </div>
             <div className="flex items-center mx-2 cursor-pointer">
@@ -170,17 +187,19 @@ export default function Info({ infoValues, setInfoValues, handleUpdateInfo }) {
                 onFocus={() => handleFocus()}
               />
               <label className="ml-2 cursor-pointer" htmlFor="null">
-                Khác
+                {language.genderNull}
               </label>
             </div>
           </div>
         </div>
       </div>
-      <div className="px-2">
+      <div className="px-2 lg:block flex justify-center">
         <MessNoti mess={mess} />
       </div>
-      <div className="ml-2 max-w-[150px]">
-        <SubmitButton title={"Update info"} loading={loadingBtn} />
+      <div className="lg:block flex justify-center ml-2 ">
+        <div className="lg:max-w-[200px]">
+          <SubmitButton title={language.userUpdateInfo} loading={loadingBtn} />
+        </div>
       </div>
     </form>
   );

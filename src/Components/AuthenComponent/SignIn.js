@@ -7,16 +7,15 @@ import {
 } from "firebase/auth";
 import { BsFacebook } from "react-icons/bs";
 import { FcGoogle } from "react-icons/fc";
-import { auth, provider } from "../../Shared";
+import { auth, getErrorMessFirebase, provider } from "../../Shared";
 import Validator from "../../Shared/validator";
 import { useDispatch, useSelector } from "react-redux";
-import { actions } from "../../Store";
 import SubmitButton from "../SubmitButton";
+import { actions } from "../../Store";
 
 function SignIn() {
-  const dispatch = useDispatch();
   const navigate = useNavigate();
-
+  const dispatch = useDispatch();
   const language = useSelector((state) => state.root.language);
   const pathNameLogin = useSelector((state) => state.user.pathNameLogin);
 
@@ -26,22 +25,22 @@ function SignIn() {
         field: "email",
         method: "isEmpty",
         validWhen: false,
-        message: "The email field is required.",
+        message: language.emailRequire,
       },
       {
         field: "email",
         method: "isEmail",
         validWhen: true,
-        message: "This field is email.",
+        message: language.emailCheck,
       },
       {
         field: "password",
         method: "isEmpty",
         validWhen: false,
-        message: "The password field is required.",
+        message: language.pwRequire,
       },
     ],
-    []
+    [language]
   );
   const [signInValue, setSignInValue] = useState({
     email: "",
@@ -57,57 +56,46 @@ function SignIn() {
     if (validator.isValid) {
       setLoading(true);
       signInWithEmailAndPassword(auth, signInValue.email, signInValue.password)
-        .then((userCredential) => {
-          const user = userCredential.user;
-
+        .then(() => {
           if (pathNameLogin) {
             navigate(pathNameLogin);
           } else {
             navigate("/");
           }
+          dispatch(actions.setLoginCreateAcc(true));
         })
         .catch((error) => {
           const errorCode = error.code;
-          if (errorCode === "auth/user-not-found") {
-            setErrors({
-              ...errors,
-              email: "This user is not found!",
-            });
-          } else if (errorCode === "auth/wrong-password") {
-            setErrors({
-              ...errors,
-              password: "This password is wrong!",
-            });
-          } else {
-            setErrors({
-              ...errors,
-              password: errorCode,
-            });
-          }
+          setErrors({
+            ...errors,
+            password: getErrorMessFirebase(errorCode),
+          });
           setLoading(false);
         });
     }
   };
 
   const handleLoginGG = () => {
+    provider.setCustomParameters({
+      login_hint: "user@example.com",
+    });
+    provider.addScope("profile");
+    provider.addScope("email");
     signInWithPopup(auth, provider)
-      .then((result) => {
-        // This gives you a Google Access Token. You can use it to access the Google API.
-        const credential = GoogleAuthProvider.credentialFromResult(result);
-        const token = credential.accessToken;
-        // The signed-in user info.
-        const user = result.user;
-        // ...
+      .then(() => {
+        if (pathNameLogin) {
+          navigate(pathNameLogin);
+        } else {
+          navigate("/");
+        }
       })
       .catch((error) => {
-        // Handle Errors here.
         const errorCode = error.code;
-        const errorMessage = error.message;
-        // The email of the user's account used.
-        const email = error.email;
-        // The AuthCredential type that was used.
-        const credential = GoogleAuthProvider.credentialFromError(error);
-        throw new Error(error);
+        setErrors({
+          ...errors,
+          password: getErrorMessFirebase(errorCode),
+        });
+        setLoading(false);
       });
   };
 
@@ -131,7 +119,9 @@ function SignIn() {
 
   return (
     <div className="">
-      <h2 className="capitalize text-3xl font-semibold mb-5">Sign in</h2>
+      <h2 className="capitalize text-3xl font-semibold mb-5">
+        {language.login}
+      </h2>
       <form action="" className="flex flex-col" onSubmit={handleSubmit}>
         <input
           type="text"
@@ -147,7 +137,7 @@ function SignIn() {
         {errors.email && <p className="text-red-600">{errors.email}</p>}
         <input
           type="password"
-          placeholder="Password"
+          placeholder={language.userPassword}
           name="password"
           value={signInValue.password}
           onFocus={handleFocus}
@@ -157,15 +147,15 @@ function SignIn() {
           }`}
         />
         {errors.password && <p className="text-red-600">{errors.password}</p>}
-        <SubmitButton title="sign in" loading={loading} />
+        <SubmitButton title={language.login} loading={loading} />
       </form>
       <div className="flex justify-between items-center mt-5">
         <div className="h-[1px]  bg-gray-500 flex-1"></div>
-        <span className="mx-4 uppercase">Or</span>
+        <span className="mx-4 uppercase">{language.or}</span>
         <div className="h-[1px] bg-gray-500 flex-1"></div>
       </div>
       <div className="flex mt-5">
-        <p className="mr-2 font-thin capitalize">Sign In with:</p>{" "}
+        <p className="mr-2 font-thin capitalize">{language.signInWith}</p>{" "}
         <div className="flex">
           <button className="text-blue-600 text-2xl bg-white rounded-full">
             <BsFacebook />

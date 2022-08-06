@@ -1,6 +1,6 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Validator from "../../Shared/validator";
-import { auth, db } from "../../Shared";
+import { auth, db, getErrorMessFirebase } from "../../Shared";
 import { createUserWithEmailAndPassword, signOut } from "firebase/auth";
 import { ref, update } from "firebase/database";
 import SubmitButton from "../SubmitButton";
@@ -15,22 +15,29 @@ function SignUp() {
         field: "email",
         method: "isEmpty",
         validWhen: false,
-        message: "The email field is required.",
+        message: language.emailRequire,
       },
       {
         field: "email",
         method: "isEmail",
         validWhen: true,
-        message: "This field is email.",
+        message: language.emailCheck,
       },
       {
         field: "password",
         method: "isEmpty",
         validWhen: false,
-        message: "The password field is required.",
+        message: language.pwRequire,
+      },
+      {
+        field: "password",
+        method: "isLength",
+        args: [{ min: 6, max: undefined }],
+        validWhen: true,
+        message: language.newPwLength,
       },
     ];
-  }, []);
+  }, [language]);
   const [signUpValue, setSignUpValue] = useState({
     email: "",
     password: "",
@@ -39,10 +46,7 @@ function SignUp() {
   const [errors, setErrors] = useState({});
   const [messSuccess, setMessSuccess] = useState("");
   const [loading, setLoading] = useState(false);
-  const [validator, setValidator] = useState(new Validator(rules));
-
-  const requiredWith = (value, field, state) =>
-    (!state[field] && !value) || !!value;
+  const validator = useRef(new Validator(rules)).current;
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -63,7 +67,7 @@ function SignUp() {
             photoURL,
           };
           update(ref(db), updates);
-          setMessSuccess("Sign Up success!");
+          setMessSuccess(language.successSignup);
           setSignUpValue({
             email: "",
             password: "",
@@ -73,17 +77,10 @@ function SignUp() {
         })
         .catch((error) => {
           const errorCode = error.code;
-          if (errorCode === "auth/email-already-in-use") {
-            setErrors({
-              ...errors,
-              email: "This email has been used!",
-            });
-          } else if (errorCode === "auth/weak-password") {
-            setErrors({
-              ...errors,
-              password: "This password is weak!",
-            });
-          }
+          setErrors({
+            ...errors,
+            password: getErrorMessFirebase(errorCode),
+          });
           setLoading(false);
         });
     }
@@ -93,7 +90,7 @@ function SignUp() {
     if (signUpValue.cfPassWord !== signUpValue.password) {
       setErrors({
         ...errors,
-        cfPassWord: "Comfirm password isn't corrected!",
+        cfPassWord: language.cfNotCorrect,
       });
       return false;
     } else {
@@ -132,7 +129,9 @@ function SignUp() {
 
   return (
     <div className="">
-      <h2 className="capitalize text-3xl font-semibold mb-5">Sign up</h2>
+      <h2 className="capitalize text-3xl font-semibold mb-5">
+        {language.signUp}
+      </h2>
       <form action="" className="flex flex-col" onSubmit={handleSubmit}>
         <input
           type="text"
@@ -151,7 +150,7 @@ function SignUp() {
 
         <input
           type="password"
-          placeholder="Password"
+          placeholder={language.userPassword}
           value={signUpValue.password}
           onFocus={handleFocus}
           onChange={handleChange}
@@ -166,7 +165,7 @@ function SignUp() {
 
         <input
           type="password"
-          placeholder="Comfirm Password"
+          placeholder={language.cfPassword}
           name="cfPassWord"
           onFocus={handleFocus}
           autoComplete={`off`}
@@ -181,7 +180,7 @@ function SignUp() {
           <p className="text-red-600">{errors.cfPassWord}</p>
         )}
         {messSuccess && <p className="text-blue-600">{messSuccess}</p>}
-        <SubmitButton title="sign up" loading={loading} />
+        <SubmitButton title={language.signUp} loading={loading} />
       </form>
     </div>
   );

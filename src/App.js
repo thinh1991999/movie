@@ -4,6 +4,7 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { onAuthStateChanged } from "firebase/auth";
 import { useSelector, useDispatch } from "react-redux";
+import { onValue, ref } from "firebase/database";
 import {
   Detail,
   Explored,
@@ -14,12 +15,12 @@ import {
   Search,
   Actors,
   History,
+  Error,
 } from "./Pages";
-import { Header, SideBar } from "./Components";
+import { GlobalLayout, SearchMobile } from "./Components";
 import { actions } from "./Store";
 import { auth, db } from "./Shared";
 import User from "./Pages/User/User";
-import { onValue, ref } from "firebase/database";
 
 function App() {
   const location = useLocation();
@@ -38,6 +39,7 @@ function App() {
       } else {
         dispatch(actions.setUser(null));
         dispatch(actions.setUserInfo(null));
+        dispatch(actions.setLoginCreateAcc(false));
       }
     });
   }, []);
@@ -48,45 +50,125 @@ function App() {
   }, [location]);
 
   return (
-    <div className={`w-full ${theme}`}>
-      <div
-        className={` flex justify-end  flex-auto flex-shrink-0 antialiased bg-gray-50 dark:bg-gray-800 text-gray-800 `}
-      >
-        <SideBar />
-        <Header />
-        <div className="lg:w-5/6 w-full md:w-[calc(100%_-_100%/16)] bg-gray-50 dark:bg-gray-800">
-          <Routes>
-            <Route index element={<Home />}></Route>
-            <Route path="/" element={<Home />}></Route>
-            <Route path="/explored" element={<Explored />}></Route>
-            <Route path="/explored/:genre/:type" element={<Explored />}></Route>
-            <Route path="/detail/:id/:type" element={<Detail />}></Route>
-            <Route path="/player/:id/:type" element={<Player />}></Route>
-            <Route
-              path="/player/:id/:type/:session/:episode"
-              element={<Player />}
-            ></Route>
-            <Route path="/people/:id" element={<People />}></Route>
-            <Route path="/search/" element={<Search />}></Route>
-            <Route path="/search/:value" element={<Search />}></Route>
-            <Route path="/actors" element={<Actors />}></Route>
-            <Route path="/history" element={<History />}></Route>
-            <Route path="/user" element={<User />}></Route>
-          </Routes>
-        </div>
-
-        {showNavMobile && (
-          <div
-            className="fixed top-0 left-0 bottom-0 right-0 bg-black/[0.2] z-[11] "
-            onClick={() => dispatch(actions.setShowNavMobile(false))}
-          ></div>
-        )}
-        <ToastContainer />
-      </div>
+    <div className={`w-full  ${theme}`}>
       <Routes>
+        <Route
+          index
+          element={
+            <GlobalLayout>
+              <Home />
+            </GlobalLayout>
+          }
+        ></Route>
+        <Route
+          path="/"
+          element={
+            <GlobalLayout>
+              <Home />
+            </GlobalLayout>
+          }
+        ></Route>
+        <Route
+          path="/explored"
+          element={
+            <GlobalLayout>
+              <Explored />
+            </GlobalLayout>
+          }
+        ></Route>
+        <Route
+          path="/explored/:genre/:type"
+          element={
+            <GlobalLayout>
+              <Explored />
+            </GlobalLayout>
+          }
+        ></Route>
+        <Route
+          path="/detail/:id/:type"
+          element={
+            <GlobalLayout>
+              <Detail />
+            </GlobalLayout>
+          }
+        ></Route>
+        <Route
+          path="/player/:id/:type"
+          element={
+            <GlobalLayout>
+              <Player />
+            </GlobalLayout>
+          }
+        ></Route>
+        <Route
+          path="/player/:id/:type/:session/:episode"
+          element={
+            <GlobalLayout>
+              <Player />
+            </GlobalLayout>
+          }
+        ></Route>
+        <Route
+          path="/people/:id"
+          element={
+            <GlobalLayout>
+              <People />
+            </GlobalLayout>
+          }
+        ></Route>
+        <Route
+          path="/search/"
+          element={
+            <GlobalLayout>
+              <Search />
+            </GlobalLayout>
+          }
+        ></Route>
+        <Route
+          path="/search/:value"
+          element={
+            <GlobalLayout>
+              <Search />
+            </GlobalLayout>
+          }
+        ></Route>
+        <Route
+          path="/actors"
+          element={
+            <GlobalLayout>
+              <Actors />
+            </GlobalLayout>
+          }
+        ></Route>
+        <Route
+          path="/history"
+          element={
+            <GlobalLayout>
+              <History />
+            </GlobalLayout>
+          }
+        ></Route>
+        <Route
+          path="/user"
+          element={
+            <GlobalLayout>
+              <User />
+            </GlobalLayout>
+          }
+        ></Route>
+        <Route path="*" element={<Error notFound={true} />}></Route>
+        <Route path="/error" element={<Error />}></Route>
         <Route path="/authen" element={<Authen />}></Route>
         <Route path="/authen/:status" element={<Authen />}></Route>
       </Routes>
+      {showNavMobile && (
+        <div
+          className="fixed top-0 left-0 bottom-0 right-0 bg-black/[0.2] z-[11] "
+          onClick={() => dispatch(actions.setShowNavMobile(false))}
+        ></div>
+      )}
+      <SearchMobile />
+      <ToastContainer />
     </div>
   );
 }

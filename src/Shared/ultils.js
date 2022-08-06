@@ -72,6 +72,15 @@ export const getErrorMessFirebase = (code) => {
     case "auth/too-many-requests":
       mess = "Quá nhiều request,vui lòng thử lại sau";
       break;
+    case "auth/user-not-found":
+      mess = "This user is not found!";
+      break;
+    case "auth/email-already-in-use":
+      mess = "Tài khoản đã tồn tại";
+      break;
+    case "auth/weak-password":
+      mess = "Mật khẩu yếu,vui lòng thử lại";
+      break;
     default:
       break;
   }

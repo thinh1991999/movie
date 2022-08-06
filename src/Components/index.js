@@ -8,7 +8,10 @@ export { default as SquareButton } from "./SquareButton";
 export { default as DetailSlider } from "./DetailSlider";
 export { default as MessNoti } from "./MessNoti";
 export { default as SubmitButton } from "./SubmitButton";
+export { default as ButtonScrollTop } from "./ButtonScrollTop";
 export { default as Card } from "./Card";
+export { default as GlobalLayout } from "./GlobalLayout";
+export { default as SearchMobile } from "./SearchMobile";
 
 export { default as BannerSlider } from "./HomeComponents/BannerSlider";
 export { default as Trending } from "./HomeComponents/Trending";

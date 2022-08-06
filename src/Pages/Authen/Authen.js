@@ -8,6 +8,7 @@ function Authen() {
 
   const navigate = useNavigate();
   const user = useSelector((state) => state.user.user);
+  const language = useSelector((state) => state.root.language);
 
   useEffect(() => {
     user && navigate("/");
@@ -30,16 +31,16 @@ function Authen() {
           {status === "signIn" ? <SignIn /> : <SignUp />}
           {status === "signIn" ? (
             <p className="mt-5 text-gray-500">
-              You don't have account?{" "}
+              {language.noAccount}?{" "}
               <Link to={"/authen/signUp"} className="text-red-600 capitalize">
-                Sign up now
+                {language.signUpNow}
               </Link>
             </p>
           ) : (
             <p className="mt-5 text-gray-500">
-              You have account?{" "}
+              {language.haveAccount}?{" "}
               <Link to={"/authen/signIn"} className="text-red-600 capitalize">
-                Sign in now
+                {language.signInNow}
               </Link>
             </p>
           )}

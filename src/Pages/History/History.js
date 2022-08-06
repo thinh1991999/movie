@@ -47,13 +47,13 @@ export default function History() {
   }, []);
 
   return (
-    <div className="h-screen pt-16 pb-20 px-5 w-full overflow-y-scroll scroll-list dark:text-white">
-      <div className="flex items-center mt-5">
-        <h5 className="text-2xl font-medium">Lịch sử xem phim</h5>
+    <div className="pb-20 px-5 w-full text-gray-800 dark:text-white">
+      <div className="flex flex-wrap items-center mt-5">
+        <h5 className="text-2xl font-medium">{language.watchHistory}</h5>
         {historyData.length > 0 && (
-          <button className="-mt-5 ml-5" onClick={handleDeleteHistory}>
+          <button className="smm2:-mt-5 ml-5" onClick={handleDeleteHistory}>
             <SubmitButton
-              title="Xóa lịch sử"
+              title={language.deleteHistory}
               loading={false}
               label={true}
             ></SubmitButton>
@@ -65,14 +65,14 @@ export default function History() {
           <div className="flex flex-row flex-wrap">
             {historyData.map((item) => {
               return (
-                <div className="mdd:w-1/4 lgg:w-1/6">
+                <div className="w-full smm2:w-1/2 smm:w-1/3 mdd:w-1/4 lgg:w-1/6">
                   <Card data={item} type={"ALBUM"} />
                 </div>
               );
             })}
           </div>
         ) : (
-          <p>Bạn chưa có lịch sử xem phim</p>
+          <p>{language.noWatchHistory}</p>
         )}
       </div>
     </div>

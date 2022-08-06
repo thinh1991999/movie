@@ -166,9 +166,9 @@ function Comments({ id }) {
               id,
               data: { sentBy, comment, created, like, dislike },
             } = item;
-            const disliked = dislike ? dislike[user.uid] : 0;
+            const disliked = dislike ? dislike[user?.uid] : 0;
             const countDisLiked = dislike ? Object.keys(dislike).length : 0;
-            const liked = like ? like[user.uid] : 0;
+            const liked = like ? like[user?.uid] : 0;
             const countLiked = like ? Object.keys(like).length : 0;
             const timeUTC = moment.unix(created).utc().format();
             const timeFromNow = moment(timeUTC).fromNow();

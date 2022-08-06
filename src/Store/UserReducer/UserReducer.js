@@ -2,6 +2,7 @@ const initState = {
   user: null,
   userInfo: null,
   pathNameLogin: "",
+  loginCreateAcc: false,
 };
 
 export const UserReducer = (state = initState, { type, payload }) => {
@@ -22,6 +23,12 @@ export const UserReducer = (state = initState, { type, payload }) => {
       return {
         ...state,
         pathNameLogin: payload,
+      };
+    }
+    case "SET_LOGIN_CREATE_ACC": {
+      return {
+        ...state,
+        loginCreateAcc: payload,
       };
     }
     default:

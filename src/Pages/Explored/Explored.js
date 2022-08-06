@@ -13,6 +13,7 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import Card from "../../Components/Card";
 import { actions } from "../../Store";
 import httpService from "../../Services/http.service";
+import LoadingCard from "../../Components/LoadingCard";
 
 function Explored() {
   const { genre, type } = useParams();
@@ -186,10 +187,10 @@ function Explored() {
   }, [genre]);
 
   return (
-    <div className="w-full h-screen overflow-x-hidden flex flex-col pt-16 dark:bg-gray-800 bg-white px-5 py-5">
+    <div className="w-full h-full overflow-x-hidden flex flex-col pt-16 dark:bg-gray-800 bg-white px-5 py-5">
       <div className="">
         <div className="w-full mb-8">
-          <ul className="flex items-center">
+          <ul className="flex items-center md:justify-start justify-center">
             {navData.map((item, index) => {
               const { name } = item;
               return (
@@ -208,38 +209,47 @@ function Explored() {
             })}
           </ul>
         </div>
-        <div className="flex items-center justify-start flex-wrap">
-          <SelectConfig data={genres} handleSetSearch={handleSetSearch} />
-          <SelectConfig data={languages} handleSetSearch={handleSetSearch} />
-          <ChooseRate
-            title={language.exploreScore}
-            begin={"vote_average.gte"}
-            end={"vote_average.lte"}
-            number={10}
-            hint={2}
-            twoWay={true}
-          />
-          <ChooseRate
-            title={language.exploreMiniVote}
-            begin={"vote_count.gte"}
-            number={500}
-            hint={5}
-          />
+        <div className="flex items-center md:justify-start justify-center flex-wrap">
+          <div className="md:m-0 my-2">
+            <SelectConfig data={genres} handleSetSearch={handleSetSearch} />
+          </div>
+          <div className="md:m-0 my-2">
+            <SelectConfig data={languages} handleSetSearch={handleSetSearch} />
+          </div>
+          <div className="md:m-0 my-4">
+            <ChooseRate
+              title={language.exploreScore}
+              begin={"vote_average.gte"}
+              end={"vote_average.lte"}
+              number={10}
+              hint={2}
+              twoWay={true}
+            />
+          </div>
+          <div className="md:m-0 my-4">
+            <ChooseRate
+              title={language.exploreMiniVote}
+              begin={"vote_count.gte"}
+              number={500}
+              hint={5}
+            />
+          </div>
           <button className="mt-2" onClick={handleClearSearch}>
             <SquareButton
               msg={language.exploreResetBtn}
               bg="bg-red-600"
+              color="text-white"
             ></SquareButton>
           </button>
         </div>
       </div>
       <div
         id="scrollableDiv"
-        className="overflow-auto flex flex-col flex-1 scroll-list mt-4 mark"
+        className="overflow-auto flex flex-col h-[500px] md:h-[unset] md:flex-1 scroll-list mt-4 mark"
       >
         {firstLoading ? (
           <div className="w-full  py-5 overflow-hidden">
-            <AlbumSlider full={true} />
+            <LoadingCard />
           </div>
         ) : (
           <InfiniteScroll

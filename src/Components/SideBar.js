@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { FaHome, FaSignInAlt, FaSignOutAlt, FaUserPlus } from "react-icons/fa";
 import {
   MdVideoCameraBack,
@@ -102,7 +102,7 @@ function SideBar() {
     <div
       className={`fixed ${
         showNavMobile ? "w-3/4" : "w-0"
-      } transition-all duration-300 ease-linear z-20 overflow-hidden  lg:w-1/6 md:w-[calc(100%/16)] flex flex-col top-0 left-0 bg-gray-100 dark:bg-gray-900 h-full border-r dark:border-gray-800`}
+      } transition-all duration-300 ease-linear z-50 overflow-hidden  lg:w-1/6 md:w-[calc(100%/16)] flex flex-col top-0 left-0 bg-gray-100 dark:bg-gray-900 h-full border-r dark:border-gray-800`}
     >
       <div className="flex items-center lg:justify-start lg:pl-4 h-14 md:pl-0 md:justify-center justify-start pl-4">
         <Logo />
@@ -136,25 +136,29 @@ function SideBar() {
           <li className="px-5 pb-5 lg:block md:hidden">
             <div className="flex flex-row items-center h-8">
               <div className="capitalize text-xl  tracking-wide text-gray-800 dark:text-white font-bold">
-                personal
+                {language.account}
               </div>
             </div>
           </li>
           {user ? (
             <li>
               <LinkItem link={"/user"}>
-                <div className="flex flex-row items-center ">
-                  <img
-                    src={userInfo?.avatar || unKnowUserUrl}
-                    alt=""
-                    className="w-[40px] h-[40px] rounded-full mr-2 lg:ml-4 md:ml-0 ml-4"
-                  />
+                <div className=" w-full h-[40px] flex justify-start items-center lg:ml-4 md:ml-0 ml-4 relative">
+                  <div className="min-w-[40px] h-full rounded-full mr-2  overflow-hidden absolute left-0">
+                    <img
+                      src={userInfo?.avatar || unKnowUserUrl}
+                      alt=""
+                      className="w-full h-full "
+                    />
+                  </div>
                   <div
                     className={`${
-                      !showNavMobile && "hidden lg:block"
-                    } capitalize tracking-wide  text-gray-800 dark:text-white font-bold one-line`}
+                      !showNavMobile ? "hidden lg:flex" : "flex"
+                    } text-gray-800 dark:text-white font-bold h-full w-full items-center pr-[30px]`}
                   >
-                    {user?.email}
+                    <div className="capitalize tracking-wide  whitespace-nowrap overflow-hidden text-ellipsis pl-[45px]">
+                      {user?.email}
+                    </div>
                   </div>
                 </div>
               </LinkItem>
@@ -172,7 +176,7 @@ function SideBar() {
                   <FaSignOutAlt />
                 </span>
                 <span className="ml-2 lg:block md:hidden text-base tracking-wide truncate">
-                  Sign out
+                  {language.logout}
                 </span>
               </button>
             </li>
@@ -187,7 +191,7 @@ function SideBar() {
                     <FaSignInAlt />
                   </span>
                   <span className="ml-2 lg:block md:hidden text-base tracking-wide truncate">
-                    Sign in
+                    {language.login}
                   </span>
                 </button>
               </li>
@@ -200,7 +204,7 @@ function SideBar() {
                     <FaUserPlus />
                   </span>
                   <span className="ml-2 lg:block md:hidden text-base tracking-wide truncate">
-                    Sign up
+                    {language.signUp}
                   </span>
                 </button>
               </li>
@@ -208,10 +212,6 @@ function SideBar() {
           )}
         </ul>
       </div>
-      {/* <Manager>
-        <Target>abc</Target>
-        <Popper>aaa</Popper>
-      </Manager> */}
     </div>
   );
 }
