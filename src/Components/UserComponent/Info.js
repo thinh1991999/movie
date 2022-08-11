@@ -177,16 +177,16 @@ export default function Info({ infoValues, setInfoValues, handleUpdateInfo }) {
               <input
                 type="radio"
                 name="gender"
-                id="null"
+                id="other"
                 className="cursor-pointer"
-                value="null"
+                value="other"
                 onChange={(e) => {
                   handleChangeInput("gender", e.target.value);
                 }}
-                checked={infoValues?.gender === "null"}
+                checked={infoValues?.gender === "other"}
                 onFocus={() => handleFocus()}
               />
-              <label className="ml-2 cursor-pointer" htmlFor="null">
+              <label className="ml-2 cursor-pointer" htmlFor="other">
                 {language.genderNull}
               </label>
             </div>

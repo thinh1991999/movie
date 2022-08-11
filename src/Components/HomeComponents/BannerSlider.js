@@ -8,13 +8,12 @@ import { getImageUrl } from "../../Shared";
 function BannerSlider({ data }) {
   const [bannerData, setBannerData] = useState(data);
   const [mount, setMount] = useState(false);
-  console.log(bannerData);
   useEffect(() => {
     if (!mount && data) {
       setBannerData(data);
       setMount(true);
     }
-  }, [data]);
+  }, [data, mount]);
 
   if (!bannerData) {
     return (

@@ -1,14 +1,14 @@
 import { useEffect, useState } from "react";
 import { FaRegUserCircle } from "react-icons/fa";
-import { AiOutlineSend, AiFillLike, AiFillDislike } from "react-icons/ai";
+import { AiOutlineSend } from "react-icons/ai";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
 import { onValue, ref, push, child, update } from "firebase/database";
 import { Timestamp } from "firebase/firestore";
-import moment from "moment";
 import _ from "lodash";
 import { db, unKnowUserUrl } from "../../Shared";
 import { actions } from "../../Store";
+import CommentList from "./CommentList";
 
 function Comments({ id }) {
   const dispatch = useDispatch();
@@ -45,21 +45,6 @@ function Comments({ id }) {
         comment: "",
       });
     }
-  };
-
-  const setUpLike = (key, method, unMethod) => {
-    const updates = {};
-    const fIndex = _.findIndex(comments, (o) => o.id === key);
-    const list = comments[fIndex].data[method];
-    const trigger = list ? list[user.uid] : 0;
-    if (trigger === 1) {
-      updates["/comments/" + id + "/" + key + `/${method}/` + user.uid] = null;
-    } else {
-      updates["/comments/" + id + "/" + key + `/${method}/` + user.uid] = 1;
-      updates["/comments/" + id + "/" + key + `/${unMethod}/` + user.uid] =
-        null;
-    }
-    update(ref(db), updates);
   };
 
   useEffect(() => {
@@ -160,59 +145,7 @@ function Comments({ id }) {
         )}
       </div>
       {comments.length > 0 && (
-        <ul className="mt-5">
-          {comments.map((item) => {
-            const {
-              id,
-              data: { sentBy, comment, created, like, dislike },
-            } = item;
-            const disliked = dislike ? dislike[user?.uid] : 0;
-            const countDisLiked = dislike ? Object.keys(dislike).length : 0;
-            const liked = like ? like[user?.uid] : 0;
-            const countLiked = like ? Object.keys(like).length : 0;
-            const timeUTC = moment.unix(created).utc().format();
-            const timeFromNow = moment(timeUTC).fromNow();
-            return (
-              <li key={id} className="flex items-center mt-5">
-                <div className="h-[50px] mr-2 w-[50px] rounded-full overflow-hidden">
-                  <img
-                    src={infoUsers[sentBy]?.avatar || unKnowUserUrl}
-                    alt=""
-                  />
-                </div>
-                <div className="">
-                  <h3>
-                    {infoUsers[sentBy]?.email}
-                    <span className="text-sm font-thin ml-1 text-gray-300">
-                      {timeFromNow}
-                    </span>
-                  </h3>
-                  <p>{comment}</p>
-                  <div className="flex">
-                    <button
-                      onClick={() => setUpLike(id, "like", "dislike")}
-                      className={`${
-                        liked === 1 && `text-blue-600`
-                      } flex items-center mr-3 text-xl hover:opacity-50 transition-all duration-300 ease-linear`}
-                    >
-                      <AiFillLike />
-                      <span className="ml-1 text-sm">{countLiked}</span>
-                    </button>
-                    <button
-                      onClick={() => setUpLike(id, "dislike", "like")}
-                      className={`${
-                        disliked === 1 && `text-blue-600`
-                      } flex items-center mr-3 text-xl hover:opacity-50 transition-all duration-300 ease-linear`}
-                    >
-                      <AiFillDislike />
-                      <span className="ml-1 text-sm">{countDisLiked}</span>
-                    </button>
-                  </div>
-                </div>
-              </li>
-            );
-          })}
-        </ul>
+        <CommentList comments={comments} infoUsers={infoUsers} id={id} />
       )}
     </div>
   );

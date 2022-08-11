@@ -1,17 +1,14 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import {
-  signInWithEmailAndPassword,
-  signInWithPopup,
-  GoogleAuthProvider,
-} from "firebase/auth";
-import { BsFacebook } from "react-icons/bs";
+import { signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
 import { FcGoogle } from "react-icons/fc";
-import { auth, getErrorMessFirebase, provider } from "../../Shared";
+import { auth, db, getErrorMessFirebase, provider } from "../../Shared";
 import Validator from "../../Shared/validator";
 import { useDispatch, useSelector } from "react-redux";
 import SubmitButton from "../SubmitButton";
 import { actions } from "../../Store";
+import MessNoti from "../MessNoti";
+import { child, get, ref, update } from "firebase/database";
 
 function SignIn() {
   const navigate = useNavigate();
@@ -48,6 +45,10 @@ function SignIn() {
   });
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
+  const [mess, setMess] = useState({
+    type: true,
+    value: "",
+  });
   const validator = useRef(new Validator(rules)).current;
 
   const handleSubmit = (e) => {
@@ -66,10 +67,22 @@ function SignIn() {
         })
         .catch((error) => {
           const errorCode = error.code;
-          setErrors({
-            ...errors,
-            password: getErrorMessFirebase(errorCode),
-          });
+          if (errorCode === "auth/user-not-found") {
+            setErrors({
+              ...errors,
+              email: getErrorMessFirebase(errorCode),
+            });
+          } else if (errorCode === "auth/wrong-password") {
+            setErrors({
+              ...errors,
+              password: getErrorMessFirebase(errorCode),
+            });
+          } else {
+            setMess({
+              type: false,
+              value: getErrorMessFirebase(errorCode),
+            });
+          }
           setLoading(false);
         });
     }
@@ -82,12 +95,30 @@ function SignIn() {
     provider.addScope("profile");
     provider.addScope("email");
     signInWithPopup(auth, provider)
-      .then(() => {
-        if (pathNameLogin) {
-          navigate(pathNameLogin);
-        } else {
-          navigate("/");
-        }
+      .then((user) => {
+        const pathUser = "/users/" + user.user.uid;
+        get(child(ref(db), pathUser)).then((snapshot) => {
+          if (snapshot.val()) {
+            if (pathNameLogin) {
+              navigate(pathNameLogin);
+            } else {
+              navigate("/");
+            }
+          } else {
+            const updates = {};
+            const { email } = user.user;
+            updates[pathUser] = {
+              email,
+            };
+            update(ref(db), updates).then(() => {
+              if (pathNameLogin) {
+                navigate(pathNameLogin);
+              } else {
+                navigate("/");
+              }
+            });
+          }
+        });
       })
       .catch((error) => {
         const errorCode = error.code;
@@ -95,7 +126,6 @@ function SignIn() {
           ...errors,
           password: getErrorMessFirebase(errorCode),
         });
-        setLoading(false);
       });
   };
 
@@ -147,6 +177,9 @@ function SignIn() {
           }`}
         />
         {errors.password && <p className="text-red-600">{errors.password}</p>}
+        <div className="px-2 lg:block flex justify-center">
+          <MessNoti mess={mess} />
+        </div>
         <SubmitButton title={language.login} loading={loading} />
       </form>
       <div className="flex justify-between items-center mt-5">
@@ -157,9 +190,6 @@ function SignIn() {
       <div className="flex mt-5">
         <p className="mr-2 font-thin capitalize">{language.signInWith}</p>{" "}
         <div className="flex">
-          <button className="text-blue-600 text-2xl bg-white rounded-full">
-            <BsFacebook />
-          </button>
           <button className="text-2xl ml-2" onClick={handleLoginGG}>
             <FcGoogle />
           </button>

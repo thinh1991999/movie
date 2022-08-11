@@ -120,4 +120,7 @@ export const VietNam = {
   signUpNow: "Đăng ký ngay",
   haveAccount: "Bạn đã có tài khoản",
   signInNow: "Đăng nhập ngay",
+  momentSetup: "vi",
+  sessions: "Danh sách phần phim",
+  episodes: "Danh sách tập",
 };

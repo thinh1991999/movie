@@ -47,7 +47,7 @@ function InforPlayer({
       {seasons?.length > 0 && (
         <div className="mb-4">
           <h4 className="capitalize text-gray-800 dark:text-white mb-2">
-            sessions
+            {language.sessions}
           </h4>
           <div className="">
             {seasons.map((item) => {
@@ -73,7 +73,9 @@ function InforPlayer({
       )}
       {episodeData?.episodes?.length > 0 && (
         <div className="mb-4">
-          <h4 className="text-gray-800 dark:text-white mb-2">Episodes</h4>
+          <h4 className="text-gray-800 dark:text-white mb-2 capitalize">
+            {language.episodes}
+          </h4>
           <div className="">
             {episodeData?.episodes.map((item, index) => {
               const { episode_number } = item;

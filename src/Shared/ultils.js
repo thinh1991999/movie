@@ -73,13 +73,16 @@ export const getErrorMessFirebase = (code) => {
       mess = "Quá nhiều request,vui lòng thử lại sau";
       break;
     case "auth/user-not-found":
-      mess = "This user is not found!";
+      mess = "Không tồn tại tài khoản này";
       break;
     case "auth/email-already-in-use":
       mess = "Tài khoản đã tồn tại";
       break;
     case "auth/weak-password":
       mess = "Mật khẩu yếu,vui lòng thử lại";
+      break;
+    case "auth/account-exists-with-different-credential":
+      mess = "Tài khoản này đã được sử dụng bằng phương pháp xác thực khác";
       break;
     default:
       break;

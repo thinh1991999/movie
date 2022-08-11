@@ -1,5 +1,5 @@
 import { Logo, SignIn, SignUp } from "../../Components";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 
@@ -11,12 +11,20 @@ function Authen() {
   const language = useSelector((state) => state.root.language);
 
   useEffect(() => {
-    user && navigate("/");
-  }, []);
+    let timeOut = null;
+    if (user) {
+      timeOut = setTimeout(() => {
+        navigate("/");
+      }, 1000);
+    }
+    return () => {
+      clearTimeout(timeOut);
+    };
+  }, [user, navigate]);
 
   useEffect(() => {
     if (status !== "signUp" && status !== "signIn") navigate("/authen/signIn");
-  }, [status]);
+  }, [status, navigate]);
 
   return (
     <div className="h-screen w-full relative z-50">

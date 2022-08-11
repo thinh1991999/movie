@@ -121,4 +121,7 @@ export const English = {
   signUpNow: "Sign up now",
   haveAccount: "You have account",
   signInNow: "Sign in now",
+  momentSetup: "en-gb",
+  sessions: "sessions",
+  episodes: "episodes",
 };

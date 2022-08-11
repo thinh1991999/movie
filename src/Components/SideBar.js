@@ -144,7 +144,7 @@ function SideBar() {
             <li>
               <LinkItem link={"/user"}>
                 <div className=" w-full h-[40px] flex justify-start items-center lg:ml-4 md:ml-0 ml-4 relative">
-                  <div className="min-w-[40px] h-full rounded-full mr-2  overflow-hidden absolute left-0">
+                  <div className="w-[40px] h-full rounded-full mr-2  overflow-hidden absolute left-0">
                     <img
                       src={userInfo?.avatar || unKnowUserUrl}
                       alt=""

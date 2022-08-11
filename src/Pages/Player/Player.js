@@ -48,7 +48,7 @@ function Player() {
         setEpisodeData(res.data);
       });
     }
-  }, [session, id]);
+  }, [session, id, episode]);
 
   useEffect(() => {
     let timeOutSetMedia;
@@ -63,7 +63,7 @@ function Player() {
     return () => {
       clearTimeout(timeOutSetMedia);
     };
-  }, [episode, session, type]);
+  }, [episode, session, type, id]);
 
   useEffect(() => {
     let setHistory;
@@ -88,8 +88,17 @@ function Player() {
   }, [detailData, user]);
 
   useEffect(() => {
+    let realName = "";
+    if (detailData) {
+      const { name, title } = detailData;
+      realName = name ? name : title;
+    }
+    document.title = language.detailWatch + " " + realName;
+  }, [detailData, language]);
+
+  useEffect(() => {
     dispatch(actions.setBgHeader(true));
-  }, []);
+  }, [dispatch]);
 
   if (loading) {
     return (

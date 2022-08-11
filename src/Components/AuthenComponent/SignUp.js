@@ -5,6 +5,7 @@ import { createUserWithEmailAndPassword, signOut } from "firebase/auth";
 import { ref, update } from "firebase/database";
 import SubmitButton from "../SubmitButton";
 import { useSelector } from "react-redux";
+import MessNoti from "../MessNoti";
 
 function SignUp() {
   const language = useSelector((state) => state.root.language);
@@ -44,7 +45,7 @@ function SignUp() {
     cfPassWord: "",
   });
   const [errors, setErrors] = useState({});
-  const [messSuccess, setMessSuccess] = useState("");
+  const [mess, setMess] = useState({ type: true, value: null });
   const [loading, setLoading] = useState(false);
   const validator = useRef(new Validator(rules)).current;
 
@@ -60,27 +61,36 @@ function SignUp() {
       )
         .then((user) => {
           const updates = {};
-          const { displayName, email, photoURL } = user.user;
+          const { email } = user.user;
           updates["/users/" + user.user.uid] = {
-            displayName,
             email,
-            photoURL,
           };
           update(ref(db), updates);
-          setMessSuccess(language.successSignup);
+          setMess({
+            type: true,
+            value: language.successSignup,
+          });
           setSignUpValue({
             email: "",
             password: "",
             cfPassWord: "",
           });
           signOut(auth);
+          setLoading(false);
         })
         .catch((error) => {
           const errorCode = error.code;
-          setErrors({
-            ...errors,
-            password: getErrorMessFirebase(errorCode),
-          });
+          if (errorCode === "auth/email-already-in-use") {
+            setErrors({
+              ...errors,
+              email: getErrorMessFirebase(errorCode),
+            });
+          } else {
+            setMess({
+              type: false,
+              value: getErrorMessFirebase(errorCode),
+            });
+          }
           setLoading(false);
         });
     }
@@ -103,7 +113,10 @@ function SignUp() {
       ...errors,
       [e.target.name]: "",
     });
-    setMessSuccess("");
+    setMess({
+      type: true,
+      value: null,
+    });
   };
 
   const handleChange = (e) => {
@@ -179,7 +192,9 @@ function SignUp() {
         {errors.cfPassWord && (
           <p className="text-red-600">{errors.cfPassWord}</p>
         )}
-        {messSuccess && <p className="text-blue-600">{messSuccess}</p>}
+        <div className="px-2 lg:block flex justify-center">
+          <MessNoti mess={mess} />
+        </div>
         <SubmitButton title={language.signUp} loading={loading} />
       </form>
     </div>
