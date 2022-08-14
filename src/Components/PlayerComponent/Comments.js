@@ -1,28 +1,36 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { FaRegUserCircle } from "react-icons/fa";
 import { AiOutlineSend } from "react-icons/ai";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
 import { onValue, ref, push, child, update } from "firebase/database";
 import { Timestamp } from "firebase/firestore";
+import data from "@emoji-mart/data";
+import Picker from "@emoji-mart/react";
 import _ from "lodash";
 import { db, unKnowUserUrl } from "../../Shared";
 import { actions } from "../../Store";
 import CommentList from "./CommentList";
+import { BsEmojiSmile } from "react-icons/bs";
+import { useRef } from "react";
 
 function Comments({ id }) {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user.user);
   const userInfo = useSelector((state) => state.user.userInfo);
   const language = useSelector((state) => state.root.language);
+  const theme = useSelector((state) => state.root.theme);
+
   const location = useLocation();
   const navigate = useNavigate();
 
+  const commentRef = useRef(null);
+  const emoijRef = useRef(null);
   const [comments, setComments] = useState([]);
-  const [commentValue, setCommentValue] = useState({
-    comment: "",
-  });
+  const [commentValue, setCommentValue] = useState("");
   const [infoUsers, setInfoUsers] = useState({});
+  const [showEmoji, setShowEmoji] = useState(false);
+  const [perLine, setPerLine] = useState(9);
 
   const handleFowardToLogin = () => {
     dispatch(actions.setPathNameLogin(location.pathname));
@@ -31,21 +39,38 @@ function Comments({ id }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (commentValue.comment.trim().length > 0) {
+    if (commentValue.trim().length > 0) {
       const values = {
         sentBy: user.uid,
-        comment: commentValue.comment,
+        comment: commentValue.trim(),
         created: Timestamp.fromDate(new Date()).seconds,
       };
       const newCommentKey = push(child(ref(db), "comments" + id)).key;
       const updates = {};
       updates["/comments/" + id + "/" + newCommentKey] = values;
       update(ref(db), updates);
-      setCommentValue({
-        comment: "",
-      });
+      setCommentValue("");
     }
   };
+
+  const onEmojiSelect = (e) => {
+    if (commentValue.length > 198) return;
+    const cursor = commentRef.current.selectionStart;
+    const text =
+      commentValue.slice(0, cursor) + e.native + commentValue.slice(cursor);
+    setCommentValue(text);
+    commentRef.current.focus();
+    commentRef.current.selectionStart = cursor + 2;
+    commentRef.current.selectionEnd = cursor + 2;
+  };
+
+  const setPerLineEmoji = useCallback((size) => {
+    if (size <= 400) {
+      setPerLine(7);
+    } else {
+      setPerLine(9);
+    }
+  }, []);
 
   useEffect(() => {
     const commentsRef = ref(db, "comments/" + id);
@@ -90,41 +115,96 @@ function Comments({ id }) {
       }
     });
   }, [id]);
+
+  useEffect(() => {
+    const clickEvent = (e) => {
+      if (!emoijRef.current.contains(e.target)) {
+        setShowEmoji(false);
+      }
+    };
+    const resizeEvent = (e) => {
+      setPerLineEmoji(e.target.innerWidth);
+    };
+    if (showEmoji) {
+      window.addEventListener("click", clickEvent);
+      window.addEventListener("resize", resizeEvent);
+    }
+    return () => {
+      window.removeEventListener("click", clickEvent);
+      window.addEventListener("resize", resizeEvent);
+    };
+  }, [showEmoji, setPerLineEmoji]);
+
+  useEffect(() => {
+    setPerLineEmoji(window.innerWidth);
+  }, [setPerLineEmoji]);
+
   return (
     <div className="w-full text-gray-800 dark:text-white mt-10">
       <h5 className="text-2xl capitalize">
         {language.playerComments}: {comments.length}
       </h5>
-      <div className=" py-2 px-4 border-2 border-gray-600 dark:border-gray-200 rounded-full mt-5">
+      <div className="">
         {user && userInfo && (
-          <form action="" onSubmit={handleSubmit}>
-            <div className="flex items-center">
-              <img
-                src={userInfo?.avatar || unKnowUserUrl}
-                alt=""
-                className="h-[30px] w-[30px] bg-white rounded-full mr-2"
-              />
-              <input
-                type="text"
-                placeholder="Your comment..."
-                className="w-full bg-transparent outline-none"
-                value={commentValue.comment}
-                onChange={(e) =>
-                  setCommentValue({
-                    ...commentValue,
-                    comment: e.target.value,
-                  })
-                }
-              />
-              <button
-                type="submit"
-                onSubmit={handleSubmit}
-                className="text-3xl"
-              >
-                <AiOutlineSend />
-              </button>
+          <>
+            <div className="flex justify-end my-2">
+              <span className="text-sm">{commentValue.length}/200</span>
             </div>
-          </form>
+            <form
+              action=""
+              onSubmit={handleSubmit}
+              className="py-2 px-4 border-2 border-gray-600 dark:border-gray-200 rounded-full"
+            >
+              <div className="flex items-center">
+                <img
+                  src={userInfo?.avatar || unKnowUserUrl}
+                  alt=""
+                  className="h-[30px] w-[30px] bg-white rounded-full mr-2"
+                />
+                <input
+                  ref={commentRef}
+                  type="text"
+                  placeholder="Your comment..."
+                  className="w-full bg-transparent outline-none"
+                  value={commentValue}
+                  onChange={(e) => {
+                    e.target.value.length <= 200 &&
+                      setCommentValue(e.target.value);
+                  }}
+                />
+                <div className="flex justify-center items-center mr-4 relative">
+                  <button
+                    type="button"
+                    onClick={() => setShowEmoji(!showEmoji)}
+                    className="text-3xl hover:opacity-50"
+                  >
+                    <BsEmojiSmile />
+                  </button>
+                  {showEmoji && (
+                    <div
+                      ref={emoijRef}
+                      className="absolute bottom-full md:right-0 right-[-70px]"
+                    >
+                      <Picker
+                        data={data}
+                        onEmojiSelect={(e) => onEmojiSelect(e)}
+                        theme={theme}
+                        emojiSize={24}
+                        perLine={perLine}
+                      />
+                    </div>
+                  )}
+                </div>
+                <button
+                  type="submit"
+                  onSubmit={handleSubmit}
+                  className="text-3xl hover:opacity-50"
+                >
+                  <AiOutlineSend />
+                </button>
+              </div>
+            </form>
+          </>
         )}
         {!user && (
           <div className="w-full items-center flex">

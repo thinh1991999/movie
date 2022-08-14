@@ -3,10 +3,13 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@emoji-mart/data": "^1.0.5",
+    "@emoji-mart/react": "^1.0.1",
     "@testing-library/jest-dom": "^5.16.2",
     "@testing-library/react": "^12.1.4",
     "@testing-library/user-event": "^13.5.0",
     "axios": "^0.26.1",
+    "emoji-mart": "^5.2.1",
     "firebase": "^9.6.10",
     "lodash": "^4.17.21",
     "moment": "^2.29.3",

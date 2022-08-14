@@ -1,5 +1,5 @@
 export {
-  showPopper,
+  // showPopper,
   resizeImage,
   getImageUrl,
   getTimeMovie,

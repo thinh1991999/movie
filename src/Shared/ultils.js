@@ -1,19 +1,19 @@
-import { createPopper } from "@popperjs/core";
+// import { createPopper } from "@popperjs/core";
 import { English, VietNam } from "../Lanuages";
 
-export const showPopper = (reference, popper) => {
-  createPopper(reference, popper, {
-    placement: "top",
-    modifiers: [
-      {
-        name: "offset",
-        options: {
-          offset: [10, 20],
-        },
-      },
-    ],
-  });
-};
+// export const showPopper = (reference, popper) => {
+//   createPopper(reference, popper, {
+//     placement: "top",
+//     modifiers: [
+//       {
+//         name: "offset",
+//         options: {
+//           offset: [10, 20],
+//         },
+//       },
+//     ],
+//   });
+// };
 
 export const resizeImage = (url = "", width = "", height = "") =>
   url.startsWith("https://graph.facebook.com/")

@@ -46,7 +46,7 @@ export default function GlobalLayout({ children }) {
     return () => {
       localMainRef.removeEventListener("scroll", handleScroll);
     };
-  }, [zeroBgHeader]);
+  }, [zeroBgHeader, dispatch, handleSetShowScroll]);
 
   return (
     <>
@@ -66,7 +66,7 @@ export default function GlobalLayout({ children }) {
           {children}
           {showScrollTop && (
             <button
-              className="absolute bottom-5 right-5 text-black z-50"
+              className="absolute bottom-5 right-5 text-black z-50 hover:opacity-50"
               onClick={handleScrollTop}
             >
               <ButtonScrollTop />

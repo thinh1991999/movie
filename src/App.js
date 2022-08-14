@@ -42,12 +42,12 @@ function App() {
         dispatch(actions.setLoginCreateAcc(false));
       }
     });
-  }, []);
+  }, [dispatch]);
 
   useEffect(() => {
     dispatch(actions.setRouterHistory(location));
     dispatch(actions.setCurrentRouter(location.key));
-  }, [location]);
+  }, [location, dispatch]);
 
   return (
     <div className={`w-full  ${theme}`}>

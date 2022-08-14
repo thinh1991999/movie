@@ -33,7 +33,7 @@ function Card({ data, type, typeNavigate = null }) {
     <div className="w-full p-2 ">
       <div
         onClick={handleToDetail}
-        className="relative rounded-md group overflow-hidden group  cursor-pointer bg-gray-500 card-shadow"
+        className="relative rounded-md  overflow-hidden  cursor-pointer bg-gray-500 card-shadow group"
       >
         <div className="w-full h-auto overflow-hidden relative ">
           <LazyLoadImage

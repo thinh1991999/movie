@@ -20,5 +20,9 @@ module.exports = {
     namedGroups: ["foo", "bar"],
   },
   plugins: [require("tailwindcss-named-groups")],
-  variants: {},
+  variants: {
+    extend: {
+      translate: ["group-hover", "hover"],
+    },
+  },
 };

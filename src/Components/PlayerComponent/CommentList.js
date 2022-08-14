@@ -1,11 +1,9 @@
 import { child, get, ref, remove, update } from "firebase/database";
 import _ from "lodash";
 import moment from "moment";
-import { toast } from "react-toastify";
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { AiFillDislike, AiFillLike } from "react-icons/ai";
 import { BsThreeDots } from "react-icons/bs";
-import { MdOutlineSendAndArchive } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
 import "moment/locale/en-gb";
 import "moment/locale/vi";
@@ -14,6 +12,8 @@ import { actions } from "../../Store";
 import Modal from "../Modal";
 import SquareButton from "../SquareButton";
 import DetailComment from "./DetailComment";
+import CommentSetting from "./CommentSetting";
+import UpdateComment from "./UpdateComment";
 
 export default function CommentList({ comments, infoUsers, id }) {
   const dispatch = useDispatch();
@@ -22,12 +22,14 @@ export default function CommentList({ comments, infoUsers, id }) {
   const language = useSelector((state) => state.root.language);
 
   const settingRef = useRef(null);
+  const btnSettingRefs = useRef({}).current;
   const [settingId, setSettingId] = useState(null);
   const [settingIdMobile, setSettingIdMobile] = useState(null);
   const [deleteId, setDeleteId] = useState(null);
   const [updateId, setUpdateId] = useState(null);
-  const [updateValue, setUpdateValue] = useState("");
   const [detailUser, setDetailUser] = useState(null);
+  const [showAll, setShowAll] = useState(false);
+  const [postionSettings, setPositionSettings] = useState({});
 
   const setUpLike = (key, method, unMethod) => {
     const updates = {};
@@ -44,14 +46,13 @@ export default function CommentList({ comments, infoUsers, id }) {
     update(ref(db), updates);
   };
 
-  const handleShowSetting = (id) => {
-    if (id === settingId) {
+  const handleShowSetting = (idComment) => {
+    if (idComment === settingId) {
       setSettingId(null);
     } else {
-      setSettingId(id);
+      setSettingId(idComment);
     }
   };
-
   const handleShowSettingMoblie = (id) => {
     setSettingIdMobile(id);
     dispatch(actions.setShowModal(true));
@@ -76,71 +77,15 @@ export default function CommentList({ comments, infoUsers, id }) {
       });
   };
 
-  const handleCancerUpdate = () => {
-    setUpdateId(null);
-    setUpdateValue(null);
-  };
-
-  const handleSubmitUpdate = (e) => {
-    e.preventDefault();
-    const path = "/comments/" + id + "/" + updateId + "/comment/";
-    const updates = {};
-    updates[path] = updateValue;
-    update(ref(db), updates)
-      .then(() => {
-        setUpdateId(null);
-        setUpdateValue(null);
-      })
-      .catch(() => {
-        setUpdateId(null);
-        setUpdateValue(null);
-      });
-  };
-
-  const closeModal = useCallback(() => {
-    if (showModal) dispatch(actions.setShowModal(false));
-    if (settingId) setSettingId(null);
-    if (settingIdMobile) setSettingIdMobile(null);
-    if (deleteId) setDeleteId(null);
-  }, [showModal, dispatch, settingIdMobile, deleteId, settingId]);
-
-  const handleHideComment = (idComment) => {
-    const path = "/comments/" + id + "/" + idComment + "/hides/";
-    get(child(ref(db), path)).then((snapshot) => {
-      if (snapshot.val()) {
-        const hideList = snapshot.val();
-        if (hideList[user.uid]) {
-          remove(ref(db, path + user.uid));
-        } else {
-          const updates = {};
-          updates[path + user.uid] = 1;
-          update(ref(db), updates);
-        }
-        closeModal();
-      } else {
-        const updates = {};
-        updates[path + user.uid] = 1;
-        update(ref(db), updates);
-        closeModal();
-      }
-    });
-  };
-  const handleGetDetail = (sentBy) => {
-    setSettingIdMobile(false);
-    const path = "/users/" + sentBy;
-    get(child(ref(db), path)).then((snapshot) => {
-      if (snapshot.val()) {
-        setDetailUser(snapshot.val());
-        dispatch(actions.setShowModal(true));
-      } else {
-        toast.error("Người dùng này chưa có thông tin");
-      }
-    });
-  };
-
   useEffect(() => {
     const clickEvent = (e) => {
-      if (!settingRef.current?.contains(e.target)) {
+      let checked = true;
+      _.forIn(btnSettingRefs, function (_, key) {
+        if (btnSettingRefs[key]?.contains(e.target)) {
+          checked = false;
+        }
+      });
+      if (checked) {
         setSettingId(null);
       }
     };
@@ -150,9 +95,12 @@ export default function CommentList({ comments, infoUsers, id }) {
     return () => {
       window.removeEventListener("click", clickEvent);
     };
-  }, [settingId]);
+  }, [settingId, btnSettingRefs]);
 
   useEffect(() => {
+    if (showModal) {
+      setSettingId(null);
+    }
     if (!showModal) {
       setDeleteId(null);
       setDetailUser(null);
@@ -160,62 +108,45 @@ export default function CommentList({ comments, infoUsers, id }) {
   }, [showModal]);
 
   useEffect(() => {
-    const eventKeyPress = (e) => {
-      if (e.keyCode === 27) {
-        setUpdateId(null);
-        setUpdateValue(null);
-      }
-    };
-    if (updateId) {
-      window.addEventListener("keydown", eventKeyPress);
+    if (comments.length > 0 && btnSettingRefs) {
+      const windowWidth = window.innerWidth;
+      const posObj = {};
+      _.forIn(btnSettingRefs, function (_, key) {
+        if (btnSettingRefs[key]) {
+          const { right } = btnSettingRefs[key].getBoundingClientRect();
+          const sizeCheck = windowWidth - right;
+          let pos = "L";
+          if (sizeCheck >= 350) {
+            pos = "L";
+          } else if (sizeCheck >= 200 && sizeCheck < 350) {
+            pos = "CT";
+          } else {
+            pos = "R";
+          }
+          posObj[key] = pos;
+        }
+      });
+      setPositionSettings({ ...posObj });
     }
-    return () => {
-      window.removeEventListener("keydown", eventKeyPress);
-    };
-  }, [updateId]);
-
+  }, [comments, btnSettingRefs, showAll]);
   return (
     <>
       <ul className="mt-5">
-        {comments.map((item) => {
+        {comments.map((item, index) => {
           const {
-            id,
+            id: idComment,
             data: { sentBy, comment, hides, created, like, dislike },
           } = item;
-          if (id === updateId) {
+          if (idComment === updateId) {
             return (
               <>
-                <li key={id}>
-                  <div className="w-full py-2 px-4 border-2 border-gray-600 dark:border-gray-200 rounded-full mt-5">
-                    <form onSubmit={handleSubmitUpdate}>
-                      <div className="flex items-center">
-                        <img
-                          src={infoUsers[sentBy]?.avatar || unKnowUserUrl}
-                          alt=""
-                          className="h-[40px] w-[40px] bg-white rounded-full mr-2"
-                        />
-                        <input
-                          type="text"
-                          placeholder="Your comment..."
-                          className="w-full bg-transparent outline-none"
-                          value={updateValue}
-                          onChange={(e) => setUpdateValue(e.target.value)}
-                        />
-                        <button type="submit" className="text-3xl">
-                          <MdOutlineSendAndArchive />
-                        </button>
-                      </div>
-                    </form>
-                  </div>
-                  <span className="ml-[calc(50px_+_1rem)] mt-1 block text-sm">
-                    Nhấn Esc để{" "}
-                    <button
-                      className="text-blue-600"
-                      onClick={handleCancerUpdate}
-                    >
-                      Hủy
-                    </button>
-                  </span>
+                <li key={idComment}>
+                  <UpdateComment
+                    idComment={idComment}
+                    idPlayer={id}
+                    setUpdateId={setUpdateId}
+                    comment={comment}
+                  />
                 </li>
               </>
             );
@@ -228,9 +159,10 @@ export default function CommentList({ comments, infoUsers, id }) {
           const timeUTC = moment.unix(created).utc().format();
           const timeFromNow = moment(timeUTC).fromNow();
           const checkHided = hides?.[user?.uid] ? true : false;
+          if (index > 5 && !showAll) return null;
           return (
             <li
-              key={id}
+              key={idComment}
               className={`${
                 checkHided ? "opacity-50" : ""
               } flex items-center mt-5 group`}
@@ -252,7 +184,7 @@ export default function CommentList({ comments, infoUsers, id }) {
                 <p className="break-words">{comment}</p>
                 <div className="flex">
                   <button
-                    onClick={() => setUpLike(id, "like", "dislike")}
+                    onClick={() => setUpLike(idComment, "like", "dislike")}
                     className={`${
                       liked === 1 && `text-blue-600`
                     } flex items-center mr-3 text-xl hover:opacity-50 transition-all duration-300 ease-linear`}
@@ -261,7 +193,7 @@ export default function CommentList({ comments, infoUsers, id }) {
                     <span className="ml-1 text-sm">{countLiked}</span>
                   </button>
                   <button
-                    onClick={() => setUpLike(id, "dislike", "like")}
+                    onClick={() => setUpLike(idComment, "dislike", "like")}
                     className={`${
                       disliked === 1 && `text-blue-600`
                     } flex items-center mr-3 text-xl hover:opacity-50 transition-all duration-300 ease-linear`}
@@ -270,119 +202,73 @@ export default function CommentList({ comments, infoUsers, id }) {
                     <span className="ml-1 text-sm">{countDisLiked}</span>
                   </button>
                   <button
-                    onClick={() => handleShowSettingMoblie(id)}
+                    onClick={() => handleShowSettingMoblie(idComment)}
                     className={`smm:hidden p-1 overflow-hidden rounded-full hover:bg-gray-300  dark:hover:bg-gray-500/[0.4]`}
                   >
                     <BsThreeDots />
                   </button>
                 </div>
               </div>
-              <div className="smm:group-hover:block hidden ml-2 relative">
+              <div className=" ml-2 relative">
                 <button
-                  onClick={() => handleShowSetting(id)}
-                  className="p-1 overflow-hidden rounded-full hover:bg-gray-300  dark:hover:bg-gray-500/[0.4]"
+                  onClick={() => handleShowSetting(idComment)}
+                  ref={(ref) => (btnSettingRefs[idComment] = ref)}
+                  className="smm:group-hover:visible invisible p-1 overflow-hidden rounded-full hover:bg-gray-300  dark:hover:bg-gray-500/[0.4]"
                 >
                   <BsThreeDots />
                 </button>
-                {id === settingId && (
+                {idComment === settingId && (
                   <div
                     ref={settingRef}
-                    className="absolute top-full left-0 z-50"
+                    className={`${
+                      postionSettings[idComment] === "L"
+                        ? "left-0"
+                        : postionSettings[idComment] === "R"
+                        ? "right-0"
+                        : "left-0 -translate-x-[50%]"
+                    } absolute top-full z-50 `}
                   >
-                    <ul className="smm:min-w-[300px] bg-gray-200 dark:bg-gray-900 py-2 px-3 rounded-md">
-                      <li
-                        className="px-2 py-1 rounded-md hover:bg-gray-300 dark:hover:bg-gray-700 cursor-pointer"
-                        onClick={() => handleGetDetail(sentBy)}
-                      >
-                        Chi tiết
-                      </li>
-                      {user !== null && user?.uid !== sentBy && (
-                        <li
-                          className="px-2 py-1 rounded-md hover:bg-gray-300 dark:hover:bg-gray-700 cursor-pointer"
-                          onClick={() => handleHideComment(id)}
-                        >
-                          {checkHided ? "Hiện đánh giá" : "Ẩn đánh giá"}
-                        </li>
-                      )}
-                      {user?.uid === sentBy && (
-                        <>
-                          <li
-                            className="px-2 py-1 rounded-md hover:bg-gray-300 dark:hover:bg-gray-700 cursor-pointer"
-                            onClick={() => {
-                              dispatch(actions.setShowModal(true));
-                              setSettingId(false);
-                              setDeleteId(id);
-                            }}
-                          >
-                            Xóa đánh giá
-                          </li>
-                          <li
-                            className="px-2 py-1 rounded-md hover:bg-gray-300 dark:hover:bg-gray-700 cursor-pointer"
-                            onClick={() => {
-                              setUpdateId(id);
-                              setUpdateValue(comment);
-                            }}
-                          >
-                            Sửa đánh giá
-                          </li>
-                        </>
-                      )}
-                    </ul>
+                    <CommentSetting
+                      item={item}
+                      idPlayer={id}
+                      checkHided={checkHided}
+                      setDetailUser={setDetailUser}
+                      setDeleteId={setDeleteId}
+                      setUpdateId={setUpdateId}
+                      setSettingId={setSettingId}
+                    />
                   </div>
                 )}
               </div>
-              {showModal && settingIdMobile && id === settingIdMobile && (
+              {showModal && idComment === settingIdMobile && (
                 <Modal
                   bg={"bg-gray-200 dark:bg-gray-900"}
                   pd="p-2"
                   colorBtn="dark:text-white text-gray-800"
                 >
-                  <ul className="w-[300px] rounded-md">
-                    <li
-                      className="px-2 py-1 rounded-md hover:bg-gray-300 dark:hover:bg-gray-700 cursor-pointer"
-                      onClick={() => handleGetDetail(sentBy)}
-                    >
-                      Chi tiết
-                    </li>
-                    {user !== null && user?.uid !== sentBy && (
-                      <li
-                        className="px-2 py-1 rounded-md hover:bg-gray-300 dark:hover:bg-gray-700 cursor-pointer"
-                        onClick={() => handleHideComment(id)}
-                      >
-                        {checkHided ? "Hiện đánh giá" : "Ẩn đánh giá"}
-                      </li>
-                    )}
-                    {user?.uid === sentBy && (
-                      <>
-                        <li
-                          className="px-2 py-1 rounded-md hover:bg-gray-300 dark:hover:bg-gray-700 cursor-pointer"
-                          onClick={() => {
-                            dispatch(actions.setShowModal(true));
-                            setDeleteId(id);
-                            setSettingIdMobile(false);
-                          }}
-                        >
-                          Xóa đánh giá
-                        </li>
-                        <li
-                          className="px-2 py-1 rounded-md hover:bg-gray-300 dark:hover:bg-gray-700 cursor-pointer"
-                          onClick={() => {
-                            setUpdateId(id);
-                            setUpdateValue(comment);
-                            closeModal();
-                          }}
-                        >
-                          Sửa đánh giá
-                        </li>
-                      </>
-                    )}
-                  </ul>
+                  <CommentSetting
+                    item={item}
+                    idPlayer={id}
+                    checkHided={checkHided}
+                    setDetailUser={setDetailUser}
+                    setDeleteId={setDeleteId}
+                    setUpdateId={setUpdateId}
+                    setSettingId={setSettingId}
+                  />
                 </Modal>
               )}
             </li>
           );
         })}
       </ul>
+      {comments?.length > 6 && (
+        <button
+          onClick={() => setShowAll(!showAll)}
+          className="mt-4 hover:text-blue-600 animation-global"
+        >
+          {showAll ? "Show less comments" : "Show all comments"}
+        </button>
+      )}
       {showModal && deleteId && (
         <Modal>
           <div className="mt-2 min-w-[300px] text-white">
