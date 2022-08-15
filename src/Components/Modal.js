@@ -25,15 +25,17 @@ function Modal({
       ref={containerRef}
       onClick={handleCloseModal}
     >
-      <div className={`${bg} ${pd} max-w-xl rounded-xl`} ref={wrapRef}>
-        <div className={`${colorBtn} flex justify-end text-white `}>
-          <button onClick={() => dispatch(actions.setShowModal(false))}>
-            <Button>
-              <AiOutlineClose />
-            </Button>
-          </button>
+      <div className={`${bg} ${pd}  max-w-xl rounded-xl `} ref={wrapRef}>
+        <div className="h-full flex flex-col ">
+          <div className={`${colorBtn} flex justify-end text-white `}>
+            <button onClick={() => dispatch(actions.setShowModal(false))}>
+              <Button>
+                <AiOutlineClose />
+              </Button>
+            </button>
+          </div>
+          <div className="flex-1">{children}</div>
         </div>
-        <div>{children}</div>
       </div>
     </div>
   );

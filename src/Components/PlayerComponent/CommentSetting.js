@@ -20,6 +20,7 @@ export default function CommentItem({
   } = item;
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user.user);
+  const language = useSelector((state) => state.root.language);
 
   const handleHideComment = () => {
     const path = "/comments/" + idPlayer + "/" + id + "/hides/";
@@ -44,7 +45,6 @@ export default function CommentItem({
     });
   };
   const handleGetDetail = (sentBy) => {
-    // setSettingIdMobile(false);
     const path = "/users/" + sentBy;
     get(child(ref(db), path)).then((snapshot) => {
       if (snapshot.val()) {
@@ -62,14 +62,14 @@ export default function CommentItem({
         className="px-2 py-1 rounded-md hover:bg-gray-300 dark:hover:bg-gray-700 cursor-pointer"
         onClick={() => handleGetDetail(sentBy)}
       >
-        Chi tiết
+        {language.detail}
       </li>
       {user !== null && user?.uid !== sentBy && (
         <li
           className="px-2 py-1 rounded-md hover:bg-gray-300 dark:hover:bg-gray-700 cursor-pointer"
           onClick={() => handleHideComment()}
         >
-          {checkHided ? "Hiện đánh giá" : "Ẩn đánh giá"}
+          {checkHided ? language.showCmt : language.hideCmt}
         </li>
       )}
       {user?.uid === sentBy && (
@@ -81,7 +81,7 @@ export default function CommentItem({
               setDeleteId(id);
             }}
           >
-            Xóa đánh giá
+            {language.deleteCmt}
           </li>
           <li
             className="px-2 py-1 rounded-md hover:bg-gray-300 dark:hover:bg-gray-700 cursor-pointer"
@@ -89,7 +89,7 @@ export default function CommentItem({
               setUpdateId(id);
             }}
           >
-            Sửa đánh giá
+            {language.updateCmt}
           </li>
         </>
       )}

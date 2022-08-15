@@ -1,4 +1,4 @@
-import { memo, useEffect, useRef, useState } from "react";
+import { memo, useEffect, useMemo, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { actions } from "../../Store";
 
@@ -8,7 +8,6 @@ function ChooseRate({ title, number, begin, end, hint, twoWay }) {
 
   const dispatch = useDispatch();
   const [result, setResult] = useState("");
-  const [countHint, setCountHint] = useState(Math.floor(number / hint));
   const [mouseLeftDown, setMouseLeftDown] = useState(false);
   const [mouseRightDown, setMouseRightDown] = useState(false);
   const [levelLeft, setLevelLeft] = useState(0);
@@ -16,11 +15,13 @@ function ChooseRate({ title, number, begin, end, hint, twoWay }) {
   const [leftIndex, setLeftIndex] = useState(false);
   const [arrChar, setArrChar] = useState([]);
 
+  const countHint = useMemo(() => {
+    return Math.floor(number / hint);
+  }, [hint, number]);
   const charRef = useRef(null);
 
   const handleLeftBtnDown = () => {
     setMouseLeftDown(true);
-    console.log("true");
   };
 
   const handleRightBtnDown = () => {
@@ -36,6 +37,7 @@ function ChooseRate({ title, number, begin, end, hint, twoWay }) {
       setMouseRightDown(false);
     };
     const eventMoveLeftBtn = (e) => {
+      console.log(e.clientX);
       const { width, x } = charRef.current.getBoundingClientRect();
       if (e.clientX <= x) {
         setLevelLeft(0);
@@ -190,7 +192,7 @@ function ChooseRate({ title, number, begin, end, hint, twoWay }) {
             <button
               onMouseDown={handleLeftBtnDown}
               onPointerDown={handleLeftBtnDown}
-              className={`w-4 h-4 hover:scale-125 rounded-full bg-blue-500 absolute  top-1/2 -translate-y-1/2`}
+              className={`w-4 h-4 hover:scale-125 rounded-full bg-blue-500 absolute  top-1/2 -translate-y-1/2 touch-none`}
               style={{
                 left: `${-8 + (200 / 10) * levelLeft}px`,
                 zIndex: `${leftIndex ? `3` : ``}`,
@@ -200,7 +202,7 @@ function ChooseRate({ title, number, begin, end, hint, twoWay }) {
               <button
                 onPointerDown={handleRightBtnDown}
                 onMouseDown={handleRightBtnDown}
-                className="w-4 h-4 hover:scale-125 rounded-full bg-blue-500 absolute  top-1/2 -translate-y-1/2"
+                className="w-4 h-4 hover:scale-125 rounded-full bg-blue-500 absolute  top-1/2 -translate-y-1/2 touch-none"
                 style={{
                   right: `${-8 + (200 / 10) * levelRight}px`,
                   zIndex: `2`,

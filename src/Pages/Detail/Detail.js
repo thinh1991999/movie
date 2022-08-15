@@ -69,7 +69,7 @@ function Detail() {
   if (loading) {
     return (
       <div className=" w-full ">
-        <div className="lg:h-[500px] md:h-[450px] w-full">
+        <div className="lg:h-[500px] h-[450px] w-full">
           <Loading />
         </div>
         <div className="px-5">

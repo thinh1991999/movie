@@ -56,11 +56,11 @@ export const formatter = new Intl.NumberFormat("en-US", {
 });
 
 export const getMovieUrl = (id) => {
-  return "https://2embed.org//embed/movie?tmdb=" + id;
+  return "https://2embed.org/embed/movie?tmdb=" + id;
 };
 
 export const getTvUrl = (id, session, episode) => {
-  return `https://2embed.org//embed/series?tmdb=${id}&sea=${session}&epi=${episode}`;
+  return `https://2embed.org/embed/series?tmdb=${id}&sea=${session}&epi=${episode}`;
 };
 
 export const getErrorMessFirebase = (code) => {

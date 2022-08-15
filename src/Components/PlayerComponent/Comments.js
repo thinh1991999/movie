@@ -172,7 +172,7 @@ function Comments({ id }) {
                       setCommentValue(e.target.value);
                   }}
                 />
-                <div className="flex justify-center items-center mr-4 relative">
+                <div className="flex justify-center items-center mx-2 relative">
                   <button
                     type="button"
                     onClick={() => setShowEmoji(!showEmoji)}
@@ -207,7 +207,7 @@ function Comments({ id }) {
           </>
         )}
         {!user && (
-          <div className="w-full items-center flex">
+          <div className="mt-5 w-full items-center flex py-2 px-4 border-2 border-gray-600 dark:border-gray-200 rounded-full">
             <div className=" bg-gray-200 dark:bg-gray-400 text-3xl rounded-full mr-2">
               <FaRegUserCircle />
             </div>

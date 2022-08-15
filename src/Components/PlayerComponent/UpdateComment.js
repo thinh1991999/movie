@@ -121,7 +121,7 @@ export default function UpdateComment({
             value={updateValue}
             onChange={(e) => setUpdateValue(e.target.value)}
           />
-          <div className="flex justify-center items-center mr-4 relative">
+          <div className="flex justify-center items-center mx-2 relative">
             <button
               type="button"
               onClick={() => setShowEmoji(!showEmoji)}

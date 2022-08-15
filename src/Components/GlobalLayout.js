@@ -1,11 +1,14 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useLocation } from "react-router-dom";
 import { actions } from "../Store";
 import ButtonScrollTop from "./ButtonScrollTop";
 import Header from "./Header";
 import SideBar from "./SideBar";
 
 export default function GlobalLayout({ children }) {
+  const location = useLocation();
+
   const dispatch = useDispatch();
   const zeroBgHeader = useSelector((state) => state.root.zeroBgHeader);
 
@@ -47,6 +50,14 @@ export default function GlobalLayout({ children }) {
       localMainRef.removeEventListener("scroll", handleScroll);
     };
   }, [zeroBgHeader, dispatch, handleSetShowScroll]);
+
+  useEffect(() => {
+    let localMainRef = null;
+    if (mainRef.current) {
+      localMainRef = mainRef.current;
+      localMainRef.scrollTop = 0;
+    }
+  }, [location]);
 
   return (
     <>
