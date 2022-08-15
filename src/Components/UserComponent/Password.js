@@ -1,4 +1,4 @@
-import React, { useMemo, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import methods from "validator";
 import {
   EmailAuthProvider,
@@ -8,6 +8,8 @@ import {
 import Validator from "../../Shared/validator";
 import SubmitButton from "../SubmitButton";
 import { auth, getErrorMessFirebase } from "../../Shared";
+import MessNoti from "../MessNoti";
+import { useSelector } from "react-redux";
 
 const InputPassword = function ({
   title,
@@ -31,7 +33,7 @@ const InputPassword = function ({
         placeholder={placeholder}
         className={`${disable && `cursor-not-allowed`} ${
           errors[hint] ? "border-red-600" : "border-gray-400"
-        } px-3 py-2 rounded-sm outline-none text-black border-[2px]  `}
+        } px-3 py-2 rounded-sm outline-none  bg-gray-100 dark:bg-gray-700 text-black  dark:text-white border-[2px] border-gray-400 `}
         disabled={disable}
         value={value[hint]}
         onChange={(e) => setValues({ ...value, [hint]: e.target.value })}
@@ -44,6 +46,8 @@ const InputPassword = function ({
 };
 
 export default function Password() {
+  const language = useSelector((state) => state.root.language);
+
   const [values, setValues] = useState({
     currentPassword: "",
     password: "",
@@ -62,43 +66,36 @@ export default function Password() {
         field: "currentPassword",
         method: "isEmpty",
         validWhen: false,
-        message: "The currentPassword field is required.",
+        message: language.currentPwRequire,
       },
       {
         field: "currentPassword",
         method: "isLength",
         args: [{ min: 6, max: undefined }],
         validWhen: true,
-        message: "The currentPassword nhiều hơn 6 kí tự.",
+        message: language.currentPwLength,
       },
       {
         field: "password",
         method: "isEmpty",
         validWhen: false,
-        message: "The password field is required.",
+        message: language.newPwRequire,
       },
       {
         field: "password",
         method: "isLength",
         args: [{ min: 6, max: undefined }],
         validWhen: true,
-        message: "The password nhiều hơn 6 kí tự.",
+        message: language.newPwLength,
       },
       {
         field: "cfPassword",
         method: "isEmpty",
         validWhen: false,
-        message: "The password field is required.",
-      },
-      {
-        field: "cfPassword",
-        method: "isLength",
-        args: [{ min: 6, max: undefined }],
-        validWhen: true,
-        message: "The cfPassword nhiều hơn 6 kí tự.",
+        message: language.cfPwRequire,
       },
     ];
-  }, []);
+  }, [language]);
   const validator = useRef(new Validator(rules)).current;
   const [errors, setErrors] = useState({});
 
@@ -118,10 +115,15 @@ export default function Password() {
         reauthenticateWithCredential(auth.currentUser, credential)
           .then(() => {
             updatePassword(auth.currentUser, values.password)
-              .then((res) => {
+              .then(() => {
                 setMess({
                   type: true,
-                  value: "Cập nhật mật khẩu thành công",
+                  value: language.successUpdate,
+                });
+                setValues({
+                  currentPassword: "",
+                  password: "",
+                  cfPassword: "",
                 });
                 setLoadingBtn(false);
               })
@@ -150,12 +152,11 @@ export default function Password() {
           });
       } else {
         setErrors({
-          cfPassword: "Comfirm password is not correct!",
+          cfPassword: language.cfNotCorrect,
         });
       }
     }
   };
-
   const handleFocus = (hint) => {
     setMess({
       value: "",
@@ -166,13 +167,27 @@ export default function Password() {
     });
   };
 
+  useEffect(() => {
+    const handleClick = () => {
+      if (mess.value) {
+        setMess({
+          value: null,
+        });
+      }
+    };
+    window.addEventListener("click", handleClick);
+    return () => {
+      window.removeEventListener("click", handleClick);
+    };
+  }, [mess]);
+
   return (
     <form onSubmit={handleSubmit}>
-      <div className="flex flex-col">
-        <div className="w-1/2 flex flex-col ">
+      <div className="lg:items-start items-center flex flex-col ">
+        <div className="w-full md:w-1/2 flex flex-col ">
           <InputPassword
-            title={"Current Password"}
-            placeholder={"Your current password"}
+            title={language.currentPassword}
+            placeholder={language.urCurrentPassword}
             hint={"currentPassword"}
             value={values}
             setValues={setValues}
@@ -183,10 +198,10 @@ export default function Password() {
         {errors.currentPassword && (
           <p className="text-red-600">{errors.currentPassword}</p>
         )}
-        <div className="w-1/2 flex flex-col ">
+        <div className="w-full md:w-1/2 flex flex-col ">
           <InputPassword
-            title={"New Password"}
-            placeholder={"Your new password"}
+            title={language.newPassword}
+            placeholder={language.urNewPassword}
             hint={"password"}
             value={values}
             setValues={setValues}
@@ -195,10 +210,10 @@ export default function Password() {
           />
           {errors.password && <p className="text-red-600">{errors.password}</p>}
         </div>
-        <div className="w-1/2 flex flex-col ">
+        <div className="w-full md:w-1/2 flex flex-col ">
           <InputPassword
-            title={"Comfirm password"}
-            placeholder={"Comfirm new password"}
+            title={language.cfPassword}
+            placeholder={language.cfNewPassword}
             hint={"cfPassword"}
             value={values}
             setValues={setValues}
@@ -210,13 +225,14 @@ export default function Password() {
           )}
         </div>
       </div>
-      {mess.value && (
-        <p className={`${mess.type ? `text-blue-600` : `text-red-600`} mt-2`}>
-          {mess.value}
-        </p>
-      )}
-      <div className="max-w-[200px]">
-        <SubmitButton title={"Update password"} loading={loadingBtn} />
+      <div className="px-2 lg:block flex justify-center">
+        <MessNoti mess={mess} />
+      </div>
+      <div className="lg:block flex justify-center lg:max-w-[200px]">
+        <SubmitButton
+          title={language.userUpdatePassword}
+          loading={loadingBtn}
+        />
       </div>
     </form>
   );

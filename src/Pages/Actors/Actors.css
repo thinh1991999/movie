@@ -15,6 +15,14 @@
   cursor: not-allowed !important;
 }
 
+#actors ul li.previous {
+  padding: 0 10px 0 0;
+}
+
+#actors ul li.next {
+  padding: 0 0 0 10px;
+}
+
 #actors ul li.active {
   border: 1px solid gray;
   border-radius: 4px;

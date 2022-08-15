@@ -113,7 +113,7 @@ function Home() {
   }, [language]);
 
   return (
-    <div className="h-screen w-full pt-16 overflow-auto scroll-list">
+    <div className="w-full">
       <div className="md:w-3/4 w-full px-5 py-5 ">
         <BannerSlider data={trendingData} />
         <div className="w-full">

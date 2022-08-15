@@ -74,9 +74,10 @@ class AxiosService {
     const status = err?.response?.status;
     switch (status) {
       case 404:
+        window.location.assign("/error");
         break;
-
       default:
+        window.location.assign("/error");
         break;
     }
   }

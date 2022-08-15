@@ -93,14 +93,14 @@ function Search() {
   }, []);
 
   return (
-    <div className="h-screen w-full pt-16 overflow-auto scroll-list">
+    <div className="w-full ">
       <div className=" text-gray-800 h-full flex flex-col dark:text-white">
         <div className="flex items-center px-5  border-b-[1px] border-gray-300/[0.2]">
           <h5 className=" text-3xl sm:block hidden font-medium capitalize">
             {language.searchResults}
           </h5>
           <div className="mx-10 h-8 w-[1px] sm:block hidden bg-gray-300/[0.2]"></div>
-          <ul className="flex items-center">
+          <ul className="flex-1 flex items-center md:justify-start justify-center">
             {navData.map((item, index) => {
               const { name } = item;
               return (
@@ -117,8 +117,8 @@ function Search() {
             })}
           </ul>
         </div>
-        <div className="px-5 mt-5 mb-2 flex items-center">
-          <h5 className="capitalize mr-4 text-2xl font-medium">
+        <div className="w-full md:w-auto md:justify-start justify-center px-5 mt-5 mb-2 flex items-center">
+          <h5 className="text-center capitalize mr-4 text-2xl font-medium ">
             {language.searchKeyWord}:
           </h5>
           <span className="italic text-xl">{value}</span>

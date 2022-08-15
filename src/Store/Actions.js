@@ -21,6 +21,13 @@ export const setShowNavMobile = (payload) => {
   };
 };
 
+export const setShowSearchMobile = (payload) => {
+  return {
+    type: "SET_SHOW_SEARCH_MOBILE",
+    payload,
+  };
+};
+
 export const setShowModal = (payload) => {
   return {
     type: "SET_SHOW_MODAL",
@@ -31,6 +38,13 @@ export const setShowModal = (payload) => {
 export const setBgHeader = (payload) => {
   return {
     type: "SET_BG_HEADER",
+    payload,
+  };
+};
+
+export const setZeroBgHeader = (payload) => {
+  return {
+    type: "SET_ZERO_BG_HEADER",
     payload,
   };
 };
@@ -129,6 +143,13 @@ export const setUserInfo = (payload) => {
 export const setPathNameLogin = (payload) => {
   return {
     type: "SET_PATH_NAME_LOGIN",
+    payload,
+  };
+};
+
+export const setLoginCreateAcc = (payload) => {
+  return {
+    type: "SET_LOGIN_CREATE_ACC",
     payload,
   };
 };

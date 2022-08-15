@@ -19,7 +19,6 @@ function Detail() {
     (state) => state.detail.showTrailerModal
   );
   const language = useSelector((state) => state.root.language);
-
   const dispatch = useDispatch();
   const { id, type } = useParams();
   const [detailData, setDetailData] = useState(null);
@@ -27,14 +26,6 @@ function Detail() {
   const [creditsData, setCreditsData] = useState(null);
   const [trailerData, setTrailerData] = useState(null);
   const [loading, setLoading] = useState(true);
-
-  const handleScroll = (e) => {
-    if (e.target.scrollTop > 0) {
-      dispatch(actions.setBgHeader(true));
-    } else {
-      dispatch(actions.setBgHeader(false));
-    }
-  };
 
   useEffect(() => {
     setLoading(true);
@@ -69,12 +60,16 @@ function Detail() {
 
   useEffect(() => {
     dispatch(actions.setBgHeader(false));
+    dispatch(actions.setZeroBgHeader(true));
+    return () => {
+      dispatch(actions.setZeroBgHeader(false));
+    };
   }, []);
 
   if (loading) {
     return (
-      <div className=" w-full h-screen pt-16 overflow-y-scroll scroll-list">
-        <div className="lg:h-[500px] md:h-[450px] w-full">
+      <div className=" w-full ">
+        <div className="lg:h-[500px] h-[450px] w-full">
           <Loading />
         </div>
         <div className="px-5">
@@ -87,10 +82,7 @@ function Detail() {
 
   const { backdrop_path: bgImg, poster_path: showImg, seasons } = detailData;
   return (
-    <div
-      className="h-screen pb-10 overflow-y-scroll scroll-list scroll-smooth"
-      onScroll={handleScroll}
-    >
+    <div className="pb-10 -mt-16 scroll-smooth">
       <div className="relative ">
         <LazyLoadImage
           src={getImageUrl(bgImg, "w1280")}

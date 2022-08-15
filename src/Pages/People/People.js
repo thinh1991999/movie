@@ -25,14 +25,16 @@ function People() {
   }, []);
 
   return (
-    <div className="h-screen w-full pt-16 overflow-auto scroll-list text-gray-800 dark:text-white">
+    <div className="w-full  text-gray-800 dark:text-white">
       <div className="px-5 py-5">
         <ul className="flex justify-center items-center border-b-[1px] border-gray-400">
           {nav.map((itemNav, index) => {
             return (
               <li
                 key={index}
-                className="mx-5 py-3 cursor-pointer text-2xl relative"
+                className={`${
+                  index === currentNav && "text-blue-600"
+                } mx-5 py-3 cursor-pointer text-2xl relative`}
                 onClick={() => setCurrentNav(index)}
               >
                 {itemNav.title}

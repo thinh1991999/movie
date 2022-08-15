@@ -1,6 +1,6 @@
 import Button from "./Button";
 import { useEffect, useRef, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { BsFillPlayFill } from "react-icons/bs";
 import { useNavigate } from "react-router-dom";
 import {
@@ -9,12 +9,16 @@ import {
   AiOutlineTags,
   AiOutlineClose,
 } from "react-icons/ai";
+import { actions } from "../Store";
 import { getImageUrl } from "../Shared";
 import httpService from "../Services/http.service";
 
 function Search() {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const bgHeader = useSelector((state) => state.root.bgHeader);
+  const showSearchMobile = useSelector((state) => state.root.showSearchMobile);
+
   const language = useSelector((state) => state.root.language);
 
   const [searchValue, setSearchValue] = useState("");
@@ -27,10 +31,11 @@ function Search() {
   const closeBtnRef = useRef(null);
 
   const handleForwardLink = (id, type) => {
+    showSearchMobile && dispatch(actions.setShowSearchMobile(false));
     if (type === "person") {
-      navigate(`people/${id}`);
+      navigate(`/people/${id}`);
     } else if (type === "tv" || type === "movie") {
-      navigate(`detail/${id}/${type}`);
+      navigate(`/detail/${id}/${type}`);
     } else {
       navigate(`/`);
     }
@@ -51,14 +56,14 @@ function Search() {
   };
 
   const eventClick = (e) => {
-    if (!wrapRef.current.contains(e.target)) {
+    if (!wrapRef.current?.contains(e.target)) {
       setSearchFocus(false);
     }
   };
 
   useEffect(() => {
     let getSearchData;
-    if (searchFocus) {
+    if (searchFocus && searchValue) {
       setLoading(true);
       getSearchData = setTimeout(() => {
         httpService.getMutilSearch(searchValue, 1).then((res) => {
@@ -79,13 +84,14 @@ function Search() {
       window.removeEventListener("click", eventClick);
     };
   }, [searchFocus]);
-
   return (
     <div
       ref={wrapRef}
       className={`bg-gray-200 dark:bg-gray-600 ${
-        !bgHeader && `bg-gray-200/[0.3] dark:bg-gray-200/[0.3]`
-      } px-2 ml-4   ${
+        !bgHeader &&
+        !showSearchMobile &&
+        `bg-gray-200/[0.3] dark:bg-gray-200/[0.3]`
+      } px-2 w-full  ${
         searchFocus
           ? " from-violet-200 to-fuchsia-300 bg-gradient-to-r dark:from-violet-800 dark:to-fuchsia-800"
           : ""

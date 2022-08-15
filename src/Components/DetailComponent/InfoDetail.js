@@ -35,14 +35,10 @@ function InfoDetail({ data, type, trailerLength }) {
   const handleToPlayer = () => {
     switch (type) {
       case "movie":
-        {
-          navigate(`/player/${id}/${type}`);
-        }
+        navigate(`/player/${id}/${type}`);
         break;
       case "tv":
-        {
-          navigate(`/player/${id}/${type}/1/1`);
-        }
+        navigate(`/player/${id}/${type}/1/1`);
         break;
       default:
         navigate("/");
@@ -78,7 +74,7 @@ function InfoDetail({ data, type, trailerLength }) {
                 <div className="text-xl relative" key={item}>
                   <AiFillStar className="text-gray-200" />
                   <div
-                    className={`absolute top-0 left-0  bottom-0 right-0 overflow-hidden w-[${resultPercent}%]`}
+                    className={`absolute top-0 left-0  bottom-0 right-0 overflow-hidden`}
                     style={{
                       width: `${resultPercent}%`,
                     }}
@@ -106,14 +102,21 @@ function InfoDetail({ data, type, trailerLength }) {
       </div>
       <div className="mt-5 flex items-center">
         <AiFillTags className="mr-2 text-xl text-yellow-400" />
-        {genres.map((item) => {
-          const { name, id } = item;
-          return (
-            <Link to={`/explored/${id}/${type}`} key={id} className="mr-2">
-              <SquareButton msg={name} bd={false} detail={true} />
-            </Link>
-          );
-        })}
+        <div className="flex flex-wrap  items-center">
+          {genres.map((item) => {
+            const { name, id } = item;
+            return (
+              <Link to={`/explored/${id}/${type}`} key={id} className="m-1">
+                <SquareButton
+                  msg={name}
+                  bd={false}
+                  detail={true}
+                  color={"text-white"}
+                />
+              </Link>
+            );
+          })}
+        </div>
       </div>
       <div className="mt-5">
         <button onClick={handleToPlayer} className="inline-block">
@@ -121,6 +124,7 @@ function InfoDetail({ data, type, trailerLength }) {
             msg={language.detailWatch}
             bg={"bg-red-700/[0.8]"}
             bd={true}
+            color={"text-white"}
           />
         </button>
         <a
@@ -132,6 +136,7 @@ function InfoDetail({ data, type, trailerLength }) {
             msg={language.detailTrailer}
             bg={"bg-blue-700/[0.8]"}
             bd={true}
+            color={"text-white"}
           />
         </a>
       </div>

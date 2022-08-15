@@ -1,5 +1,5 @@
 import { Logo, SignIn, SignUp } from "../../Components";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 
@@ -8,14 +8,23 @@ function Authen() {
 
   const navigate = useNavigate();
   const user = useSelector((state) => state.user.user);
+  const language = useSelector((state) => state.root.language);
 
   useEffect(() => {
-    user && navigate("/");
-  }, []);
+    let timeOut = null;
+    if (user) {
+      timeOut = setTimeout(() => {
+        navigate("/");
+      }, 1000);
+    }
+    return () => {
+      clearTimeout(timeOut);
+    };
+  }, [user, navigate]);
 
   useEffect(() => {
     if (status !== "signUp" && status !== "signIn") navigate("/authen/signIn");
-  }, [status]);
+  }, [status, navigate]);
 
   return (
     <div className="h-screen w-full relative z-50">
@@ -30,16 +39,16 @@ function Authen() {
           {status === "signIn" ? <SignIn /> : <SignUp />}
           {status === "signIn" ? (
             <p className="mt-5 text-gray-500">
-              You don't have account?{" "}
+              {language.noAccount}?{" "}
               <Link to={"/authen/signUp"} className="text-red-600 capitalize">
-                Sign up now
+                {language.signUpNow}
               </Link>
             </p>
           ) : (
             <p className="mt-5 text-gray-500">
-              You have account?{" "}
+              {language.haveAccount}?{" "}
               <Link to={"/authen/signIn"} className="text-red-600 capitalize">
-                Sign in now
+                {language.signInNow}
               </Link>
             </p>
           )}

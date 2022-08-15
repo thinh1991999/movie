@@ -1,19 +1,19 @@
-import { createPopper } from "@popperjs/core";
+// import { createPopper } from "@popperjs/core";
 import { English, VietNam } from "../Lanuages";
 
-export const showPopper = (reference, popper) => {
-  createPopper(reference, popper, {
-    placement: "top",
-    modifiers: [
-      {
-        name: "offset",
-        options: {
-          offset: [10, 20],
-        },
-      },
-    ],
-  });
-};
+// export const showPopper = (reference, popper) => {
+//   createPopper(reference, popper, {
+//     placement: "top",
+//     modifiers: [
+//       {
+//         name: "offset",
+//         options: {
+//           offset: [10, 20],
+//         },
+//       },
+//     ],
+//   });
+// };
 
 export const resizeImage = (url = "", width = "", height = "") =>
   url.startsWith("https://graph.facebook.com/")
@@ -56,11 +56,11 @@ export const formatter = new Intl.NumberFormat("en-US", {
 });
 
 export const getMovieUrl = (id) => {
-  return "https://2embed.org//embed/movie?tmdb=" + id;
+  return "https://2embed.org/embed/movie?tmdb=" + id;
 };
 
 export const getTvUrl = (id, session, episode) => {
-  return `https://2embed.org//embed/series?tmdb=${id}&sea=${session}&epi=${episode}`;
+  return `https://2embed.org/embed/series?tmdb=${id}&sea=${session}&epi=${episode}`;
 };
 
 export const getErrorMessFirebase = (code) => {
@@ -71,6 +71,18 @@ export const getErrorMessFirebase = (code) => {
       break;
     case "auth/too-many-requests":
       mess = "Quá nhiều request,vui lòng thử lại sau";
+      break;
+    case "auth/user-not-found":
+      mess = "Không tồn tại tài khoản này";
+      break;
+    case "auth/email-already-in-use":
+      mess = "Tài khoản đã tồn tại";
+      break;
+    case "auth/weak-password":
+      mess = "Mật khẩu yếu,vui lòng thử lại";
+      break;
+    case "auth/account-exists-with-different-credential":
+      mess = "Tài khoản này đã được sử dụng bằng phương pháp xác thực khác";
       break;
     default:
       break;

@@ -1,10 +1,11 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Validator from "../../Shared/validator";
-import { auth, db } from "../../Shared";
+import { auth, db, getErrorMessFirebase } from "../../Shared";
 import { createUserWithEmailAndPassword, signOut } from "firebase/auth";
 import { ref, update } from "firebase/database";
 import SubmitButton from "../SubmitButton";
 import { useSelector } from "react-redux";
+import MessNoti from "../MessNoti";
 
 function SignUp() {
   const language = useSelector((state) => state.root.language);
@@ -15,34 +16,38 @@ function SignUp() {
         field: "email",
         method: "isEmpty",
         validWhen: false,
-        message: "The email field is required.",
+        message: language.emailRequire,
       },
       {
         field: "email",
         method: "isEmail",
         validWhen: true,
-        message: "This field is email.",
+        message: language.emailCheck,
       },
       {
         field: "password",
         method: "isEmpty",
         validWhen: false,
-        message: "The password field is required.",
+        message: language.pwRequire,
+      },
+      {
+        field: "password",
+        method: "isLength",
+        args: [{ min: 6, max: undefined }],
+        validWhen: true,
+        message: language.newPwLength,
       },
     ];
-  }, []);
+  }, [language]);
   const [signUpValue, setSignUpValue] = useState({
     email: "",
     password: "",
     cfPassWord: "",
   });
   const [errors, setErrors] = useState({});
-  const [messSuccess, setMessSuccess] = useState("");
+  const [mess, setMess] = useState({ type: true, value: null });
   const [loading, setLoading] = useState(false);
-  const [validator, setValidator] = useState(new Validator(rules));
-
-  const requiredWith = (value, field, state) =>
-    (!state[field] && !value) || !!value;
+  const validator = useRef(new Validator(rules)).current;
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -56,32 +61,34 @@ function SignUp() {
       )
         .then((user) => {
           const updates = {};
-          const { displayName, email, photoURL } = user.user;
+          const { email } = user.user;
           updates["/users/" + user.user.uid] = {
-            displayName,
             email,
-            photoURL,
           };
           update(ref(db), updates);
-          setMessSuccess("Sign Up success!");
+          setMess({
+            type: true,
+            value: language.successSignup,
+          });
           setSignUpValue({
             email: "",
             password: "",
             cfPassWord: "",
           });
           signOut(auth);
+          setLoading(false);
         })
         .catch((error) => {
           const errorCode = error.code;
           if (errorCode === "auth/email-already-in-use") {
             setErrors({
               ...errors,
-              email: "This email has been used!",
+              email: getErrorMessFirebase(errorCode),
             });
-          } else if (errorCode === "auth/weak-password") {
-            setErrors({
-              ...errors,
-              password: "This password is weak!",
+          } else {
+            setMess({
+              type: false,
+              value: getErrorMessFirebase(errorCode),
             });
           }
           setLoading(false);
@@ -93,7 +100,7 @@ function SignUp() {
     if (signUpValue.cfPassWord !== signUpValue.password) {
       setErrors({
         ...errors,
-        cfPassWord: "Comfirm password isn't corrected!",
+        cfPassWord: language.cfNotCorrect,
       });
       return false;
     } else {
@@ -106,7 +113,10 @@ function SignUp() {
       ...errors,
       [e.target.name]: "",
     });
-    setMessSuccess("");
+    setMess({
+      type: true,
+      value: null,
+    });
   };
 
   const handleChange = (e) => {
@@ -132,7 +142,9 @@ function SignUp() {
 
   return (
     <div className="">
-      <h2 className="capitalize text-3xl font-semibold mb-5">Sign up</h2>
+      <h2 className="capitalize text-3xl font-semibold mb-5">
+        {language.signUp}
+      </h2>
       <form action="" className="flex flex-col" onSubmit={handleSubmit}>
         <input
           type="text"
@@ -151,7 +163,7 @@ function SignUp() {
 
         <input
           type="password"
-          placeholder="Password"
+          placeholder={language.userPassword}
           value={signUpValue.password}
           onFocus={handleFocus}
           onChange={handleChange}
@@ -166,7 +178,7 @@ function SignUp() {
 
         <input
           type="password"
-          placeholder="Comfirm Password"
+          placeholder={language.cfPassword}
           name="cfPassWord"
           onFocus={handleFocus}
           autoComplete={`off`}
@@ -180,8 +192,10 @@ function SignUp() {
         {errors.cfPassWord && (
           <p className="text-red-600">{errors.cfPassWord}</p>
         )}
-        {messSuccess && <p className="text-blue-600">{messSuccess}</p>}
-        <SubmitButton title="sign up" loading={loading} />
+        <div className="px-2 lg:block flex justify-center">
+          <MessNoti mess={mess} />
+        </div>
+        <SubmitButton title={language.signUp} loading={loading} />
       </form>
     </div>
   );

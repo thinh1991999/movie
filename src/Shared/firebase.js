@@ -1,6 +1,10 @@
 import { initializeApp } from "firebase/app";
 import { getDatabase } from "firebase/database";
-import { getAuth, GoogleAuthProvider } from "firebase/auth";
+import {
+  FacebookAuthProvider,
+  getAuth,
+  GoogleAuthProvider,
+} from "firebase/auth";
 import { getStorage } from "firebase/storage";
 
 const firebaseConfig = {
@@ -21,6 +25,5 @@ export const auth = getAuth(app);
 export const db = getDatabase(app);
 
 export const storage = getStorage(app);
-export const provider = new GoogleAuthProvider().addScope(
-  "https://www.googleapis.com/auth/contacts.readonly"
-);
+export const provider = new GoogleAuthProvider();
+export const providerFB = new FacebookAuthProvider();

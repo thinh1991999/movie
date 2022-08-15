@@ -13,6 +13,8 @@ export default function User() {
   const navigate = useNavigate();
 
   const user = useSelector((state) => state.user.user);
+  const loginCreateAcc = useSelector((state) => state.user.loginCreateAcc);
+
   const language = useSelector((state) => state.root.language);
 
   const [currentNav, setCurrentNav] = useState(0);
@@ -45,15 +47,15 @@ export default function User() {
           xhr.send();
           infoValues.avatar = url;
           handleUpdateInfo();
-          toast.success("Upload thành công");
+          toast.success(language.successChange);
           setLoadingBtnImg(false);
         })
         .catch(() => {
-          toast.error("Có lỗi xảy ra");
+          toast.error(language.someErr);
           setLoadingBtnImg(false);
         });
     } else {
-      toast.error("File được chọn phải là ảnh");
+      toast.error(language.imageRequire);
     }
     e.target.value = null;
   };
@@ -67,22 +69,44 @@ export default function User() {
     if (user) {
       onValue(ref(db, "/users/" + user.uid), (snapshot) => {
         const data = snapshot.val();
-        setInfoValues(data);
+        if (!data) {
+          setInfoValues({
+            email: user.email,
+          });
+        } else {
+          setInfoValues(data);
+        }
         setLoadingInit(false);
       });
     } else {
       navigate("/");
-      toast.error("Bạn chưa đăng nhập");
+      toast.error(language.notLogin);
     }
-  }, [user]);
+  }, [user, language]);
 
   useEffect(() => {
     document.title = language.profile;
-  }, [language]);
+    if (loginCreateAcc) {
+      setNavData([
+        {
+          title: language.userInfo,
+        },
+        {
+          title: language.userPassword,
+        },
+      ]);
+    } else {
+      setNavData([
+        {
+          title: language.userInfo,
+        },
+      ]);
+    }
+  }, [language, loginCreateAcc]);
 
   if (loadingInit) {
     return (
-      <div className="h-screen pt-16 pb-20 px-5 w-full overflow-y-scroll scroll-list t">
+      <div className="pb-20 px-5 w-full">
         <div className="h-full flex justify-center items-center">
           <CircleLoading />
         </div>
@@ -91,9 +115,9 @@ export default function User() {
   }
 
   return (
-    <div className="h-screen pt-16 pb-20 px-5 w-full overflow-y-scroll scroll-list text-gray-800 dark:text-white">
-      <div className="flex">
-        <div className="w-1/3 flex flex-col justify-center items-center min-h-[450px]">
+    <div className="pb-20 px-5 w-full  text-gray-800 dark:text-white">
+      <div className="flex flex-wrap">
+        <div className="w-full lg:w-1/3 flex flex-col justify-center items-center min-h-[450px]">
           <img
             src={infoValues?.avatar || unKnowUserUrl}
             alt=""
@@ -110,19 +134,23 @@ export default function User() {
               <SubmitButton
                 label={true}
                 loading={loadingBtnImg}
-                title="upload avatar"
+                title={language.userChangeAvatar}
                 id="image"
               />
             </div>
           </div>
         </div>
-        <div className="w-2/3 ">
-          <h3 className="text-3xl font-extrabold">Edit profile</h3>
-          <ul className="flex border-b-[1px] border-gray-500 mt-2">
+        <div className="w-full lg:w-2/3 ">
+          <h3 className="text-center lg:text-left text-3xl font-extrabold ">
+            {language.userEditProfile}
+          </h3>
+          <ul className="justify-center lg:justify-start flex border-b-[1px] border-gray-500 mt-2">
             {navData.map((item, index) => {
               return (
                 <li
-                  className="px-5 py-3 cursor-pointer relative text-2xl"
+                  className={`${
+                    index === currentNav && "text-blue-600"
+                  } mx-5 py-3 cursor-pointer text-2xl relative`}
                   key={index}
                   onClick={() => setCurrentNav(index)}
                 >

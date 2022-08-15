@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { actions } from "../Store";
 import { AiOutlineRight } from "react-icons/ai";
@@ -7,7 +7,7 @@ function Setting() {
   const language = useSelector((state) => state.root.language);
   const dispatch = useDispatch();
 
-  const [flag, setFlag] = useState([
+  const flag = useRef([
     {
       name: "Việt Nam",
       type: "VN",
@@ -20,7 +20,7 @@ function Setting() {
       imgUrl:
         "https://firebasestorage.googleapis.com/v0/b/my-project-2b635.appspot.com/o/ameraica.png?alt=media&token=91b96932-d6dd-4369-9289-6c6cc7089a24",
     },
-  ]);
+  ]).current;
 
   const handleChangeLanguage = (type) => {
     dispatch(actions.setLanguage(type));
@@ -37,7 +37,7 @@ function Setting() {
             className="w-[30px] object-contain"
           />
           <AiOutlineRight />
-          <div className="absolute group-hover:block setting-shadow hidden w-[150px] right-[100%] rounded-md translate-y-1/2 bottom-0 py-2 from-violet-400 to-fuchsia-400 bg-gradient-to-r dark:from-violet-800 dark:to-fuchsia-800">
+          <div className="bottom-[-100%] md:bottom-0  md:right-[100%] absolute group-hover:block setting-shadow hidden w-[150px]  rounded-md translate-y-1/2  py-2 from-violet-400 to-fuchsia-400 bg-gradient-to-r dark:from-violet-800 dark:to-fuchsia-800">
             <ul>
               {flag.map((item, index) => {
                 return (

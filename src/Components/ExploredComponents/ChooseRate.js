@@ -1,4 +1,4 @@
-import { memo, useEffect, useRef, useState } from "react";
+import { memo, useEffect, useMemo, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { actions } from "../../Store";
 
@@ -8,7 +8,6 @@ function ChooseRate({ title, number, begin, end, hint, twoWay }) {
 
   const dispatch = useDispatch();
   const [result, setResult] = useState("");
-  const [countHint, setCountHint] = useState(Math.floor(number / hint));
   const [mouseLeftDown, setMouseLeftDown] = useState(false);
   const [mouseRightDown, setMouseRightDown] = useState(false);
   const [levelLeft, setLevelLeft] = useState(0);
@@ -16,6 +15,9 @@ function ChooseRate({ title, number, begin, end, hint, twoWay }) {
   const [leftIndex, setLeftIndex] = useState(false);
   const [arrChar, setArrChar] = useState([]);
 
+  const countHint = useMemo(() => {
+    return Math.floor(number / hint);
+  }, [hint, number]);
   const charRef = useRef(null);
 
   const handleLeftBtnDown = () => {
@@ -26,61 +28,67 @@ function ChooseRate({ title, number, begin, end, hint, twoWay }) {
     setMouseRightDown(true);
   };
 
-  const handleLeftBtnUp = () => {};
-
-  const eventLeft = () => {
-    setMouseLeftDown(false);
-  };
-
-  const eventRight = () => {
-    setMouseRightDown(false);
-  };
-
-  const eventMoveLeftBtn = (e) => {
-    const { width, x } = charRef.current.getBoundingClientRect();
-    if (e.clientX <= x) {
-      setLevelLeft(0);
-    } else if (e.clientX >= x + width) {
-      setLevelLeft(10);
-    } else {
-      const hintRange = e.clientX - x;
-      const calIndex = Math.round((hintRange / width) * 10);
-      10 - calIndex === levelRight && setLeftIndex(true);
-      10 - calIndex < levelRight && setLevelRight(10 - calIndex);
-      setLevelLeft(calIndex);
-    }
-  };
-
-  const eventMoveRightBtn = (e) => {
-    const { width, x } = charRef.current.getBoundingClientRect();
-    if (e.clientX <= x) {
-      setLevelRight(10);
-    } else if (e.clientX >= x + width) {
-      setLevelRight(0);
-    } else {
-      const hintRange = e.clientX - x;
-      const calIndex = Math.round((hintRange / width) * 10);
-      calIndex === levelLeft && setLeftIndex(false);
-      calIndex < levelLeft && setLevelLeft(calIndex);
-      setLevelRight(10 - calIndex);
-    }
-  };
   useEffect(() => {
+    const eventLeft = () => {
+      setMouseLeftDown(false);
+    };
+
+    const eventRight = () => {
+      setMouseRightDown(false);
+    };
+    const eventMoveLeftBtn = (e) => {
+      console.log(e.clientX);
+      const { width, x } = charRef.current.getBoundingClientRect();
+      if (e.clientX <= x) {
+        setLevelLeft(0);
+      } else if (e.clientX >= x + width) {
+        setLevelLeft(10);
+      } else {
+        const hintRange = e.clientX - x;
+        const calIndex = Math.round((hintRange / width) * 10);
+        10 - calIndex === levelRight && setLeftIndex(true);
+        10 - calIndex < levelRight && setLevelRight(10 - calIndex);
+        setLevelLeft(calIndex);
+      }
+    };
+
+    const eventMoveRightBtn = (e) => {
+      const { width, x } = charRef.current.getBoundingClientRect();
+      if (e.clientX <= x) {
+        setLevelRight(10);
+      } else if (e.clientX >= x + width) {
+        setLevelRight(0);
+      } else {
+        const hintRange = e.clientX - x;
+        const calIndex = Math.round((hintRange / width) * 10);
+        calIndex === levelLeft && setLeftIndex(false);
+        calIndex < levelLeft && setLevelLeft(calIndex);
+        setLevelRight(10 - calIndex);
+      }
+    };
     if (mouseLeftDown) {
       window.addEventListener("mouseup", eventLeft);
       window.addEventListener("mousemove", eventMoveLeftBtn);
+      window.addEventListener("pointerup", eventLeft);
+      window.addEventListener("pointermove", eventMoveLeftBtn);
     }
     if (mouseRightDown) {
       window.addEventListener("mouseup", eventRight);
       window.addEventListener("mousemove", eventMoveRightBtn);
+      window.addEventListener("pointerup", eventRight);
+      window.addEventListener("pointermove", eventMoveRightBtn);
     }
     return () => {
       window.removeEventListener("mouseup", eventLeft);
       window.removeEventListener("mousemove", eventMoveLeftBtn);
       window.removeEventListener("mouseup", eventRight);
       window.removeEventListener("mousemove", eventMoveRightBtn);
+      window.removeEventListener("pointerup", eventLeft);
+      window.removeEventListener("pointermove", eventMoveLeftBtn);
+      window.removeEventListener("pointerup", eventRight);
+      window.removeEventListener("pointermove", eventMoveRightBtn);
     };
-  }, [mouseLeftDown, mouseRightDown]);
+  }, [mouseLeftDown, mouseRightDown, levelLeft, levelRight]);
 
   useEffect(() => {
     if (!reset) {
@@ -122,7 +130,7 @@ function ChooseRate({ title, number, begin, end, hint, twoWay }) {
   useEffect(() => {
     const arr = Array.from({ length: 11 }, (_, i) => i * (number / 10));
     setArrChar(arr);
-  }, [countHint]);
+  }, [countHint, number]);
 
   useEffect(() => {
     if (reset) {
@@ -183,8 +191,8 @@ function ChooseRate({ title, number, begin, end, hint, twoWay }) {
             ></div>
             <button
               onMouseDown={handleLeftBtnDown}
-              onMouseUp={handleLeftBtnUp}
-              className={`w-4 h-4 hover:scale-125 rounded-full bg-blue-500 absolute  top-1/2 -translate-y-1/2`}
+              onPointerDown={handleLeftBtnDown}
+              className={`w-4 h-4 hover:scale-125 rounded-full bg-blue-500 absolute  top-1/2 -translate-y-1/2 touch-none`}
               style={{
                 left: `${-8 + (200 / 10) * levelLeft}px`,
                 zIndex: `${leftIndex ? `3` : ``}`,
@@ -192,8 +200,9 @@ function ChooseRate({ title, number, begin, end, hint, twoWay }) {
             ></button>
             {twoWay && (
               <button
+                onPointerDown={handleRightBtnDown}
                 onMouseDown={handleRightBtnDown}
-                className="w-4 h-4 hover:scale-125 rounded-full bg-blue-500 absolute  top-1/2 -translate-y-1/2"
+                className="w-4 h-4 hover:scale-125 rounded-full bg-blue-500 absolute  top-1/2 -translate-y-1/2 touch-none"
                 style={{
                   right: `${-8 + (200 / 10) * levelRight}px`,
                   zIndex: `2`,

@@ -1,4 +1,5 @@
-import Button from "./Button";
+import { useNavigate } from "react-router-dom";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   AiFillSetting,
   AiOutlineArrowLeft,
@@ -10,9 +11,9 @@ import { BsFillMoonStarsFill, BsSunFill } from "react-icons/bs";
 import { useDispatch, useSelector } from "react-redux";
 import { actions } from "../Store";
 import Setting from "./Setting";
-import { useEffect, useMemo, useRef, useState } from "react";
 import Search from "./Search";
-import { useNavigate } from "react-router-dom";
+import Logo from "./Logo";
+import Button from "./Button";
 
 function Header() {
   const navigate = useNavigate();
@@ -52,7 +53,7 @@ function Header() {
   };
 
   const event = (e) => {
-    if (!settingWrapRef.current.contains(e.target)) {
+    if (!settingWrapRef.current?.contains(e.target)) {
       setShowSetting(false);
     }
   };
@@ -72,26 +73,7 @@ function Header() {
     >
       <div className="flex flex-1 items-center justify-start h-14 ">
         <div className="flex items-center cursor-pointer md:hidden">
-          {theme === "dark" && bgHeader && (
-            <img
-              src="/iconWhite.png"
-              alt=""
-              className="w-10 h-10 object-cover"
-            />
-          )}
-          {theme !== "dark" && bgHeader && (
-            <img src="/icon.png" alt="" className="w-10 h-10 object-cover" />
-          )}
-          {!bgHeader && (
-            <img
-              src="/iconWhite.png"
-              alt=""
-              className="w-10 h-10 object-cover"
-            />
-          )}
-          <span className="text-gray-800 text-xl font-bold font-sans hidden sm2:block dark:text-white">
-            ChillTime
-          </span>
+          <Logo bgHeaderActive={true} mobile={true} />
         </div>
         <div className={`hidden md:block ${!bgHeader && `text-white`}`}>
           <button
@@ -128,7 +110,10 @@ function Header() {
           !bgHeader && `text-white`
         }`}
       >
-        <button className="md:hidden">
+        <button
+          onClick={() => dispatch(actions.setShowSearchMobile(true))}
+          className="md:hidden"
+        >
           <Button size={"text-2xl"} bg={true} header={bgHeader}>
             <AiOutlineSearch />
           </Button>
