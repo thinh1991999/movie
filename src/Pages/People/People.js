@@ -1,3 +1,4 @@
+import { useRef } from "react";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
@@ -10,19 +11,19 @@ function People() {
 
   const { id } = useParams();
 
-  const [nav, setNav] = useState([
+  const nav = useRef([
     {
       title: "Overview",
     },
     {
       title: "Media",
     },
-  ]);
+  ]).current;
   const [currentNav, setCurrentNav] = useState(0);
 
   useEffect(() => {
     dispatch(actions.setBgHeader(true));
-  }, []);
+  }, [dispatch]);
 
   return (
     <div className="w-full  text-gray-800 dark:text-white">

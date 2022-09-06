@@ -4,7 +4,6 @@ import { useDispatch, useSelector } from "react-redux";
 import _ from "lodash";
 import {
   SelectConfig,
-  AlbumSlider,
   SquareButton,
   CircleLoading,
   ChooseRate,

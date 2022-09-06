@@ -3,7 +3,6 @@ import { Navigation } from "swiper";
 import { BsPlayCircle } from "react-icons/bs";
 import { useDispatch, useSelector } from "react-redux";
 import { actions } from "../../Store";
-import { LazyLoadImage } from "react-lazy-load-image-component";
 
 function TrailerSlider({ data }) {
   const dispatch = useDispatch();

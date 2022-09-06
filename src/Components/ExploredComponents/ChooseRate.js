@@ -37,7 +37,6 @@ function ChooseRate({ title, number, begin, end, hint, twoWay }) {
       setMouseRightDown(false);
     };
     const eventMoveLeftBtn = (e) => {
-      console.log(e.clientX);
       const { width, x } = charRef.current.getBoundingClientRect();
       if (e.clientX <= x) {
         setLevelLeft(0);
