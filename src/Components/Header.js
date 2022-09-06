@@ -33,7 +33,7 @@ function Header() {
       return item.key === currentRouter;
     });
   }, [routerHistory, currentRouter]);
-
+  console.log(routerHistory);
   const handleChangeTheme = () => {
     if (theme === "") {
       dispatch(actions.setTheme("dark"));

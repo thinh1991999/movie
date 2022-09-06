@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { AlbumSlider, BannerSlider, Trending } from "../../Components";
 import { useDispatch, useSelector } from "react-redux";
+
+import { AlbumSlider, BannerSlider, Trending } from "../../Components";
 import { actions } from "../../Store";
 import httpService from "../../Services/http.service";
 
@@ -16,7 +17,6 @@ function Home() {
   const [topRatedData, setTopRatedData] = useState(null);
   const [homeData, setHomeData] = useState([]);
   const [mounted, setMounted] = useState(false);
-
   useEffect(() => {
     setTrendingData(null);
     if (trending === "week") {
@@ -40,7 +40,7 @@ function Home() {
         type: popular,
       });
     });
-  }, [popular]);
+  }, [popular, language]);
 
   useEffect(() => {
     setTopRatedData(null);
@@ -52,7 +52,7 @@ function Home() {
         type: topRated,
       });
     });
-  }, [topRated]);
+  }, [topRated, language]);
 
   useEffect(() => {
     const call1 = httpService.getMovieNowPlaying(1).then((res) => {
