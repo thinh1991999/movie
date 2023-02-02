@@ -9,51 +9,50 @@ function ActingAndProduction({ data }) {
   const [castData, setCastData] = useState([]);
   const [crewData, setCrewData] = useState([]);
 
-  const getNewArr = (arr) => {
-    const newArrCastData = [];
-    arr.forEach((item) => {
-      const { release_date, first_air_date } = item;
-      let year = "";
-      year =
-        release_date || release_date === ""
-          ? release_date?.substring(0, 4)
-          : first_air_date?.substring(0, 4);
-      const index = newArrCastData.findIndex((item) => {
-        return item.year === year;
-      });
-      if (index === -1) {
-        newArrCastData.push({
-          year,
-          items: [item],
-        });
-      } else {
-        newArrCastData[index].items.push(item);
-      }
-    });
-    const filterData = newArrCastData.filter((item) => {
-      return item.year || item.year === "";
-    });
-    filterData.sort((a, b) => {
-      return b.year * 1 - a.year * 1;
-    });
-    return filterData;
-  };
-
   useEffect(() => {
+    const getNewArr = (arr) => {
+      const newArrCastData = [];
+      arr.forEach((item) => {
+        const { release_date, first_air_date } = item;
+        let year = "";
+        year =
+          release_date || release_date === ""
+            ? release_date?.substring(0, 4)
+            : first_air_date?.substring(0, 4);
+        const index = newArrCastData.findIndex((item) => {
+          return item.year === year;
+        });
+        if (index === -1) {
+          newArrCastData.push({
+            year,
+            items: [item],
+          });
+        } else {
+          newArrCastData[index].items.push(item);
+        }
+      });
+      const filterData = newArrCastData.filter((item) => {
+        return item.year || item.year === "";
+      });
+      filterData.sort((a, b) => {
+        return b.year * 1 - a.year * 1;
+      });
+      return filterData;
+    };
     setCastData(getNewArr(cast));
     setCrewData(getNewArr(crew));
-  }, []);
+  }, [cast, crew]);
 
   return (
     <div className="w-full mt-20 text-gray-800 dark:text-white">
-      <div className="">
+      <div>
         <h5 className="capitalize font-semibold text-xl mb-2">
           {language.peopleActing}
         </h5>
         <div className="border-l-[1px] border-r-[1px] border-t-[1px]">
           {castData.map((item, index) => {
             const { year, items } = item;
-            if (!year && year !== "") return;
+            if (!year && year !== "") return <></>;
             return (
               <ul
                 key={index}
@@ -95,7 +94,7 @@ function ActingAndProduction({ data }) {
           <div className="border-l-[1px] border-r-[1px] border-t-[1px]">
             {crewData.map((item, index) => {
               const { year, items } = item;
-              if (!year && year !== "") return;
+              if (!year && year !== "") return <></>;
               return (
                 <ul
                   key={index}

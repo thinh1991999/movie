@@ -1,10 +1,9 @@
 import { AiFillStar, AiFillTags } from "react-icons/ai";
-import { formatter, getTimeMovie } from "../../Shared";
-import { SquareButton } from "..";
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { memo } from "react";
-
+import { formatter, getTimeMovie } from "../../Shared";
+import { SquareButton } from "..";
 function InforPlayer({
   data,
   episodeData,

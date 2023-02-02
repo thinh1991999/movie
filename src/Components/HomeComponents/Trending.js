@@ -18,9 +18,9 @@ function Trending({ data }) {
         {[1, 2, 3, 4, 5].map((item) => {
           return (
             <div className="flex" key={item}>
-              <a className="flex w-full h-[100px] group mb-2 hover:opacity-50 cursor-pointer transition-all duration-300 ease-linear">
+              <div className="flex w-full h-[100px] group mb-2 hover:opacity-50 cursor-pointer transition-all duration-300 ease-linear">
                 <Loading />
-              </a>
+              </div>
             </div>
           );
         })}

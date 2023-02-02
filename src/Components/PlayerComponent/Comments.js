@@ -1,18 +1,18 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { FaRegUserCircle } from "react-icons/fa";
 import { AiOutlineSend } from "react-icons/ai";
+import { BsEmojiSmile } from "react-icons/bs";
+import { useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
 import { onValue, ref, push, child, update } from "firebase/database";
 import { Timestamp } from "firebase/firestore";
 import data from "@emoji-mart/data";
 import Picker from "@emoji-mart/react";
-import _ from "lodash";
+import forIn from "lodash/forIn";
 import { db, unKnowUserUrl } from "../../Shared";
 import { actions } from "../../Store";
 import CommentList from "./CommentList";
-import { BsEmojiSmile } from "react-icons/bs";
-import { useRef } from "react";
 
 function Comments({ id }) {
   const dispatch = useDispatch();
@@ -78,7 +78,7 @@ function Comments({ id }) {
       const data = snapshot.val();
       if (data) {
         const arrComments = [];
-        _.forIn(data, function (value, key) {
+        forIn(data, function (value, key) {
           arrComments.push({
             id: key,
             data: value,

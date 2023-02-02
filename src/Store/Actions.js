@@ -118,6 +118,20 @@ export const setResetExplore = (payload) => {
   };
 };
 
+export const setTypeExplore = (payload) => {
+  return {
+    type: "SET_TYPE_EXPLORE",
+    payload,
+  };
+};
+
+export const setGenreExplore = (payload) => {
+  return {
+    type: "SET_GENRE_EXPLORE",
+    payload,
+  };
+};
+
 export const resetExplore = (payload) => {
   return {
     type: "RESET_EXPLORE",

@@ -2,13 +2,13 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
 import { FcGoogle } from "react-icons/fc";
+import { child, get, ref, update } from "firebase/database";
+import { useDispatch, useSelector } from "react-redux";
 import { auth, db, getErrorMessFirebase, provider } from "../../Shared";
 import Validator from "../../Shared/validator";
-import { useDispatch, useSelector } from "react-redux";
 import SubmitButton from "../SubmitButton";
 import { actions } from "../../Store";
 import MessNoti from "../MessNoti";
-import { child, get, ref, update } from "firebase/database";
 
 function SignIn() {
   const navigate = useNavigate();

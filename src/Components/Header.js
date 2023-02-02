@@ -21,11 +21,10 @@ function Header() {
   const theme = useSelector((state) => state.root.theme);
   const routerHistory = useSelector((state) => state.root.routerHistory);
   const currentRouter = useSelector((state) => state.root.currentRouter);
-
   const showNavMobile = useSelector((state) => state.root.showNavMobile);
   const bgHeader = useSelector((state) => state.root.bgHeader);
-  const [showSetting, setShowSetting] = useState(false);
 
+  const [showSetting, setShowSetting] = useState(false);
   const settingWrapRef = useRef(null);
 
   const checkIdxRouter = useMemo(() => {
@@ -33,7 +32,6 @@ function Header() {
       return item.key === currentRouter;
     });
   }, [routerHistory, currentRouter]);
-  console.log(routerHistory);
   const handleChangeTheme = () => {
     if (theme === "") {
       dispatch(actions.setTheme("dark"));
@@ -64,7 +62,6 @@ function Header() {
       window.removeEventListener("click", event);
     };
   }, []);
-
   return (
     <div
       className={`fixed flex justify-between lg:px-8 px-4 top-0  right-0 left-0 lg:left-[calc(100%/6)] md:left-[calc(100%/16)] py-1  bg-white dark:bg-gray-800 ${

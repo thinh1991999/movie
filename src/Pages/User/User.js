@@ -82,7 +82,7 @@ export default function User() {
       navigate("/");
       toast.error(language.notLogin);
     }
-  }, [user, language]);
+  }, [user, language, navigate]);
 
   useEffect(() => {
     document.title = language.profile;

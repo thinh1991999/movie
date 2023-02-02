@@ -1,5 +1,5 @@
 import { LazyLoadImage } from "react-lazy-load-image-component";
-import { getImageUrl, IMAGE_CARD_SIZE, resizeImage } from "../Shared";
+import { getImageUrl, IMAGE_CARD_SIZE } from "../Shared";
 import "react-lazy-load-image-component/src/effects/opacity.css";
 import Button from "./Button";
 import { BsPlayCircle } from "react-icons/bs";
