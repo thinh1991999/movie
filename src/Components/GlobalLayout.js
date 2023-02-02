@@ -10,7 +10,7 @@ export default function GlobalLayout({ children }) {
   const location = useLocation();
 
   const dispatch = useDispatch();
-  const zeroBgHeader = useSelector((state) => state.root.zeroBgHeader);
+  const bgHeader = useSelector((state) => state.root.bgHeader);
 
   const mainRef = useRef(null);
 
@@ -27,18 +27,16 @@ export default function GlobalLayout({ children }) {
       setShowScrollTop(false);
     }
   }, []);
-
   useEffect(() => {
     let localMainRef = null;
     const handleScroll = (e) => {
       const value = e.target.scrollTop;
       handleSetShowScroll(value);
-      if (zeroBgHeader) {
-        if (value === 0) {
-          dispatch(actions.setBgHeader(false));
-        } else {
-          dispatch(actions.setBgHeader(true));
-        }
+      if (bgHeader && value === 0) {
+        dispatch(actions.setBgHeader(false));
+      }
+      if (!bgHeader && value > 0) {
+        dispatch(actions.setBgHeader(true));
       }
     };
     if (mainRef.current) {
@@ -49,7 +47,7 @@ export default function GlobalLayout({ children }) {
     return () => {
       localMainRef.removeEventListener("scroll", handleScroll);
     };
-  }, [zeroBgHeader, dispatch, handleSetShowScroll]);
+  }, [bgHeader, dispatch, handleSetShowScroll]);
 
   useEffect(() => {
     let localMainRef = null;
@@ -68,11 +66,7 @@ export default function GlobalLayout({ children }) {
         <Header />
         <div
           ref={mainRef}
-          className={`lg:w-5/6 w-full md:w-[calc(100%_-_100%/16)] bg-gray-50 dark:bg-gray-800 ${
-            zeroBgHeader
-              ? "h-screen"
-              : "min-h-screen md:min-h-[unset] md:h-screen"
-          } pt-16 overflow-y-auto  scroll-smooth scroll-list`}
+          className={`lg:w-5/6 w-full md:w-[calc(100%_-_100%/16)] bg-gray-50 dark:bg-gray-800 h-screen pt-16 overflow-y-auto  scroll-smooth scroll-list`}
         >
           {children}
           {showScrollTop && (

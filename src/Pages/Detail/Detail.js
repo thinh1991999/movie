@@ -64,7 +64,7 @@ function Detail() {
     return () => {
       dispatch(actions.setZeroBgHeader(false));
     };
-  }, []);
+  }, [dispatch]);
 
   if (loading) {
     return (

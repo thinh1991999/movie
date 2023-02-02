@@ -93,6 +93,7 @@ function Home() {
     });
     dispatch(actions.setBgHeader(true));
     setMounted(true);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -110,6 +111,7 @@ function Home() {
       });
     }
     document.title = language.home;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [language]);
 
   return (

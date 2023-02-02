@@ -72,7 +72,7 @@ function Search() {
       setLoading(false);
       setAllData([]);
     }
-  }, [value, currentNav]);
+  }, [value, currentNav, navData]);
 
   useEffect(() => {
     if (page > 1) {
@@ -86,11 +86,11 @@ function Search() {
           setAllData([...allData, ...res?.results]);
         });
     }
-  }, [page]);
+  }, [page, allData, navData, currentNav, value]);
 
   useEffect(() => {
     dispatch(actions.setBgHeader(true));
-  }, []);
+  }, [dispatch]);
 
   return (
     <div className="w-full ">

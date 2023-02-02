@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import Button from "../Button";
 import { AiOutlineClose } from "react-icons/ai";
 import { useDispatch, useSelector } from "react-redux";
 import { actions } from "../../Store";
+import Button from "../Button";
 
 function TrailerModal() {
   const key = useSelector((state) => state.detail.showTrailerModal.key);

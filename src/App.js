@@ -43,7 +43,6 @@ function App() {
       }
     });
   }, [dispatch]);
-
   useEffect(() => {
     dispatch(actions.setRouterHistory(location));
     dispatch(actions.setCurrentRouter(location.key));

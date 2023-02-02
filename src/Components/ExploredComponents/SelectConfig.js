@@ -1,7 +1,9 @@
 import { memo, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { actions } from "../../Store";
-import _ from "lodash";
+import findIndex from "lodash/findIndex";
+import startsWith from "lodash/startsWith";
+import trim from "lodash/trim";
 import { BsChevronDown } from "react-icons/bs";
 
 function SelectConfig({ data }) {
@@ -13,28 +15,24 @@ function SelectConfig({ data }) {
   const [showDrop, setShowDrop] = useState(false);
   const [currentValue, setCurrentValue] = useState("");
   const [char, setChar] = useState("");
-
   const handleSetSearch = (id) => {
     const { type } = data;
     setShowDrop(!showDrop);
     dispatch(
       actions.setSearchExplore({
-        ...search,
         [type]: id,
       })
     );
   };
-
   useEffect(() => {
     if (data) {
       const { type, options } = data;
-      const index = _.findIndex(options, ["id", search[type]]);
+      const index = findIndex(options, ["id", search[type]]);
       setCurrentValue(options[index]?.name);
-      const firstChar = _.trim(options[index]?.name).slice(0, 1);
+      const firstChar = trim(options[index]?.name).slice(0, 1);
       setChar(firstChar);
     }
   }, [search, data]);
-
   const event = (e) => {
     !mainRef.current.contains(e.target) && setShowDrop(false);
   };
@@ -58,8 +56,8 @@ function SelectConfig({ data }) {
       const heightLi = liRef.current.getBoundingClientRect().height;
       const index = data?.options?.findIndex((item) => {
         return (
-          _.startsWith(item.name, char) ||
-          _.startsWith(item.name.toLowerCase(), char)
+          startsWith(item.name, char) ||
+          startsWith(item.name.toLowerCase(), char)
         );
       });
       ulRef.current.scrollTop = heightLi * index;
@@ -93,7 +91,7 @@ function SelectConfig({ data }) {
           >
             {options?.map((item) => {
               const { name, id } = item;
-              if (!name || name.includes("?") || id === "xx") return;
+              if (!name || name.includes("?") || id === "xx") return <></>;
               return (
                 <li
                   ref={liRef}

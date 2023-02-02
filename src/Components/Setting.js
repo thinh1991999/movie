@@ -1,7 +1,7 @@
 import { useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { actions } from "../Store";
 import { AiOutlineRight } from "react-icons/ai";
+import { actions } from "../Store";
 
 function Setting() {
   const language = useSelector((state) => state.root.language);

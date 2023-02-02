@@ -28,23 +28,20 @@ export default function Actors() {
     setOffset(e.selected + 1);
   };
 
-  const handleResize = useCallback(
-    (size) => {
-      if (size >= 768) {
-        setPageRange(5);
-        setMarginRange(5);
-        return;
-      }
-      if (size >= 460) {
-        setPageRange(2);
-        setMarginRange(2);
-        return;
-      }
-      setPageRange(1);
-      setMarginRange(1);
-    },
-    [pageRange, marginRange]
-  );
+  const handleResize = useCallback((size) => {
+    if (size >= 768) {
+      setPageRange(5);
+      setMarginRange(5);
+      return;
+    }
+    if (size >= 460) {
+      setPageRange(2);
+      setMarginRange(2);
+      return;
+    }
+    setPageRange(1);
+    setMarginRange(1);
+  }, []);
 
   useEffect(() => {
     setLoading(true);
@@ -70,12 +67,12 @@ export default function Actors() {
     return () => {
       window.removeEventListener("resize", eventResize);
     };
-  }, [pageRange, marginRange]);
+  }, [handleResize]);
 
   useEffect(() => {
     handleResize(window.innerWidth);
     dispatch(actions.setBgHeader(true));
-  }, []);
+  }, [dispatch, handleResize]);
 
   return (
     <div id="actors" className="px-5 h-full w-full text-white">

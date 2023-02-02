@@ -8,6 +8,7 @@ function PeopleSocial({ peopleExternal }) {
           href={`https://www.facebook.com/${peopleExternal?.facebook_id}`}
           className="text-3xl mr-4 hover:text-blue-600 transition-all duration-300 ease-linear"
           target="_blank"
+          rel="noreferrer"
         >
           <BsFacebook />
         </a>
@@ -17,6 +18,7 @@ function PeopleSocial({ peopleExternal }) {
           href={`https://www.instagram.com/${peopleExternal?.instagram_id}`}
           className="text-3xl mr-4 hover:text-blue-600 transition-all duration-300 ease-linear"
           target="_blank"
+          rel="noreferrer"
         >
           <BsInstagram />
         </a>
@@ -26,6 +28,7 @@ function PeopleSocial({ peopleExternal }) {
           href={`https://twitter.com/${peopleExternal?.twitter_id}`}
           className="text-3xl mr-4 hover:text-blue-600 transition-all duration-300 ease-linear"
           target="_blank"
+          rel="noreferrer"
         >
           <BsTwitter />
         </a>

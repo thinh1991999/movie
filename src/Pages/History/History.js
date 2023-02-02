@@ -21,11 +21,11 @@ export default function History() {
     setReset(true);
   }, [user]);
 
-  const setHistory = () => {
+  const setHistory = useCallback(() => {
     const key = user?.email || "unknowUser";
     const historyArr = localStorageServ.historyWatch.get()?.[key] || [];
     setHistoryData([...historyArr]);
-  };
+  }, [user]);
 
   useEffect(() => {
     document.title = language.history;
@@ -33,18 +33,18 @@ export default function History() {
 
   useEffect(() => {
     setHistory();
-  }, [user]);
+  }, [user, setHistory]);
 
   useEffect(() => {
     if (reset) {
       setHistory();
       setReset(false);
     }
-  }, [reset]);
+  }, [reset, setHistory]);
 
   useEffect(() => {
     dispatch(actions.setBgHeader(true));
-  }, []);
+  }, [dispatch]);
 
   return (
     <div className="pb-20 px-5 w-full text-gray-800 dark:text-white">
